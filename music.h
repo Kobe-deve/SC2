@@ -1,15 +1,10 @@
-#define SDL_MAIN_HANDLED
+#ifndef STATE_HANDLED
+#include "state.h"
+#endif
 
-// main SDL2 handler
-#include <SDL2/SDL.h>
-
-// handles music with SDL2
-#include <SDL2/SDL_mixer.h>
-
-// main track that is playing
-Mix_Music * music;
-
-void initMusic()
+#ifndef MUSIC_HANDLED
+#define MUSIC_HANDLED
+void initMusic(struct gameState * input)
 {
 	if(SDL_Init(SDL_INIT_AUDIO) >= 0)
 	{
@@ -20,6 +15,7 @@ void initMusic()
 		}
 	}
 	
-	music = Mix_LoadMUS( "Live.wav");
-	Mix_PlayMusic(music, 1);
+	input->music = Mix_LoadMUS("Live.wav");
+	Mix_PlayMusic(input->music, 1);
 }
+#endif

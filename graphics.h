@@ -1,3 +1,7 @@
+#ifndef STATE_HANDLED
+#include "state.h"
+#endif
+
 #ifndef GRAPHICS
 #define GRAPHICS
 #include <conio.h>
