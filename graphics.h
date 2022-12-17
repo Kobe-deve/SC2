@@ -82,7 +82,7 @@ void setCursor(int x, int y) // sets the cursor to a position on the screen
 }
 
 // print specific array patterns 
-void printPattern(int patternType, int xPos, int yPos, int maxX, int maxY)
+void printPattern(enum sprites patternType, int xPos, int yPos, int maxX, int maxY)
 {
 	int x;
 	int y;
@@ -92,8 +92,124 @@ void printPattern(int patternType, int xPos, int yPos, int maxX, int maxY)
 		{
 			switch(patternType)
 			{
-				default:
+				case BACK_ROOM:
+				setColor(backRoom[y][x]);
+				break;
+				
+				case LIBRARY:
+				setColor(library[y][x]);
+				break;
+				
+				case FLAMES:
+				setColor(flames[y][x]);
+				break;
+				
+				case TITLE:
 				setColor(title[y][x]);	
+				break;
+				
+				case MAIN_CAMP:
+				setColor(mainCamp[y][x]);
+				break;
+				
+				case SHOP:
+				setColor(shop[y][x]);
+				break;
+				
+				case PUB:
+				setColor(pub[y][x]);
+				break;
+				
+				case GARLAND:
+				setColor(garlan[y][x]);
+				break;
+				
+				case M1:
+				setColor(m1[y][x]);	
+				break;
+				
+				case M2:
+				setColor(m2[y][x]);	
+				break;
+				
+				case M3:
+				setColor(m3[y][x]);	
+				break;
+				
+				case M4:
+				setColor(m4[y][x]);	
+				break;
+				
+				case M5:
+				setColor(m5[y][x]);	
+				break;
+				
+				case M6:
+				setColor(m6[y][x]);	
+				break;
+				
+				case M7:
+				setColor(m7[y][x]);	
+				break;
+				
+				case M8:
+				setColor(m8[y][x]);	
+				break;
+				
+				case M9:
+				setColor(m9[y][x]);	
+				break;
+				
+				case M10:
+				setColor(m10[y][x]);	
+				break;
+				
+				case M12:
+				setColor(m12[y][x]);	
+				break;
+				
+				case M13:
+				setColor(m13[y][x]);	
+				break;
+				
+				case M14:
+				setColor(m14[y][x]);	
+				break;
+				
+				case M15:
+				setColor(m15[y][x]);	
+				break;
+				
+				case M16:
+				setColor(m16[y][x]);	
+				break;
+				
+				case M17:
+				setColor(m17[y][x]);	
+				break;
+				
+				case SWORD:
+				setColor(swordr[y][x]);	
+				break;
+				
+				case LANCE:
+				setColor(lancer[y][x]);	
+				break;
+				
+				case AXE:
+				setColor(axer[y][x]);	
+				break;
+				
+				case GUN:
+				setColor(gunr[y][x]);	
+				break;
+				
+				case BOW:
+				setColor(bowr[y][x]);	
+				break;
+				
+				case COMB:
+				setColor(combr[y][x]);	
 				break;
 			}
 			setCursor(xPos+x,yPos+y);
