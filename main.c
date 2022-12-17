@@ -14,7 +14,7 @@ int main()
 	initMusic(&state);
 	
 	
-	printPattern(50,10,80,10);
+	printPattern(0,50,10,80,10);
 	getchar();
 	
 	
