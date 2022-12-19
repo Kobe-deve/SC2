@@ -11,6 +11,7 @@ typedef void (*callback) (void *);
 typedef enum Events{
 	DISPLAY,
 	MENU_SELECTION,
+	LOGIC_HANDLER,
 	MAX_EVENTS
 }gameEvents;
 
@@ -45,7 +46,7 @@ void destroyListener(gameEvents eventType, struct EventHandler *listeners[])
 	
 	if(handlers != NULL)
 		free(handlers);
-	handlers = NULL;
+	*handlers = NULL;
 }
 
 // initialize listener
@@ -60,7 +61,7 @@ void initListeners(struct EventHandler *handlers[], int size)
 void destroyListeners(struct EventHandler *handlers[], int size)
 {
 	int i;
-	struct EventHandler *deleteMe, *next;
+	struct EventHandler *deleteMe;
 	
 	for(i =0;i<MAX_EVENTS;i++){
 		

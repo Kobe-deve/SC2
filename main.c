@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include <string.h>
 #include "state.h"
 #include "music.h"
@@ -84,7 +85,7 @@ void initMenu(struct gameState * s, int numOpts, char ** options, int x, int y)
 	printf(">");
 }
 
-void titleScreen(void *data)
+void titleScreenDisplay(void *data)
 {
 	printPattern(TITLE,50,10,80,10);
 	
@@ -97,35 +98,36 @@ void titleScreen(void *data)
 		array[0] = "New Game";
 		array[1] = "Continue";
 		
-		initMenu(s,2,array,20,20);
+		initMenu(s,2,array,50,21);
 		
 		free(array);
 	}
 	destroyListener(DISPLAY,s->listeners);
+	printf("%d",rand()%10+1);
+}
+
+// logic at the title screen 
+void titleScreenLogic(void *data)
+{
+	struct gameState * s = (struct gameState *)data;
+	
+	if(s->input == ENTER)
+	{
+		destroyListener(MENU_SELECTION,s->listeners);
+		system("cls");
+	}
 }
 
 int main()
 {
+	srand((unsigned)time(NULL));
+	
 	struct gameState state;
 	
 	// initialize the window 
 	init();
 	// initialize music handling
 	initMusic(&state);
-	
-	/*
-	for(enum sprites i = BACK_ROOM; i <= COMB; i++)
-	{
-		system("cls");
-		if(i >= GARLAND && i <= M17)
-			printPattern(i,50,10,20,20);
-		if(i >= BACK_ROOM && i <= PUB)
-			printPattern(i,50,10,80,10);
-		if(i >= SWORD && i <= COMB)
-			printPattern(i,50,10,10,10);
-		getchar();
-	}
-	*/
 	
 	/*
 	int x = 0;
@@ -167,8 +169,9 @@ int main()
 	initListeners(state.listeners,MAX_EVENTS);
 	
 	// register events 
-	registerEvent(DISPLAY,titleScreen,state.listeners);
+	registerEvent(DISPLAY,titleScreenDisplay,state.listeners);
 	registerEvent(MENU_SELECTION,menuSelection,state.listeners);
+	registerEvent(LOGIC_HANDLER,titleScreenLogic,state.listeners);
 	
 	struct EventHandler *handlers = state.listeners[DISPLAY];
 	
