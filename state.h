@@ -1,3 +1,5 @@
+#include "event_handler.h"
+
 // handles the state of the game itself 
 
 // get basic music handling library
@@ -17,5 +19,7 @@
 	struct gameState
 	{
 		Mix_Music * music; // the music playing
+		int input;
+		struct EventHandler *listeners[MAX_EVENTS];
 	};
 #endif

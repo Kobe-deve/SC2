@@ -4,6 +4,17 @@
 #include "event_handler.h"
 #include "graphics.h"
 
+
+void menuSelect(void *data)
+{
+	
+}
+
+void titleScreen(void *data)
+{
+	printPattern(TITLE,50,10,80,10);
+}
+
 int main()
 {
 	struct gameState state;
@@ -27,34 +38,33 @@ int main()
 	}
 	*/
 	
-	int input = 0;
-	
+	/*
 	int x = 0;
 	int y = 0;
 	
-	while(input != 27)
+	while(state.input != 27)
 	{
-		input = 0;
-		inputHandler(&input);
+		state.input = 0;
+		state.input = inputHandler();
 		
-		if(input != 0)
+		if(state.input != 0)
 		{
 			setCursor(x,y);
 			printf("  ");
 		}
 		
-		switch(input)
+		switch(state.input)
 		{
-			case 72:
+			case UP:
 			y--;
 			break;
-			case 80:
+			case DOWN:
 			y++;
 			break;
-			case 75:
+			case LEFT:
 			x--;
 			break;
-			case 77:
+			case RIGHT:
 			x++;
 			break;
 		}
@@ -62,6 +72,27 @@ int main()
 		setCursor(x,y);
 		printf("%c",1);
 	}
+	*/
+	
+	initListeners(state.listeners,MAX_EVENTS);
+	
+	registerEvent(INPUT_HANDLER,inputHandler,state.listeners);
+	registerEvent(DISPLAY,titleScreen,state.listeners);
+	
+	struct EventHandler *handlers = state.listeners[INPUT_HANDLER];
+	
+	while(state.input != 27)
+	{
+		state.input = 0;
+		
+		handlers = state.listeners[INPUT_HANDLER];
+		handlers->mainFunction(&state.input);
+		
+		handlers = state.listeners[DISPLAY];
+		handlers->mainFunction(&state.input);
+	}
+	
+	destroyListeners(state.listeners,MAX_EVENTS);
 	
 	return 0;
 }
