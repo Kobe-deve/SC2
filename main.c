@@ -4,20 +4,6 @@
 #include "event_handler.h"
 #include "graphics.h"
 
-void inputHandler(void *data)
-{
-	if ( _kbhit() )
-		*(int *)data = getch();
-	
-//	if(*(int *)data != 0 && *(int *)data != 224)
-//		printf("\nSOMETHING HAPPENED");
-}
-
-void test2(void *data)
-{
-	printf("\nTEST2");
-}
-
 int main()
 {
 	struct gameState state;
@@ -41,22 +27,41 @@ int main()
 	}
 	*/
 	
-	registerEvent(INPUT_HANDLER,test1);
-	registerEvent(INPUT_HANDLER,test2);
-	
-	struct EventHandler *handlers = listeners[INPUT_HANDLER];
-	
 	int input = 0;
+	
+	int x = 0;
+	int y = 0;
 	
 	while(input != 27)
 	{
-		handlers = listeners[INPUT_HANDLER];
 		input = 0;
+		inputHandler(&input);
 		
-		handlers->mainFunction(&input);
+		if(input != 0)
+		{
+			setCursor(x,y);
+			printf("  ");
+		}
+		
+		switch(input)
+		{
+			case 72:
+			y--;
+			break;
+			case 80:
+			y++;
+			break;
+			case 75:
+			x--;
+			break;
+			case 77:
+			x++;
+			break;
+		}
+		
+		setCursor(x,y);
+		printf("%c",1);
 	}
-	
-	destroyListeners(listeners,MAX_EVENTS);
 	
 	return 0;
 }

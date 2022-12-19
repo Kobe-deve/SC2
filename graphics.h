@@ -44,15 +44,14 @@ void init()
 	new_screen_buffer_size.X = SBInfo.srWindow.Right - SBInfo.srWindow.Left + 1;
 	new_screen_buffer_size.Y = SBInfo.srWindow.Bottom - SBInfo.srWindow.Top + 1;
 	
+	SetConsoleScreenBufferSize(hConsole, new_screen_buffer_size);
+	ShowWindow(consoleWindow,SW_SHOWMAXIMIZED);
+	
 	//hide cursor 
 	CONSOLE_CURSOR_INFO info;
 	info.dwSize = 1;
 	info.bVisible = FALSE;
 	SetConsoleCursorInfo(hConsole, &info);
-	
-	SetConsoleScreenBufferSize(hConsole, new_screen_buffer_size);
-	ShowWindow(consoleWindow,SW_SHOWMAXIMIZED);
-	
 }
 
 // set color based on a given color value 
