@@ -21,5 +21,12 @@
 		Mix_Music * music; // the music playing
 		int input; // input integer
 		struct EventHandler *listeners[MAX_EVENTS]; // event listeners
+		
+		// menu variables
+		int option; // menu option 
+		char ** options; // strings for options 
+		int numOptions; // number of options 
+		int menuX, menuY; // menu option coordinates
+		
 	};
 #endif

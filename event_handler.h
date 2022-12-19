@@ -5,30 +5,12 @@
 
 // https://www.gamedev.net/forums/topic/646358-event-handlers-in-c/
 
-enum input
-{
-	UP = 72,
-	DOWN = 80,
-	LEFT = 75,
-	RIGHT = 77,
-	ENTER = 13,
-	ESC = 27
-};
-
-// keyboard input event handling 
-void inputHandler(void *data)
-{
-	if ( _kbhit() )
-		*(int *)data = getch();
-}
-
 // event handling 
 typedef void (*callback) (void *);
 
 typedef enum Events{
-	INPUT_HANDLER,
 	DISPLAY,
-	TITLE_SCREEN,
+	MENU_SELECTION,
 	MAX_EVENTS
 }gameEvents;
 
@@ -45,13 +27,25 @@ void registerEvent(gameEvents eventType, callback callBackFunction, struct Event
 		*handlers = (struct EventHandler*) malloc(sizeof (struct EventHandler));
 		(*handlers)->mainFunction = callBackFunction;
 	}
+	else if(callBackFunction == (*handlers)->mainFunction)
+		return;
 	else
-	{
+	{		
 		free(handlers);
 	
 		*handlers = (struct EventHandler*) malloc(sizeof (struct EventHandler));
 		(*handlers)->mainFunction = callBackFunction;
 	}
+}
+
+// destroys specific listener
+void destroyListener(gameEvents eventType, struct EventHandler *listeners[])
+{
+	struct EventHandler **handlers = &listeners[eventType];
+	
+	if(handlers != NULL)
+		free(handlers);
+	handlers = NULL;
 }
 
 // initialize listener

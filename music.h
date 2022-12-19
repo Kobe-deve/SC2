@@ -17,5 +17,8 @@ void initMusic(struct gameState * input)
 	
 	input->music = Mix_LoadMUS("Live.wav");
 	Mix_PlayMusic(input->music, 1);
+	input->input = 0;
+	input->option = 0;
+	input->options = NULL;
 }
 #endif
