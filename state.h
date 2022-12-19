@@ -19,7 +19,7 @@
 	struct gameState
 	{
 		Mix_Music * music; // the music playing
-		int input;
-		struct EventHandler *listeners[MAX_EVENTS];
+		int input; // input integer
+		struct EventHandler *listeners[MAX_EVENTS]; // event listeners
 	};
 #endif

@@ -81,15 +81,18 @@ int main()
 	
 	struct EventHandler *handlers = state.listeners[INPUT_HANDLER];
 	
+	int i = 0;
+	
 	while(state.input != 27)
 	{
 		state.input = 0;
 		
-		handlers = state.listeners[INPUT_HANDLER];
-		handlers->mainFunction(&state.input);
-		
-		handlers = state.listeners[DISPLAY];
-		handlers->mainFunction(&state.input);
+		for(i=0;i<MAX_EVENTS;i++)
+		{
+			handlers = state.listeners[i];
+			if(handlers != NULL)
+				handlers->mainFunction(&state.input);
+		}
 	}
 	
 	destroyListeners(state.listeners,MAX_EVENTS);
