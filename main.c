@@ -6,6 +6,7 @@
 #include "event_handler.h"
 #include "graphics.h"
 
+// input handling 
 enum input
 {
 	UP = 72,
@@ -85,6 +86,10 @@ void initMenu(struct gameState * s, int numOpts, char ** options, int x, int y)
 	printf(">");
 }
 
+
+
+// title screen functions 
+
 void titleScreenDisplay(void *data)
 {
 	printPattern(TITLE,50,10,80,10);
@@ -106,6 +111,39 @@ void titleScreenDisplay(void *data)
 	printf("%d",rand()%10+1);
 }
 
+int x = 0;
+int y = 0;
+
+void walkAround(void *data)
+{
+	struct gameState * s = (struct gameState *)data;
+		
+	if(s->input != 0)
+	{
+		setCursor(x,y);
+		printf("  ");
+	}
+	
+	switch(s->input)
+	{
+		case UP:
+		y--;
+		break;
+		case DOWN:
+		y++;
+		break;
+		case LEFT:
+		x--;
+		break;
+		case RIGHT:
+		x++;
+		break;
+	}
+	
+	setCursor(x,y);
+	printf("%c",1);
+}
+
 // logic at the title screen 
 void titleScreenLogic(void *data)
 {
@@ -115,6 +153,12 @@ void titleScreenLogic(void *data)
 	{
 		destroyListener(MENU_SELECTION,s->listeners);
 		system("cls");
+		
+		destroyListener(LOGIC_HANDLER,s->listeners);
+		registerEvent(DISPLAY,walkAround,s->listeners);
+		
+		s->music = Mix_LoadMUS("music/Crossroad.wav");
+		Mix_PlayMusic(s->music, 1);
 	}
 }
 
