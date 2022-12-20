@@ -12,6 +12,9 @@
 #include <conio.h>
 #include <windows.h>
 
+// calculates ticks per frame for timers
+int SCREEN_TICK_PER_FRAME = 8; 
+
 typedef int colors; // for printing images
 #define YELLOW 14
 #define SILVER 8
