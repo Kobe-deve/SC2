@@ -47,6 +47,9 @@ void titleScreenLogic(void *data)
 		
 		s->music = Mix_LoadMUS("music/Crossroad.wav");
 		Mix_PlayMusic(s->music, -1);
+		
+		s->playerX = 0;
+		s->playerY = 0;
 	}
 }
 

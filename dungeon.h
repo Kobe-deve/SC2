@@ -4,9 +4,6 @@
 #include "input.h"
 #include "graphics.h"
 
-int x = 0;
-int y = 0;
-
 int bX = 10;
 int bY = 10;
 int fired = 0;
@@ -23,25 +20,25 @@ int dungeonPrintCoordX = 10;
 int dungeonPrintCoordY = 10;
 
 int d[20][20] = {0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
-			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
-			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
-			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
-			   0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
-			   0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
-			   0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
-			   0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-			   0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
-			   0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
-			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
-			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
-			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
-			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
-			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
-			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
-			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
-			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
-			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
-			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0};
+			     0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			     0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			     0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			     0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			     0,1,1,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
+			     0,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
+			     0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+			     0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+			     0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+			     0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			     0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			     0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			     0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			     0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			     0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			     0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			     0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			     0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			     0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0};
 
 int dungeonSize = 20;
 
@@ -49,8 +46,8 @@ void clearDisplay(struct gameState * s)
 {	
 	if(s->input != 0)
 	{
-		setCursor(dungeonPrintCoordX+x,dungeonPrintCoordY+y);
-		switch(d[y][x])
+		setCursor(dungeonPrintCoordX+s->playerX,dungeonPrintCoordY+s->playerY);
+		switch(d[s->playerY][s->playerX])
 		{
 			case 1:	
 			printf("%c",219);
@@ -68,23 +65,23 @@ void logic(struct gameState * s)
 	{
 		case UP:
 		direction = 0;
-		if(y > 0)
-			y--;
+		if(s->playerY > 0 && d[s->playerY-1][s->playerX] != 1)
+			s->playerY--;
 		break;
 		case DOWN:
 		direction = 2;
-		if(y < dungeonSize-1)
-			y++;
+		if(s->playerY < dungeonSize-1 && d[s->playerY+1][s->playerX] != 1)
+			s->playerY++;
 		break;
 		case LEFT:
 		direction = 3;
-		if(x > 0)
-			x--;
+		if(s->playerX > 0 && d[s->playerY][s->playerX-1] != 1)
+			s->playerX--;
 		break;
 		case RIGHT:
 		direction = 1;
-		if(x < dungeonSize-1)
-			x++;
+		if(s->playerX < dungeonSize-1 && d[s->playerY][s->playerX+1] != 1)
+			s->playerX++;
 		break;
 		case ENTER:
 		break;
@@ -127,10 +124,10 @@ void logic(struct gameState * s)
 	}
 }
 
-void display()
+void display(struct gameState * s)
 {
 	// display player
-	setCursor(dungeonPrintCoordX+x,dungeonPrintCoordY+y);
+	setCursor(dungeonPrintCoordX+s->playerX,dungeonPrintCoordY+s->playerY);
 	printf("%c",1);	
 	
 	setCursor(dungeonPrintCoordX+bX,dungeonPrintCoordX+bY);
@@ -146,7 +143,7 @@ void walkAround(void *data)
 	
 	clearDisplay(s);
 	logic(s);
-	display();
+	display(s);
 	
 	++frames;
 	int framet = SDL_GetTicks() - capTicks;
@@ -160,15 +157,27 @@ void displayDungeon(void *data)
 	struct gameState * s = (struct gameState *)data;
 	
 	int counterx,countery;
-	for(countery = 0;countery < dungeonSize;countery++)
+	for(countery = -1;countery < dungeonSize+1;countery++)
 	{
-		for(counterx = 0;counterx < dungeonSize;counterx++)
+		for(counterx = -1;counterx < dungeonSize+1;counterx++)
 		{
 			setCursor(dungeonPrintCoordX+counterx,dungeonPrintCoordY+countery);
-			if(d[countery][counterx] == 1)
+			if(counterx == -1 || counterx == dungeonSize || countery == -1 || countery == dungeonSize)
+			{	
+				setColor(BLUE);
 				printf("%c",219);
+			}				
 			else
-				printf("%c",178);	
+			{
+				if(d[countery][counterx] == 1)
+				{
+					setColor(BLUE);
+					printf("%c",219);
+				}
+				else
+					printf("%c",178);	
+			}
+			setColor(WHITE);
 		}
 	}
 	
