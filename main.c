@@ -8,8 +8,9 @@
 #include "graphics.h"
 #include "dungeon.h"
 
-// title screen functions 
+// gcc main.c -lSDL2 -lSDL2_mixer -o main
 
+// title screen functions 
 void titleScreenDisplay(void *data)
 {
 	printPattern(TITLE,50,10,80,10);
@@ -42,7 +43,7 @@ void titleScreenLogic(void *data)
 		system("cls");
 		
 		destroyListener(LOGIC_HANDLER,s->listeners);
-		registerEvent(DISPLAY,walkAround,s->listeners);
+		registerEvent(DISPLAY,displayDungeon,s->listeners);
 		
 		s->music = Mix_LoadMUS("music/Crossroad.wav");
 		Mix_PlayMusic(s->music, -1);

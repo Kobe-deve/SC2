@@ -18,12 +18,47 @@ Uint32 startTicks = 1;
 Uint32 capTicks = 0;
 int frames = 0;
 
+// coord to print dungeon at 
+int dungeonPrintCoordX = 10;
+int dungeonPrintCoordY = 10;
+
+int d[20][20] = {0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			   0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			   0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
+			   0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
+			   0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+			   0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+			   0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+			   0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0};
+
+int dungeonSize = 20;
+
 void clearDisplay(struct gameState * s)
 {	
 	if(s->input != 0)
 	{
-		setCursor(x,y);
-		printf("  ");
+		setCursor(dungeonPrintCoordX+x,dungeonPrintCoordY+y);
+		switch(d[y][x])
+		{
+			case 1:	
+			printf("%c",219);
+			break;
+			case 0:
+			printf("%c",178);	
+			break;
+		}
 	}
 }
 
@@ -33,84 +68,76 @@ void logic(struct gameState * s)
 	{
 		case UP:
 		direction = 0;
-		y--;
+		if(y > 0)
+			y--;
 		break;
 		case DOWN:
 		direction = 2;
-		y++;
+		if(y < dungeonSize-1)
+			y++;
 		break;
 		case LEFT:
 		direction = 3;
-		x--;
+		if(x > 0)
+			x--;
 		break;
 		case RIGHT:
 		direction = 1;
-		x++;
+		if(x < dungeonSize-1)
+			x++;
 		break;
 		case ENTER:
-		if(fired == 0)
-		{
-			fired = 1;
-			bX = x;
-			bY = y;
-			bD = direction;
-		}
 		break;
 	}
 	
-	if(fired == 1 && ((int)(SDL_GetTicks() - startTicks)) % 100 == 0)
+	if(((int)(SDL_GetTicks() - startTicks)) % 1000 == 0)
 	{
-		setCursor(bX,bY);
-		printf("X");
+		setCursor(dungeonPrintCoordX+bX,dungeonPrintCoordX+bY);
+		switch(d[bY][bX])
+		{
+			case 1:	
+			printf("%c",219);
+			break;
+			case 0:
+			printf("%c",178);	
+			break;
+		}
+		bD = rand()%4;
 		
 		switch(bD)
 		{
 			case 0:
-			bY--;
+			if(bY > 0 && d[bY-1][bX] != 1)
+				bY--;
 			break;
 			case 1:
-			bX++;
+			if(bX < dungeonSize-1 && d[bY][bX+1] != 1)
+				bX++;
 			break;
 			case 2:
-			bY++;
+			if(bY < dungeonSize-1 && d[bY+1][bX] != 1)
+				bY++;
 			break;
 			case 3:
-			bX--;
+			if(bX > 0 && d[bY][bX-1] != 1)
+				bX--;
 			break;
 		}
 		startTicks = 1;
-		
-		if(bY < 0 || bX < 0 || bX > 50 || bY > 50)
-			fired = 0;
 	}
-}
-
-int pause(int he) // pauses for he number of seconds
-{
-    time_t then;
-    
-    time(&then);
-    while(difftime(time(NULL),then) < he);
-    fflush(stdin); // clears any extra enter presses
 }
 
 void display()
 {
-	setCursor(x,y);
+	// display player
+	setCursor(dungeonPrintCoordX+x,dungeonPrintCoordY+y);
 	printf("%c",1);	
 	
-	if(fired == 1)
-	{
-		setCursor(bX,bY);
-		printf("+");
-	
-		setCursor(100,30);
-		printf("X:%d Y:%d",bX,bY);
-	//	printf("%d",((int)(SDL_GetTicks() - startTicks)))% 1000;
-	
-	}
+	setCursor(dungeonPrintCoordX+bX,dungeonPrintCoordX+bY);
+	printf("+");
 }
 
+// main dungeon crawling function 
 void walkAround(void *data)
 {
 	struct gameState * s = (struct gameState *)data;
@@ -125,4 +152,27 @@ void walkAround(void *data)
 	int framet = SDL_GetTicks() - capTicks;
 	if( framet < SCREEN_TICK_PER_FRAME)
 		pause( SCREEN_TICK_PER_FRAME - framet );
+}
+
+// display the dungeon floor initially
+void displayDungeon(void *data)
+{		
+	struct gameState * s = (struct gameState *)data;
+	
+	int counterx,countery;
+	for(countery = 0;countery < dungeonSize;countery++)
+	{
+		for(counterx = 0;counterx < dungeonSize;counterx++)
+		{
+			setCursor(dungeonPrintCoordX+counterx,dungeonPrintCoordY+countery);
+			if(d[countery][counterx] == 1)
+				printf("%c",219);
+			else
+				printf("%c",178);	
+		}
+	}
+	
+	// set to main loop of dungeon 
+	destroyListener(DISPLAY,s->listeners);
+	registerEvent(DISPLAY,walkAround,s->listeners);
 }
