@@ -205,22 +205,34 @@ void logic(struct gameState * s)
 		case UP:
 		direction = 0;
 		if(s->playerY > 0 && d[s->floor][s->playerY-1][s->playerX] != 1)
+		{
 			s->playerY--;
+			direction = 0;
+		}
 		break;
 		case DOWN:
 		direction = 2;
 		if(s->playerY < dungeonSize-1 && d[s->floor][s->playerY+1][s->playerX] != 1)
+		{
 			s->playerY++;
+			direction = 2;
+		}
 		break;
 		case LEFT:
 		direction = 3;
 		if(s->playerX > 0 && d[s->floor][s->playerY][s->playerX-1] != 1)
+		{
 			s->playerX--;
+			direction = 3;
+		}
 		break;
 		case RIGHT:
 		direction = 1;
 		if(s->playerX < dungeonSize-1 && d[s->floor][s->playerY][s->playerX+1] != 1)
+		{
 			s->playerX++;
+			direction = 1;
+		}
 		break;
 		case ENTER:
 		break;
