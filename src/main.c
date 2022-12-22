@@ -45,11 +45,12 @@ void titleScreenLogic(void *data)
 		destroyListener(LOGIC_HANDLER,s->listeners);
 		registerEvent(DISPLAY,displayDungeon,s->listeners);
 		
-		s->music = Mix_LoadMUS("music/Crossroad.wav");
+		s->music = Mix_LoadMUS("music/Live.mp3");
 		Mix_PlayMusic(s->music, -1);
 		
 		s->playerX = 0;
 		s->playerY = 0;
+		s->floor = 0;
 	}
 }
 
