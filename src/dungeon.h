@@ -186,14 +186,37 @@ int quickConvert(int x)
 	}
 }
 
+// display cone 
+void displayRange(struct gameState * s)
+{
+	int x,y;
+	for(y=s->playerY-2;y<s->playerY+3;y++)
+	{
+		for(x=s->playerX-2;x<s->playerX+3;x++)
+		{
+			if(!(x == s->playerX && y == s->playerY))
+			{
+				setCursor(dungeonPrintCoordX+x,dungeonPrintCoordY+y);
+				if(x < 0 || y < 0 || x >= dungeonSize || y >= dungeonSize)
+				{
+					setColor(BLUE);
+					printf("%c",219);
+				}	
+				else
+					printf("%c",quickConvert(d[s->floor][y][x]));
+			}
+			setColor(WHITE);
+		}
+	}
+}
+
 // clear display 
 void clearDisplay(struct gameState * s)
 {	
 	if(s->input != 0)
 	{
 		setCursor(dungeonPrintCoordX+s->playerX,dungeonPrintCoordY+s->playerY);
-		printf("%c",quickConvert(d[s->floor][s->playerY][s->playerX]));
-		
+		printf("%c",quickConvert(d[s->floor][s->playerY][s->playerX]));	
 	}
 }
 
@@ -206,6 +229,7 @@ void logic(struct gameState * s)
 		direction = 0;
 		if(s->playerY > 0 && d[s->floor][s->playerY-1][s->playerX] != 1)
 		{
+			displayRange(s);
 			s->playerY--;
 			direction = 0;
 		}
@@ -214,6 +238,7 @@ void logic(struct gameState * s)
 		direction = 2;
 		if(s->playerY < dungeonSize-1 && d[s->floor][s->playerY+1][s->playerX] != 1)
 		{
+			displayRange(s);
 			s->playerY++;
 			direction = 2;
 		}
@@ -222,6 +247,7 @@ void logic(struct gameState * s)
 		direction = 3;
 		if(s->playerX > 0 && d[s->floor][s->playerY][s->playerX-1] != 1)
 		{
+			displayRange(s);
 			s->playerX--;
 			direction = 3;
 		}
@@ -230,6 +256,7 @@ void logic(struct gameState * s)
 		direction = 1;
 		if(s->playerX < dungeonSize-1 && d[s->floor][s->playerY][s->playerX+1] != 1)
 		{
+			displayRange(s);
 			s->playerX++;
 			direction = 1;
 		}
@@ -338,7 +365,7 @@ void displayDungeon(void *data)
 	struct gameState * s = (struct gameState *)data;
 	
 	int counterx,countery;
-	for(countery = -1;countery < dungeonSize+1;countery++)
+	/*for(countery = -1;countery < dungeonSize+1;countery++)
 	{
 		for(counterx = -1;counterx < dungeonSize+1;counterx++)
 		{
@@ -352,7 +379,9 @@ void displayDungeon(void *data)
 				printf("%c",quickConvert(d[s->floor][countery][counterx]));
 			setColor(WHITE);
 		}
-	}
+	}*/
+	
+	displayRange(s);
 	
 	// set to main loop of dungeon 
 	destroyListener(DISPLAY,s->listeners);
