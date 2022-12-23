@@ -22,6 +22,13 @@ int frames = 0;
 int dungeonPrintCoordX = 10;
 int dungeonPrintCoordY = 10;
 
+struct enemies 
+{
+	int visible;
+	int x;
+	int y;
+};
+
 int d[10][10][10] = {  {0,0,0,1,0,0,0,0,4,0,
 						0,0,0,1,0,1,1,1,1,1,
 						0,0,0,28,0,0,0,0,0,0,
@@ -135,6 +142,8 @@ int d[10][10][10] = {  {0,0,0,1,0,0,0,0,4,0,
 
 int dungeonSize = 10;
 
+int ** visible = NULL;
+
 void displayDungeon(void *data);
 
 // briefly using this function to convert old dungeon 
@@ -196,14 +205,21 @@ void displayRange(struct gameState * s)
 		{
 			if(!(x == s->playerX && y == s->playerY))
 			{
-				setCursor(dungeonPrintCoordX+x,dungeonPrintCoordY+y);
-				if(x < 0 || y < 0 || x >= dungeonSize || y >= dungeonSize)
+				if(y >= 0 && x >= 0 && y < dungeonSize && x < dungeonSize)
 				{
+					setCursor(dungeonPrintCoordX+x,dungeonPrintCoordY+y);
+					if(visible[y][x] == 0)
+					{
+						visible[y][x] = 1;
+						printf("%c",quickConvert(d[s->floor][y][x]));
+					}
+				}
+				else
+				{
+					setCursor(dungeonPrintCoordX+x,dungeonPrintCoordY+y);
 					setColor(BLUE);
 					printf("%c",219);
-				}	
-				else
-					printf("%c",quickConvert(d[s->floor][y][x]));
+				}
 			}
 			setColor(WHITE);
 		}
@@ -217,6 +233,50 @@ void clearDisplay(struct gameState * s)
 	{
 		setCursor(dungeonPrintCoordX+s->playerX,dungeonPrintCoordY+s->playerY);
 		printf("%c",quickConvert(d[s->floor][s->playerY][s->playerX]));	
+	}
+}
+
+// moves enemies on the floor 
+void enemyHandler(struct gameState * s)
+{
+	if(((int)(SDL_GetTicks() - startTicks)) % 1000 == 0)
+	{
+		if(visible[bY][bX] == 1)
+		{
+			setCursor(dungeonPrintCoordX+bX,dungeonPrintCoordX+bY);
+			printf("%c",quickConvert(d[s->floor][bY][bX]));	
+			bD = rand()%4;
+		}	
+		
+		switch(bD)
+		{
+			case 0:
+			if(bY > 0 && d[s->floor][bY-1][bX] != 1)
+				bY--;
+			break;
+			case 1:
+			if(bX < dungeonSize-1 && d[s->floor][bY][bX+1] != 1)
+				bX++;
+			break;
+			case 2:
+			if(bY < dungeonSize-1 && d[s->floor][bY+1][bX] != 1)
+				bY++;
+			break;
+			case 3:
+			if(bX > 0 && d[s->floor][bY][bX-1] != 1)
+				bX--;
+			break;
+		}
+			
+		
+		startTicks = 1;
+		
+		// display enemy 
+		if(visible[bY][bX] == 1)
+		{
+			setCursor(dungeonPrintCoordX+bX,dungeonPrintCoordX+bY);
+			printf("+");
+		}
 	}
 }
 
@@ -265,41 +325,7 @@ void logic(struct gameState * s)
 		break;
 	}
 	
-	if(((int)(SDL_GetTicks() - startTicks)) % 1000 == 0)
-	{
-		setCursor(dungeonPrintCoordX+bX,dungeonPrintCoordX+bY);
-		switch(d[s->floor][bY][bX])
-		{
-			case 1:	
-			printf("%c",219);
-			break;
-			case 0:
-			printf("%c",178);	
-			break;
-		}
-		bD = rand()%4;
-		
-		switch(bD)
-		{
-			case 0:
-			if(bY > 0 && d[s->floor][bY-1][bX] != 1)
-				bY--;
-			break;
-			case 1:
-			if(bX < dungeonSize-1 && d[s->floor][bY][bX+1] != 1)
-				bX++;
-			break;
-			case 2:
-			if(bY < dungeonSize-1 && d[s->floor][bY+1][bX] != 1)
-				bY++;
-			break;
-			case 3:
-			if(bX > 0 && d[s->floor][bY][bX-1] != 1)
-				bX--;
-			break;
-		}
-		startTicks = 1;
-	}
+	enemyHandler(s);
 }
 
 // display movable elements in dungeon 
@@ -308,9 +334,6 @@ void display(struct gameState * s)
 	// display player
 	setCursor(dungeonPrintCoordX+s->playerX,dungeonPrintCoordY+s->playerY);
 	printf("%c",1);	
-	
-	setCursor(dungeonPrintCoordX+bX,dungeonPrintCoordX+bY);
-	printf("+");
 	
 	setCursor(60,10);
 	printf("FLOOR: %d",s->floor);
@@ -380,6 +403,22 @@ void displayDungeon(void *data)
 			setColor(WHITE);
 		}
 	}*/
+	
+	if(visible != NULL)
+	{
+		free(visible);
+		visible = NULL;
+	}
+	
+	visible = malloc(dungeonSize * sizeof(int *));
+	
+	int ix,iy;
+	for(iy=0;iy<dungeonSize;iy++)
+	{	
+		visible[iy] = malloc(dungeonSize * sizeof(int));
+		for(ix=0;ix<dungeonSize;ix++)
+			visible[iy][ix] = 0;
+	}
 	
 	displayRange(s);
 	
