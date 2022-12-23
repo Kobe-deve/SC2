@@ -203,6 +203,13 @@ void displayRange(struct gameState * s)
 	{
 		for(x=s->playerX-2;x<s->playerX+3;x++)
 		{
+			//make any movable characters caught in the visibility range viewabale 
+			if(x == bX && y == bY)
+			{
+				setCursor(dungeonPrintCoordX+bX,dungeonPrintCoordX+bY);
+				printf("+");
+			}
+			
 			if(!(x == s->playerX && y == s->playerY))
 			{
 				if(y >= 0 && x >= 0 && y < dungeonSize && x < dungeonSize)
