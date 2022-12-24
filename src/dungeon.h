@@ -7,10 +7,6 @@
 #ifndef DUNGEON_HANDLED
 #define DUNGEON_HANDLED
 
-int bX = 8;
-int bY = 8;
-int fired = 0;
-
 int direction = 0;
 int bD = 0;
 
@@ -22,36 +18,48 @@ int frames = 0;
 int dungeonPrintCoordX = 10;
 int dungeonPrintCoordY = 10;
 
+// struct for movable enemies
 struct enemies 
 {
-	int visible;
 	int x;
 	int y;
+	int visible;
+	int active;
+	Uint32 startTicks;
 };
+
+// array of visible tiles in an area
+int ** visible = NULL;
+
+// width/height of the current dungeon
+int dungeonSize = 10;
+
+int numEnemies;
+struct enemies * activeEnemies = NULL;
 
 int d[10][10][10] = {  {0,0,0,1,0,0,0,0,4,0,
 						0,0,0,1,0,1,1,1,1,1,
 						0,0,0,28,0,0,0,0,0,0,
 						0,0,0,0,0,1,0,0,0,0,
-						A,0,0,9,1,0,0,0,0,0,
+						0,0,0,9,1,0,0,0,0,0,
 						1,1,1,1,1,0,0,0,2,0,
 						0,4,0,0,1,0,0,0,0,0,
 						0,4,4,0,0,0,0,0,0,0,
 						1,1,0,1,0,0,0,0,0,0,
-						4,4,0,0,0,C,0,0,D,0},
+						4,4,0,0,0,0,0,0,0,0},
 						
 						{4,0,0,0,0,0,0,0,0,0,
 						 1,1,1,1,0,0,0,0,2,0,
 						 4,4,1,0,0,0,0,0,0,0,
 						 4,9,1,0,1,1,1,1,1,1,
-						 0,0,1,0,1,0,0,0,0,B,
+						 0,0,1,0,1,0,0,0,0,0,
 						 1,0,1,0,1,0,1,0,0,0,
 						 0,0,1,0,1,0,1,0,3,0,
 					 	 0,0,1,0,1,0,1,0,0,0,
 						 0,0,1,0,1,0,0,1,1,1,
 						 0,0,0,0,0,0,0,0,0,4},
 						
-						{0,0,0,0,0,0,0,0,0,B,
+						{0,0,0,0,0,0,0,0,0,0,
 						 0,0,1,1,1,0,0,0,0,0,
 						 0,0,0,0,1,9,0,0,3,0,
 						 0,0,0,0,1,1,1,1,1,1,
@@ -70,8 +78,8 @@ int d[10][10][10] = {  {0,0,0,1,0,0,0,0,4,0,
 						 4,0,0,0,1,0,1,0,1,4,
 						 1,1,1,0,1,0,1,0,1,0,
 						 0,3,1,0,1,0,1,0,2,0,
-						 B,0,1,0,1,0,0,0,0,0,
-						 0,0,0,0,1,0,0,0,A,0},
+						 0,0,1,0,1,0,0,0,0,0,
+						 0,0,0,0,1,0,0,0,0,0},
 						
 						{0,1,0,0,0,0,0,0,0,0,
 						 0,0,0,0,0,0,0,0,0,0,
@@ -87,7 +95,7 @@ int d[10][10][10] = {  {0,0,0,1,0,0,0,0,4,0,
 						{4,0,0,0,0,0,0,0,0,0,
 						 1,1,1,0,0,0,0,1,0,2,
 						 0,0,0,0,0,0,0,1,0,0,
-						 0,0,0,1,1,1,1,1,A,0,
+						 0,0,0,1,1,1,1,1,0,0,
 						 0,1,1,1,0,0,0,1,4,4,
 						 0,0,0,1,0,0,0,1,1,1,
 						 1,1,0,1,0,1,3,1,4,4,
@@ -98,7 +106,7 @@ int d[10][10][10] = {  {0,0,0,1,0,0,0,0,4,0,
 						{ 0,0,0,0,0,0,0,0,0,3,
 						  0,0,1,1,1,1,1,1,0,0,
 						  0,1,2,0,0,0,0,0,1,1,
-						  0,1,0,0,A,1,1,0,0,0,
+						  0,1,0,0,0,1,1,0,0,0,
 						  0,1,1,1,1,0,0,1,0,0,
 						  0,0,0,0,0,2,0,1,0,0,
 						  0,1,1,1,0,0,0,1,0,0,
@@ -113,13 +121,13 @@ int d[10][10][10] = {  {0,0,0,1,0,0,0,0,4,0,
 						  0,0,0,1,0,1,1,1,1,1,
 						  0,0,1,0,0,0,3,1,0,0,
 						  0,0,1,0,2,1,1,0,0,0,
-						  0,1,A,0,0,0,1,0,0,0,
+						  0,1,0,0,0,0,1,0,0,0,
 						  0,0,1,1,1,1,1,0,0,0,
 						  0,0,0,0,0,0,0,0,0,0},
 						 
 						 {0,0,0,1,0,0,0,0,2,0,
 						  0,2,0,1,0,0,1,0,0,0,
-						  0,0,A,1,0,0,1,0,0,0,
+						  0,0,0,1,0,0,1,0,0,0,
 						  0,0,0,1,0,0,1,1,1,1,
 						  0,0,0,1,0,0,0,0,0,0,
 						  0,0,0,1,0,0,0,0,0,0,
@@ -140,11 +148,12 @@ int d[10][10][10] = {  {0,0,0,1,0,0,0,0,4,0,
 						  0,0,0,0,0,0,0,0,0,0},
 						};
 
-int dungeonSize = 10;
-
-int ** visible = NULL;
-
 void displayDungeon(void *data);
+
+void encounter(struct gameState * s)
+{
+	
+}
 
 // briefly using this function to convert old dungeon 
 int quickConvert(int x)
@@ -198,19 +207,28 @@ int quickConvert(int x)
 // display cone 
 void displayRange(struct gameState * s)
 {
+	int i;
+	int enemyHere = 0;
 	int x,y;
 	for(y=s->playerY-2;y<s->playerY+3;y++)
 	{
 		for(x=s->playerX-2;x<s->playerX+3;x++)
 		{
+			enemyHere = 0;
 			//make any movable characters caught in the visibility range viewabale 
-			if(x == bX && y == bY)
+			for(i = 0;i<numEnemies;i++)
 			{
-				setCursor(dungeonPrintCoordX+bX,dungeonPrintCoordX+bY);
-				printf("+");
+				if(activeEnemies[i].visible == 0 && x == activeEnemies[i].x && y == activeEnemies[i].y)
+				{
+					activeEnemies[i].visible = 1;
+					setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
+					printf("+");
+					enemyHere = 1;
+					break;
+				}
 			}
 			
-			if(!(x == s->playerX && y == s->playerY))
+			if(enemyHere == 0 && !(x == s->playerX && y == s->playerY))
 			{
 				if(y >= 0 && x >= 0 && y < dungeonSize && x < dungeonSize)
 				{
@@ -246,50 +264,57 @@ void clearDisplay(struct gameState * s)
 // moves enemies on the floor 
 void enemyHandler(struct gameState * s)
 {
-	if(((int)(SDL_GetTicks() - startTicks)) % 1000 == 0)
+	int i = 0;
+	for(i = 0;i<numEnemies;i++)
 	{
-		if(visible[bY][bX] == 1)
+		if(activeEnemies[i].active == 1 && ((int)(SDL_GetTicks() - activeEnemies[i].startTicks)) % 1000 == 0)
 		{
-			setCursor(dungeonPrintCoordX+bX,dungeonPrintCoordX+bY);
-			printf("%c",quickConvert(d[s->floor][bY][bX]));	
-			bD = rand()%4;
-		}	
-		
-		switch(bD)
-		{
-			case 0:
-			if(bY > 0 && d[s->floor][bY-1][bX] != 1)
-				bY--;
-			break;
-			case 1:
-			if(bX < dungeonSize-1 && d[s->floor][bY][bX+1] != 1)
-				bX++;
-			break;
-			case 2:
-			if(bY < dungeonSize-1 && d[s->floor][bY+1][bX] != 1)
-				bY++;
-			break;
-			case 3:
-			if(bX > 0 && d[s->floor][bY][bX-1] != 1)
-				bX--;
-			break;
-		}
+			if(visible[activeEnemies[i].y][activeEnemies[i].x] == 1)
+			{
+				setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
+				printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
+				bD = rand()%4;
+			}	
+			
+			switch(bD)
+			{
+				case 0:
+				if(activeEnemies[i].y > 0 && d[s->floor][activeEnemies[i].y-1][activeEnemies[i].x] != 1)
+					activeEnemies[i].y--;
+				break;
+				case 1:
+				if(activeEnemies[i].x < dungeonSize-1 && d[s->floor][activeEnemies[i].y][activeEnemies[i].x+1] != 1)
+					activeEnemies[i].x++;
+				break;
+				case 2:
+				if(activeEnemies[i].y < dungeonSize-1 && d[s->floor][activeEnemies[i].y+1][activeEnemies[i].x] != 1)
+					activeEnemies[i].y++;
+				break;
+				case 3:
+				if(activeEnemies[i].x > 0 && d[s->floor][activeEnemies[i].y][activeEnemies[i].x-1] != 1)
+					activeEnemies[i].x--;
+				break;
+			}
 			
 		
-		startTicks = 1;
+			activeEnemies[i].startTicks = 1;
 		
-		// display enemy 
-		if(visible[bY][bX] == 1)
-		{
-			setCursor(dungeonPrintCoordX+bX,dungeonPrintCoordX+bY);
-			printf("+");
+			// display enemy 
+			if(visible[activeEnemies[i].y][activeEnemies[i].x] == 1 && activeEnemies[i].visible == 1)
+			{
+				setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
+				printf("+");
+			}
 		}
+		setCursor(50,20+i);
+		printf("ENEMY #%d: (%d, %d) STATUS:%d",i,activeEnemies[i].x,activeEnemies[i].y,activeEnemies[i].active);
 	}
 }
 
 // logic handling in dungeon section for moving player/npcs/etc
 void logic(struct gameState * s)
 {
+	int i;
 	switch(s->input)
 	{
 		case UP:
@@ -333,6 +358,17 @@ void logic(struct gameState * s)
 	}
 	
 	enemyHandler(s);
+	
+	// check if player has run into enemies 
+	for(i=0;i<numEnemies;i++)
+	{
+		if(activeEnemies[i].y == s->playerY && activeEnemies[i].x == s->playerX)
+		{
+			activeEnemies[i].active = 0;
+			d[s->floor][s->playerY][s->playerX] = 5;
+			encounter(s);
+		}
+	}
 }
 
 // display movable elements in dungeon 
@@ -379,8 +415,10 @@ void walkAround(void *data)
 	}
 	else
 	{
+		// display 
 		display(s);
 			
+		// frame capping	
 		++frames;
 		int framet = SDL_GetTicks() - capTicks;
 		if( framet < SCREEN_TICK_PER_FRAME)
@@ -394,23 +432,32 @@ void displayDungeon(void *data)
 {		
 	struct gameState * s = (struct gameState *)data;
 	
-	int counterx,countery;
-	/*for(countery = -1;countery < dungeonSize+1;countery++)
-	{
-		for(counterx = -1;counterx < dungeonSize+1;counterx++)
-		{
-			setCursor(dungeonPrintCoordX+counterx,dungeonPrintCoordY+countery);
-			if(counterx == -1 || counterx == dungeonSize || countery == -1 || countery == dungeonSize)
-			{	
-				setColor(BLUE);
-				printf("%c",219);
-			}				
-			else
-				printf("%c",quickConvert(d[s->floor][countery][counterx]));
-			setColor(WHITE);
-		}
-	}*/
+	// set enemies on floor
 	
+	if(activeEnemies != NULL)
+	{
+		free(activeEnemies);
+		activeEnemies = NULL;
+	}
+	numEnemies = 5;
+	activeEnemies = malloc(numEnemies * sizeof(struct enemies));
+	
+	int i;
+	for(i = 0;i<numEnemies;i++)
+	{
+		activeEnemies[i].startTicks = 1;
+		activeEnemies[i].x = rand()%dungeonSize;
+		activeEnemies[i].y = rand()%dungeonSize;
+		while(d[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1)
+		{
+			activeEnemies[i].x = rand()%dungeonSize;
+			activeEnemies[i].y = rand()%dungeonSize;	
+		}
+		activeEnemies[i].visible = 0;
+		activeEnemies[i].active = 1;
+	}
+	
+	// reset visibility array 
 	if(visible != NULL)
 	{
 		free(visible);
@@ -427,6 +474,7 @@ void displayDungeon(void *data)
 			visible[iy][ix] = 0;
 	}
 	
+	// initial display range 
 	displayRange(s);
 	
 	// set to main loop of dungeon 
