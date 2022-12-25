@@ -214,7 +214,7 @@ void displayRange(struct gameState * s)
 		{	
 			if(!(x == s->playerX && y == s->playerY))
 			{
-				if(y >= 0 && x >= 0 && y < dungeonSize && x < dungeonSize)
+				if((y >= 0 && x >= 0 && y < dungeonSize && x < dungeonSize))
 				{
 					if((visible[y][x] == 0))
 					{
@@ -231,6 +231,18 @@ void displayRange(struct gameState * s)
 					printf("%c",219);
 				}
 				setColor(WHITE);
+			}
+			
+			if((y >= 0 && x >= 0 && y < dungeonSize && x < dungeonSize))
+			{
+				for(i = 0;i<numEnemies;i++)
+				{
+					if(activeEnemies[i].active == 1 && activeEnemies[i].x == x && activeEnemies[i].y == y)
+					{
+						setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
+						printf("+");
+					}
+				}
 			}
 		}
 	}
@@ -262,15 +274,16 @@ void enemyHandler(struct gameState * s)
 				setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
 				printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
 			}	
-				if(s->playerX > activeEnemies[i].x)
-					directionX = 1;
-				else if(s->playerX < activeEnemies[i].x)
-					directionX = 3;
-					
-				if(s->playerY > activeEnemies[i].y)
-					directionY = 1;
-				else 
-					directionY = 2;
+			
+			if(s->playerX > activeEnemies[i].x)
+				directionX = 1;
+			else if(s->playerX < activeEnemies[i].x)
+				directionX = 3;
+				
+			if(s->playerY > activeEnemies[i].y)
+				directionY = 1;
+			else 
+				directionY = 2;
 			
 			switch(directionY)
 			{
