@@ -23,7 +23,6 @@ struct enemies
 {
 	int x;
 	int y;
-	int visible;
 	int active;
 	Uint32 startTicks;
 };
@@ -152,7 +151,7 @@ void displayDungeon(void *data);
 
 void encounter(struct gameState * s)
 {
-	
+
 }
 
 // briefly using this function to convert old dungeon 
@@ -218,9 +217,8 @@ void displayRange(struct gameState * s)
 			//make any movable characters caught in the visibility range viewabale 
 			for(i = 0;i<numEnemies;i++)
 			{
-				if(activeEnemies[i].visible == 0 && x == activeEnemies[i].x && y == activeEnemies[i].y)
+				if(activeEnemies[i].active == 1 && x == activeEnemies[i].x && y == activeEnemies[i].y)
 				{
-					activeEnemies[i].visible = 1;
 					setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
 					printf("+");
 					enemyHere = 1;
@@ -232,9 +230,10 @@ void displayRange(struct gameState * s)
 			{
 				if(y >= 0 && x >= 0 && y < dungeonSize && x < dungeonSize)
 				{
-					setCursor(dungeonPrintCoordX+x,dungeonPrintCoordY+y);
-					if(visible[y][x] == 0)
+					if((visible[y][x] == 0))
 					{
+						setCursor(dungeonPrintCoordX+x,dungeonPrintCoordY+y);
+			
 						visible[y][x] = 1;
 						printf("%c",quickConvert(d[s->floor][y][x]));
 					}
@@ -245,8 +244,8 @@ void displayRange(struct gameState * s)
 					setColor(BLUE);
 					printf("%c",219);
 				}
+				setColor(WHITE);
 			}
-			setColor(WHITE);
 		}
 	}
 }
@@ -273,7 +272,22 @@ void enemyHandler(struct gameState * s)
 			{
 				setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
 				printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
-				bD = rand()%4;
+				
+				switch(rand()%2+1)
+				{
+					case 1:
+					if(s->playerX > activeEnemies[i].x)
+						bD = 1;
+					else if(s->playerX < activeEnemies[i].x)
+						bD = 3;
+					break;
+					case 2:
+					if(s->playerY > activeEnemies[i].y)
+						bD = 2;
+					else 
+						bD = 3;
+					break;
+				}
 			}	
 			
 			switch(bD)
@@ -300,7 +314,7 @@ void enemyHandler(struct gameState * s)
 			activeEnemies[i].startTicks = 1;
 		
 			// display enemy 
-			if(visible[activeEnemies[i].y][activeEnemies[i].x] == 1 && activeEnemies[i].visible == 1)
+			if(visible[activeEnemies[i].y][activeEnemies[i].x] == 1)
 			{
 				setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
 				printf("+");
@@ -367,6 +381,9 @@ void logic(struct gameState * s)
 			activeEnemies[i].active = 0;
 			d[s->floor][s->playerY][s->playerX] = 5;
 			encounter(s);
+			
+			setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
+			printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
 		}
 	}
 }
@@ -453,7 +470,6 @@ void displayDungeon(void *data)
 			activeEnemies[i].x = rand()%dungeonSize;
 			activeEnemies[i].y = rand()%dungeonSize;	
 		}
-		activeEnemies[i].visible = 0;
 		activeEnemies[i].active = 1;
 	}
 	
