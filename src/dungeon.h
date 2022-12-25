@@ -8,7 +8,6 @@
 #define DUNGEON_HANDLED
 
 int direction = 0;
-int bD = 0;
 
 Uint32 startTicks = 1;
 Uint32 capTicks = 0;
@@ -212,21 +211,8 @@ void displayRange(struct gameState * s)
 	for(y=s->playerY-2;y<s->playerY+3;y++)
 	{
 		for(x=s->playerX-2;x<s->playerX+3;x++)
-		{
-			enemyHere = 0;
-			//make any movable characters caught in the visibility range viewabale 
-			for(i = 0;i<numEnemies;i++)
-			{
-				if(activeEnemies[i].active == 1 && x == activeEnemies[i].x && y == activeEnemies[i].y)
-				{
-					setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
-					printf("+");
-					enemyHere = 1;
-					break;
-				}
-			}
-			
-			if(enemyHere == 0 && !(x == s->playerX && y == s->playerY))
+		{	
+			if(!(x == s->playerX && y == s->playerY))
 			{
 				if(y >= 0 && x >= 0 && y < dungeonSize && x < dungeonSize)
 				{
@@ -264,52 +250,51 @@ void clearDisplay(struct gameState * s)
 void enemyHandler(struct gameState * s)
 {
 	int i = 0;
+	int directionX, directionY;
 	for(i = 0;i<numEnemies;i++)
 	{
+		directionY = 0;
+		directionX = 0;
 		if(activeEnemies[i].active == 1 && ((int)(SDL_GetTicks() - activeEnemies[i].startTicks)) % 1000 == 0)
 		{
 			if(visible[activeEnemies[i].y][activeEnemies[i].x] == 1)
 			{
 				setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
 				printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
-				
-				switch(rand()%2+1)
-				{
-					case 1:
-					if(s->playerX > activeEnemies[i].x)
-						bD = 1;
-					else if(s->playerX < activeEnemies[i].x)
-						bD = 3;
-					break;
-					case 2:
-					if(s->playerY > activeEnemies[i].y)
-						bD = 2;
-					else 
-						bD = 3;
-					break;
-				}
 			}	
+				if(s->playerX > activeEnemies[i].x)
+					directionX = 1;
+				else if(s->playerX < activeEnemies[i].x)
+					directionX = 3;
+					
+				if(s->playerY > activeEnemies[i].y)
+					directionY = 1;
+				else 
+					directionY = 2;
 			
-			switch(bD)
+			switch(directionY)
 			{
-				case 0:
+				case 1:
+				if(activeEnemies[i].y < dungeonSize-1 && d[s->floor][activeEnemies[i].y+1][activeEnemies[i].x] != 1)
+					activeEnemies[i].y++;
+				break;
+				case 2:
 				if(activeEnemies[i].y > 0 && d[s->floor][activeEnemies[i].y-1][activeEnemies[i].x] != 1)
 					activeEnemies[i].y--;
 				break;
+			}
+			
+			switch(directionX)
+			{
 				case 1:
 				if(activeEnemies[i].x < dungeonSize-1 && d[s->floor][activeEnemies[i].y][activeEnemies[i].x+1] != 1)
 					activeEnemies[i].x++;
-				break;
-				case 2:
-				if(activeEnemies[i].y < dungeonSize-1 && d[s->floor][activeEnemies[i].y+1][activeEnemies[i].x] != 1)
-					activeEnemies[i].y++;
 				break;
 				case 3:
 				if(activeEnemies[i].x > 0 && d[s->floor][activeEnemies[i].y][activeEnemies[i].x-1] != 1)
 					activeEnemies[i].x--;
 				break;
 			}
-			
 		
 			activeEnemies[i].startTicks = 1;
 		
@@ -321,7 +306,7 @@ void enemyHandler(struct gameState * s)
 			}
 		}
 		setCursor(50,20+i);
-		printf("ENEMY #%d: (%d, %d) STATUS:%d",i,activeEnemies[i].x,activeEnemies[i].y,activeEnemies[i].active);
+		printf("ENEMY #%d: (%d, %d) STATUS:%d MOVEMENT: %d",i,activeEnemies[i].x,activeEnemies[i].y,activeEnemies[i].active,((int)(SDL_GetTicks() - activeEnemies[i].startTicks))% 1000);
 	}
 }
 
