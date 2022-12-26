@@ -148,11 +148,6 @@ int d[10][10][10] = {  {0,0,0,1,0,0,0,0,4,0,
 
 void displayDungeon(void *data);
 
-void encounter(struct gameState * s)
-{
-
-}
-
 // briefly using this function to convert old dungeon 
 int quickConvert(int x)
 {
@@ -200,6 +195,32 @@ int quickConvert(int x)
 		return 178;
 		break;
 	}
+}
+
+// reset after encounter 
+void reset(struct gameState * s)
+{
+	int counterx,countery;
+	for(countery = 0;countery < dungeonSize;countery++)
+	{
+		for(counterx = 0;counterx < dungeonSize;counterx++)
+		{
+			setCursor(dungeonPrintCoordX+counterx,dungeonPrintCoordY+countery);
+			if(visible[countery][counterx] == 1)
+				printf("%c",quickConvert(d[s->floor][countery][counterx]));
+			setColor(WHITE);
+		}
+	}
+}
+
+// start encounter 
+void encounter(struct gameState * s)
+{
+	system("cls");
+	printf("\nENCOUNTER");
+	getchar();
+	system("cls");
+	reset(s);
 }
 
 // display cone 
@@ -374,7 +395,7 @@ void logic(struct gameState * s)
 	// check if player has run into enemies 
 	for(i=0;i<numEnemies;i++)
 	{
-		if(activeEnemies[i].y == s->playerY && activeEnemies[i].x == s->playerX)
+		if(activeEnemies[i].active == 1 && activeEnemies[i].y == s->playerY && activeEnemies[i].x == s->playerX)
 		{
 			activeEnemies[i].active = 0;
 			d[s->floor][s->playerY][s->playerX] = 5;
