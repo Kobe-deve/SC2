@@ -201,14 +201,30 @@ int quickConvert(int x)
 void reset(struct gameState * s)
 {
 	int counterx,countery;
-	for(countery = 0;countery < dungeonSize;countery++)
+	int i;
+	for(countery = -1;countery < dungeonSize+1;countery++)
 	{
-		for(counterx = 0;counterx < dungeonSize;counterx++)
+		for(counterx = -1;counterx < dungeonSize+1;counterx++)
 		{
 			setCursor(dungeonPrintCoordX+counterx,dungeonPrintCoordY+countery);
-			if(visible[countery][counterx] == 1)
+			if((counterx == -1 || counterx == dungeonSize || countery == -1 || countery == dungeonSize))
+			{	
+				setColor(BLUE);
+				printf("%c",219);
+			}				
+			else if(visible[countery][counterx] == 1)
 				printf("%c",quickConvert(d[s->floor][countery][counterx]));
 			setColor(WHITE);
+		}
+	}
+	
+	// display visible enemies 
+	for(i = 0;i<numEnemies;i++)
+	{
+		if(visible[activeEnemies[i].y][activeEnemies[i].x] == 1 && activeEnemies[i].active == 1)
+		{
+			setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
+			printf("+");
 		}
 	}
 }
@@ -245,12 +261,7 @@ void displayRange(struct gameState * s)
 						printf("%c",quickConvert(d[s->floor][y][x]));
 					}
 				}
-				else
-				{
-					setCursor(dungeonPrintCoordX+x,dungeonPrintCoordY+y);
-					setColor(BLUE);
-					printf("%c",219);
-				}
+				
 				setColor(WHITE);
 			}
 			
@@ -515,6 +526,23 @@ void displayDungeon(void *data)
 	// set to main loop of dungeon 
 	destroyListener(DISPLAY,s->listeners);
 	registerEvent(DISPLAY,walkAround,s->listeners);
+	
+	
+	
+	// display dungeon walls 
+	for(iy = -1;iy < dungeonSize+1;iy++)
+	{
+		for(ix = -1;ix < dungeonSize+1;ix++)
+		{
+			setCursor(dungeonPrintCoordX+ix,dungeonPrintCoordY+iy);
+			if((ix == -1 || ix == dungeonSize || iy == -1 || iy == dungeonSize))
+			{	
+				setColor(BLUE);
+				printf("%c",219);
+			}
+		}
+	}		
+	setColor(WHITE);
 }
 
 #endif
