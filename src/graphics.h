@@ -55,6 +55,18 @@ void init()
 	info.dwSize = 1;
 	info.bVisible = FALSE;
 	SetConsoleCursorInfo(hConsole, &info);
+	
+	// load libraries 
+	LoadLibrary("./libfreetype-6.dll");
+	LoadLibrary("./libgcc_s_dw2-1.dll");
+	LoadLibrary("./libgcc_s_sjlj-1.dll");
+	LoadLibrary("./libjpeg-9.dll");
+	LoadLibrary("./libpng16-16.dll");
+	LoadLibrary("./libstdc++-6.dll");
+	LoadLibrary("./libtiff-5.dll");
+	LoadLibrary("./libwebp-7.dll");
+	LoadLibrary("./libwinpthread-1.dll");
+	LoadLibrary("./zlib1.dll");
 }
 
 // set color based on a given color value 
