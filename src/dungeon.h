@@ -146,7 +146,7 @@ int d[10][10][10] = {  {0,0,0,1,0,0,0,0,4,0,
 						  0,0,0,0,0,0,0,0,0,0},
 						};
 
-void displayDungeon(void *data);
+void initDungeonFloor(void *data);
 
 // briefly using this function to convert old dungeon 
 int quickConvert(int x)
@@ -399,6 +399,8 @@ void logic(struct gameState * s)
 		break;
 		case ENTER:
 		break;
+		default:
+		break;
 	}
 	
 	enemyHandler(s);
@@ -409,7 +411,6 @@ void logic(struct gameState * s)
 		if(activeEnemies[i].active == 1 && activeEnemies[i].y == s->playerY && activeEnemies[i].x == s->playerX)
 		{
 			activeEnemies[i].active = 0;
-			d[s->floor][s->playerY][s->playerX] = 5;
 			encounter(s);
 			
 			setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
@@ -450,13 +451,13 @@ void walkAround(void *data)
 			s->floor = s->floor+1;
 			system("cls");
 			destroyListener(DISPLAY,s->listeners);
-			registerEvent(DISPLAY,displayDungeon,s->listeners);
+			registerEvent(DISPLAY,initDungeonFloor,s->listeners);
 			break;
 			case 3:
 			s->floor = s->floor-1;
 			system("cls");
 			destroyListener(DISPLAY,s->listeners);
-			registerEvent(DISPLAY,displayDungeon,s->listeners);
+			registerEvent(DISPLAY,initDungeonFloor,s->listeners);
 			break;
 		}	
 	}
@@ -475,7 +476,7 @@ void walkAround(void *data)
 }
 
 // display the dungeon floor initially
-void displayDungeon(void *data)
+void initDungeonFloor(void *data)
 {		
 	struct gameState * s = (struct gameState *)data;
 	
@@ -526,8 +527,6 @@ void displayDungeon(void *data)
 	// set to main loop of dungeon 
 	destroyListener(DISPLAY,s->listeners);
 	registerEvent(DISPLAY,walkAround,s->listeners);
-	
-	
 	
 	// display dungeon walls 
 	for(iy = -1;iy < dungeonSize+1;iy++)

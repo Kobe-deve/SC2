@@ -1,58 +1,24 @@
+/*
+	Stone Crawler 2.0: Idle Bodies
+	Demi
+	12/17/2022 - 
+	
+	Original Stone Crawler
+	1/16/2019
+*/
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
+
 #include "state.h"
 #include "music.h"
 #include "event_handler.h"
 #include "input.h"
 #include "graphics.h"
 #include "dungeon.h"
+#include "title.h"
 
 // gcc main.c -lSDL2 -lSDL2_mixer -o main
-
-// title screen functions 
-void titleScreenDisplay(void *data)
-{
-	printPattern(TITLE,50,10,80,10);
-	
-	struct gameState * s = (struct gameState *)data;
-	
-	// initialize options 
-	if(s->options == NULL)
-	{
-		char ** array = malloc(2 * sizeof(char*));
-		array[0] = "New Game";
-		array[1] = "Continue";
-		
-		initMenu(s,2,array,50,21);
-		
-		free(array);
-	}
-	destroyListener(DISPLAY,s->listeners);
-	printf("%d",rand()%10+1);
-}
-
-// logic at the title screen 
-void titleScreenLogic(void *data)
-{
-	struct gameState * s = (struct gameState *)data;
-	
-	if(s->input == ENTER)
-	{
-		destroyListener(MENU_SELECTION,s->listeners);
-		system("cls");
-		
-		destroyListener(LOGIC_HANDLER,s->listeners);
-		registerEvent(DISPLAY,displayDungeon,s->listeners);
-		
-		s->music = Mix_LoadMUS("music/Live.mp3");
-		Mix_PlayMusic(s->music, -1);
-		
-		s->playerX = 0;
-		s->playerY = 0;
-		s->floor = 0;
-	}
-}
 
 int main()
 {
