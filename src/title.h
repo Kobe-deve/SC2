@@ -6,12 +6,15 @@
 #include "event_handler.h"
 #include "input.h"
 #include "graphics.h"
+
+#ifndef DUNGEON_HANDLED
 #include "dungeon.h"
+#endif
 
 // title screen functions 
 void titleScreenDisplay(void *data)
 {
-	printPattern(TITLE,50,10,80,10);
+	printPattern(TITLE,10,10,80,10);
 	
 	struct gameState * s = (struct gameState *)data;
 	

@@ -39,6 +39,10 @@ void init()
 	// disable minimizing and maximizing screen
 	SetWindowLong(consoleWindow, GWL_STYLE, GetWindowLong(consoleWindow, GWL_STYLE) & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX);
 	
+	// set window size 
+	RECT rect = {100, 100, 1500, 800};
+	MoveWindow(consoleWindow, rect.left, rect.top, rect.right-rect.left, rect.bottom-rect.top,TRUE);
+	
 	// disable scroll wheel by setting screen buffer size	
     CONSOLE_SCREEN_BUFFER_INFO SBInfo;
     COORD new_screen_buffer_size;
@@ -48,7 +52,8 @@ void init()
 	new_screen_buffer_size.Y = SBInfo.srWindow.Bottom - SBInfo.srWindow.Top + 1;
 	
 	SetConsoleScreenBufferSize(hConsole, new_screen_buffer_size);
-	ShowWindow(consoleWindow,SW_SHOWMAXIMIZED);
+	
+	//ShowWindow(consoleWindow,SW_SHOWMAXIMIZED);
 	
 	//hide cursor 
 	CONSOLE_CURSOR_INFO info;

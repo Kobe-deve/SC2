@@ -1,11 +1,29 @@
+#ifndef STATE_HANDLED
 #include "state.h"
+#endif
+
+#ifndef MUSIC_HANDLED
 #include "music.h"
+#endif
+
+#ifndef EVENT_HANDLING
 #include "event_handler.h"
+#endif
+
+#ifndef MENU_HANDLED
 #include "input.h"
+#endif
+ 
+#ifndef GRAPHICS
 #include "graphics.h"
+#endif
 
 #ifndef DUNGEON_HANDLED
 #define DUNGEON_HANDLED
+
+#ifndef BATTLE_HANDLED
+#include "battle.h"
+#endif
 
 int direction = 0;
 
@@ -23,6 +41,7 @@ struct enemies
 	int x;
 	int y;
 	int active;
+	int type;
 	Uint32 startTicks;
 };
 
@@ -198,8 +217,10 @@ int quickConvert(int x)
 }
 
 // reset after encounter 
-void reset(struct gameState * s)
+void resetDungeon(void *data)
 {
+	struct gameState * s = (struct gameState *)data;
+	
 	int counterx,countery;
 	int i;
 	for(countery = -1;countery < dungeonSize+1;countery++)
@@ -227,16 +248,20 @@ void reset(struct gameState * s)
 			printf("+");
 		}
 	}
+	destroyListener(DISPLAY,s->listeners);
+	registerEvent(DISPLAY,walkAround,s->listeners);
 }
 
 // start encounter 
-void encounter(struct gameState * s)
+void startEncounter(void *data)
 {
-	system("cls");
-	printf("\nENCOUNTER");
-	getchar();
-	system("cls");
-	reset(s);
+	struct gameState * s = (struct gameState *)data;
+	
+	// set events to start battle processing
+	destroyListener(MENU_SELECTION,s->listeners);
+	destroyListener(DISPLAY,s->listeners);
+	destroyListener(LOGIC_HANDLER,s->listeners);
+	registerEvent(LOGIC_HANDLER,initBattle,s->listeners);
 }
 
 // display cone 
@@ -356,7 +381,7 @@ void enemyHandler(struct gameState * s)
 }
 
 // logic handling in dungeon section for moving player/npcs/etc
-void logic(struct gameState * s)
+void dungeonLogic(void *data, struct gameState * s)
 {
 	int i;
 	switch(s->input)
@@ -411,7 +436,7 @@ void logic(struct gameState * s)
 		if(activeEnemies[i].active == 1 && activeEnemies[i].y == s->playerY && activeEnemies[i].x == s->playerX)
 		{
 			activeEnemies[i].active = 0;
-			encounter(s);
+			startEncounter(data);
 			
 			setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
 			printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
@@ -440,26 +465,23 @@ void walkAround(void *data)
 	capTicks = 0;
 	
 	clearDisplay(s);
-	logic(s);
+	dungeonLogic(data,s);
 	
 	// move floors and update display 
 	if(d[s->floor][s->playerY][s->playerX] == 2 || d[s->floor][s->playerY][s->playerX] == 3)
 	{	
+		system("cls");
+		destroyListener(DISPLAY,s->listeners);
 		switch(d[s->floor][s->playerY][s->playerX])
 		{
 			case 2:
 			s->floor = s->floor+1;
-			system("cls");
-			destroyListener(DISPLAY,s->listeners);
-			registerEvent(DISPLAY,initDungeonFloor,s->listeners);
 			break;
 			case 3:
 			s->floor = s->floor-1;
-			system("cls");
-			destroyListener(DISPLAY,s->listeners);
-			registerEvent(DISPLAY,initDungeonFloor,s->listeners);
 			break;
 		}	
+		registerEvent(DISPLAY,initDungeonFloor,s->listeners);
 	}
 	else
 	{
@@ -475,13 +497,18 @@ void walkAround(void *data)
 		
 }
 
+// define dungeon based on file
+// TODO
+void readDungeonFile()
+{
+}
+
 // display the dungeon floor initially
 void initDungeonFloor(void *data)
 {		
 	struct gameState * s = (struct gameState *)data;
 	
 	// set enemies on floor
-	
 	if(activeEnemies != NULL)
 	{
 		free(activeEnemies);
@@ -502,6 +529,7 @@ void initDungeonFloor(void *data)
 			activeEnemies[i].y = rand()%dungeonSize;	
 		}
 		activeEnemies[i].active = 1;
+		activeEnemies[i].type = rand()%3+1;
 	}
 	
 	// reset visibility array 

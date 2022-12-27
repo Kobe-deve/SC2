@@ -15,6 +15,7 @@
 #include "event_handler.h"
 #include "input.h"
 #include "graphics.h"
+#include "battle.h"
 #include "dungeon.h"
 #include "title.h"
 

@@ -45,4 +45,10 @@
 		
 		int building; // what building the player is in 
 	};
+
+	// functions used for going between states
+	void initBattle(void *data);
+	void walkAround(void *data);
+	void resetDungeon(void *data);
 #endif
+
