@@ -15,7 +15,7 @@ void initMusic(struct gameState * input)
 		}
 	}
 	
-	input->music = Mix_LoadMUS("music/Killing Nature.wav");
+	input->music = Mix_LoadMUS(TITLE_MUSIC);
 	Mix_PlayMusic(input->music, -1);
 	input->input = 0;
 	input->option = 0;

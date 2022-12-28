@@ -13,6 +13,10 @@
 #include <SDL2/SDL_mixer.h>
 #endif
 
+#ifndef FILENAMES
+#include "filenames.h"
+#endif
+
 // state struct
 #ifndef STATE_HANDLED
 #define STATE_HANDLED

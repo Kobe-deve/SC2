@@ -53,8 +53,6 @@ void init()
 	
 	SetConsoleScreenBufferSize(hConsole, new_screen_buffer_size);
 	
-	//ShowWindow(consoleWindow,SW_SHOWMAXIMIZED);
-	
 	//hide cursor 
 	CONSOLE_CURSOR_INFO info;
 	info.dwSize = 1;

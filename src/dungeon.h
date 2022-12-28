@@ -248,6 +248,10 @@ void resetDungeon(void *data)
 			printf("+");
 		}
 	}
+	
+	s->music = Mix_LoadMUS("music/Live.mp3");
+	Mix_FadeInMusic(s->music, -1, 100); // fades into new music 
+	
 	destroyListener(DISPLAY,s->listeners);
 	registerEvent(DISPLAY,walkAround,s->listeners);
 }
