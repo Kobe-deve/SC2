@@ -48,18 +48,31 @@ void battleLoop(void *data)
 		system("cls");
 		destroyListener(DISPLAY,s->listeners);
 		registerEvent(DISPLAY,resetDungeon,s->listeners);
+
+		switchTrack(DUNGEON_MUSIC,s);
 	}
 }
 
 // start battle 
 void initBattle(void *data)
 {
-	system("cls");
 	struct gameState * s = (struct gameState *)data;
+
+	// set specific event handlers 
 	destroyListener(LOGIC_HANDLER,s->listeners);
 	registerEvent(DISPLAY,battleLoop,s->listeners);
-
-	printPattern(M1,0,0,20,20);
+	
+	// start battle music 
+	switchTrack(BATTLE_MUSIC,s);
+	
+	// initialize battle display 
+	system("cls");
+	int i = 0;
+	
+	for(i =0;i<4;i++)
+	{
+		printPattern(M1,i*20,10,20,20);
+	}
 }
 
 #endif

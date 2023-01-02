@@ -51,7 +51,7 @@ int ** visible = NULL;
 // width/height of the current dungeon
 int dungeonSize = 10;
 
-int numEnemies;
+int numEnemies = 0;
 struct enemies * activeEnemies = NULL;
 
 int d[10][10][10] = {  {0,0,0,1,0,0,0,0,4,0,

@@ -46,8 +46,7 @@ void titleScreenLogic(void *data)
 		destroyListener(LOGIC_HANDLER,s->listeners);
 		registerEvent(DISPLAY,initDungeonFloor,s->listeners);
 		
-		s->music = Mix_LoadMUS(DUNGEON_MUSIC);
-		Mix_PlayMusic(s->music, -1);
+		switchTrack(DUNGEON_MUSIC,s);
 		
 		s->playerX = 0;
 		s->playerY = 0;
