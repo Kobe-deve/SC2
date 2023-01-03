@@ -68,10 +68,26 @@ void initBattle(void *data)
 	// initialize battle display 
 	system("cls");
 	int i = 0;
+	int x,y;
 	
+	// print background pattern
+	for(y=0;y<21;y++)
+	{
+		for(x=0;x<120;x++)
+		{
+			if(x%2 == 1)
+				setColor(1);
+			else 
+				setColor(4);
+			setCursor(x,y);
+			printf("%c",219);
+		}
+	}	
+	
+	// display enemies 
 	for(i =0;i<4;i++)
 	{
-		printPattern(M1,i*20,10,20,20);
+		printPattern(M1,i*20,5,20,20);
 	}
 }
 

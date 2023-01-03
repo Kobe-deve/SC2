@@ -103,6 +103,8 @@ void printPattern(enum sprites patternType, int xPos, int yPos, int maxX, int ma
 {
 	int x;
 	int y;
+	int color;
+	
 	for(y = 0;y<maxY;y++)
 	{
 		for(x = 0;x<maxX;x++)
@@ -110,127 +112,131 @@ void printPattern(enum sprites patternType, int xPos, int yPos, int maxX, int ma
 			switch(patternType)
 			{
 				case BACK_ROOM:
-				setColor(backRoom[y][x]);
+				color = backRoom[y][x];
 				break;
 				
 				case LIBRARY:
-				setColor(library[y][x]);
+				color = library[y][x];
 				break;
 				
 				case FLAMES:
-				setColor(flames[y][x]);
+				color = flames[y][x];
 				break;
 				
 				case TITLE:
-				setColor(title[y][x]);	
+				color = title[y][x];	
 				break;
 				
 				case MAIN_CAMP:
-				setColor(mainCamp[y][x]);
+				color = mainCamp[y][x];
 				break;
 				
 				case SHOP:
-				setColor(shop[y][x]);
+				color = shop[y][x];
 				break;
 				
 				case PUB:
-				setColor(pub[y][x]);
+				color = pub[y][x];
 				break;
 				
 				case GARLAND:
-				setColor(garlan[y][x]);
+				color = garlan[y][x];
 				break;
 				
 				case M1:
-				setColor(m1[y][x]);	
+				color = m1[y][x];	
 				break;
 				
 				case M2:
-				setColor(m2[y][x]);	
+				color = m2[y][x];	
 				break;
 				
 				case M3:
-				setColor(m3[y][x]);	
+				color = m3[y][x];	
 				break;
 				
 				case M4:
-				setColor(m4[y][x]);	
+				color = m4[y][x];	
 				break;
 				
 				case M5:
-				setColor(m5[y][x]);	
+				color = m5[y][x];	
 				break;
 				
 				case M6:
-				setColor(m6[y][x]);	
+				color = m6[y][x];	
 				break;
 				
 				case M7:
-				setColor(m7[y][x]);	
+				color = m7[y][x];	
 				break;
 				
 				case M8:
-				setColor(m8[y][x]);	
+				color = m8[y][x];	
 				break;
 				
 				case M9:
-				setColor(m9[y][x]);	
+				color = m9[y][x];	
 				break;
 				
 				case M10:
-				setColor(m10[y][x]);	
+				color = m10[y][x];	
 				break;
 				
 				case M12:
-				setColor(m12[y][x]);	
+				color = m12[y][x];	
 				break;
 				
 				case M13:
-				setColor(m13[y][x]);	
+				color = m13[y][x];	
 				break;
 				
 				case M14:
-				setColor(m14[y][x]);	
+				color = m14[y][x];	
 				break;
 				
 				case M15:
-				setColor(m15[y][x]);	
+				color = m15[y][x];	
 				break;
 				
 				case M16:
-				setColor(m16[y][x]);	
+				color = m16[y][x];	
 				break;
 				
 				case M17:
-				setColor(m17[y][x]);	
+				color = m17[y][x];	
 				break;
 				
 				case SWORD:
-				setColor(swordr[y][x]);	
+				color = swordr[y][x];	
 				break;
 				
 				case LANCE:
-				setColor(lancer[y][x]);	
+				color = lancer[y][x];	
 				break;
 				
 				case AXE:
-				setColor(axer[y][x]);	
+				color = axer[y][x];	
 				break;
 				
 				case GUN:
-				setColor(gunr[y][x]);	
+				color = gunr[y][x];	
 				break;
 				
 				case BOW:
-				setColor(bowr[y][x]);	
+				color = bowr[y][x];	
 				break;
 				
 				case COMB:
-				setColor(combr[y][x]);	
+				color = combr[y][x];	
 				break;
 			}
-			setCursor(xPos+x,yPos+y);
-			printf("%c",219);
+			if(color != 0)
+			{
+				setColor(color);
+				setCursor(xPos+x,yPos+y);
+				printf("%c",219);
+			}
 		}
 	}
 	setColor(WHITE);

@@ -10,7 +10,7 @@ void switchTrack(char * songName, struct gameState * s)
 {
 	Mix_FadeOutMusic(0); // stop current music 
 	s->music = Mix_LoadMUS(songName);
-	Mix_FadeInMusic(s->music, -1, 1000);
+	Mix_FadeInMusic(s->music, -1, 2000);
 }
 
 // initialize music handling
