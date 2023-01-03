@@ -30,6 +30,9 @@ typedef int colors; // for printing images
 #define WHITE 15
 #define BLACK 16
 
+#define WINDOW_WIDTH 1500
+#define WINDOW_HEIGHT 800
+
 // initialize graphics handling 
 void init()
 {
@@ -40,7 +43,7 @@ void init()
 	SetWindowLong(consoleWindow, GWL_STYLE, GetWindowLong(consoleWindow, GWL_STYLE) & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX);
 	
 	// set window size 
-	RECT rect = {100, 100, 1500, 800};
+	RECT rect = {100, 100, WINDOW_WIDTH, WINDOW_HEIGHT};
 	MoveWindow(consoleWindow, rect.left, rect.top, rect.right-rect.left, rect.bottom-rect.top,TRUE);
 	
 	// disable scroll wheel by setting screen buffer size	

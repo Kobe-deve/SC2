@@ -31,18 +31,54 @@ void battleLogic()
 	
 }
 
-// displaying during battle
-void battleDisplay()
+// print battle situation text
+void battleSituation()
 {
 	
 }
+
+// print party status
+void partyStats()
+{
+	
+}
+
+// displaying during battle
+void battleDisplay()
+{
+	int i = 0;
+	int x,y;
+	
+	// print background pattern
+	for(y=0;y<21;y++)
+	{
+		for(x=0;x<110;x++)
+		{
+			if(x%2 == 1)
+				setColor(1);
+			else 
+				setColor(4);
+			setCursor(x,y);
+			printf("%c",219);
+		}
+	}	
+	
+	int numEnemies = 2;
+	
+	// display enemies 
+	for(i =0;i<numEnemies;i++)
+	{
+		printPattern(M12,i*25+5,0,20,20);
+	}
+}
+
+
 
 // main loop for handling battles 
 void battleLoop(void *data)
 {
 	struct gameState * s = (struct gameState *)data;
 	
-	battleDisplay();
 	if(s->input == ENTER)
 	{
 		system("cls");
@@ -67,27 +103,18 @@ void initBattle(void *data)
 	
 	// initialize battle display 
 	system("cls");
+
+	// display sprites
+	battleDisplay();
+	
+	// display outlines 
 	int i = 0;
-	int x,y;
-	
-	// print background pattern
-	for(y=0;y<21;y++)
+	for(i = 21;i<41;i++)
 	{
-		for(x=0;x<120;x++)
-		{
-			if(x%2 == 1)
-				setColor(1);
-			else 
-				setColor(4);
-			setCursor(x,y);
-			printf("%c",219);
-		}
-	}	
-	
-	// display enemies 
-	for(i =0;i<4;i++)
-	{
-		printPattern(M1,i*20,5,20,20);
+		// for text description 
+		setCursor(109,i);
+		printf("|");
+		
 	}
 }
 
