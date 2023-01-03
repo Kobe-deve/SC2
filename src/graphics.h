@@ -210,27 +210,27 @@ void printPattern(enum sprites patternType, int xPos, int yPos, int maxX, int ma
 				color = m17[y][x];	
 				break;
 				
-				case SWORD:
+				case SWORD_SPRITE:
 				color = swordr[y][x];	
 				break;
 				
-				case LANCE:
+				case LANCE_SPRITE:
 				color = lancer[y][x];	
 				break;
 				
-				case AXE:
+				case AXE_SPRITE:
 				color = axer[y][x];	
 				break;
 				
-				case GUN:
+				case GUN_SPRITE:
 				color = gunr[y][x];	
 				break;
 				
-				case BOW:
+				case BOW_SPRITE:
 				color = bowr[y][x];	
 				break;
 				
-				case COMB:
+				case COMB_SPRITE:
 				color = combr[y][x];	
 				break;
 			}

@@ -63,7 +63,7 @@ void battleDisplay()
 		}
 	}	
 	
-	int numEnemies = 2;
+	int numEnemies = 3;
 	
 	// display enemies 
 	for(i =0;i<numEnemies;i++)

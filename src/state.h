@@ -20,6 +20,11 @@
 // state struct
 #ifndef STATE_HANDLED
 #define STATE_HANDLED
+
+	#ifndef CHARACTER_HANDLED
+	#include "stats.h"
+	#endif
+
 	// pauses for he number of seconds
 	int pause(int he) 
 	{
@@ -29,7 +34,14 @@
 		while(difftime(time(NULL),then) < he);
 		fflush(stdin); // clears any extra enter presses
 	}
-
+	
+	// data structure for handling battles 
+	struct battle
+	{
+		
+	};
+	
+	// data structure for handling the state/data of the game 
 	struct gameState
 	{
 		Mix_Music * music; // the music playing

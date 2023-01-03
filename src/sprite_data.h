@@ -47,12 +47,12 @@ enum sprites
 	M15,
 	M16,
 	M17,
-	SWORD,
-	LANCE,
-	AXE,
-	GUN,
-	BOW,
-	COMB
+	SWORD_SPRITE,
+	LANCE_SPRITE,
+	AXE_SPRITE,
+	GUN_SPRITE,
+	BOW_SPRITE,
+	COMB_SPRITE
 };
 
 // scenes
