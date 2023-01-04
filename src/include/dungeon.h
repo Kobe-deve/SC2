@@ -55,7 +55,7 @@ int numEnemies = 0;
 struct enemies * activeEnemies = NULL;
 
 // status text lines 
-int maxStatus = 20; // max number of status lines visible 
+int maxStatus = 10; // max number of status lines visible 
 char ** statusText = NULL;
 int numStatusLines = 0;
 
@@ -177,10 +177,14 @@ void displayStatus()
 {
 	int i;
 	
+	setCursor(1,30);
+	printf("STATUS:");
 	// reset displayed order 
 	for(i=0;i<numStatusLines;i++)
 	{
-		setCursor(1,21+i);
+		setCursor(1,31+i);
+		printf("\33[2K");
+		setCursor(1,31+i);
 		printf("%s",statusText[i]);
 	}
 }
@@ -198,14 +202,16 @@ void updateStatus(char * text)
 	}
 	else // move recent to bottom if max is filled 
 	{
-		// clear top
-		for(i=0;i<strlen(statusText[0])+1;i++)
+		if(strlen(statusText[0]) > strlen(text))
 		{
-			setCursor(i,21);
 			setColor(BLACK);
-			printf("%c",219);
+			for(i=0;i<strlen(statusText[0])+1;i++)
+			{
+				setCursor(1+i,21);
+				printf("%c",219);
+			}
+			setColor(WHITE);
 		}
-		setColor(WHITE);
 		
 		free(statusText[0]);
 		for(i=0;i<numStatusLines-1;i++)
@@ -311,7 +317,6 @@ void resetDungeon(void *data)
 	registerEvent(DISPLAY,walkAround,s->listeners);
 	
 	displayStatus();
-	borders();
 }
 
 // start encounter 
@@ -364,6 +369,18 @@ void displayRange(struct gameState * s)
 				}
 			}
 		}
+	}
+}
+
+// generate text status descriptions based on where the player is 
+void description(struct gameState * s)
+{
+	// update status text based on where the player is at 
+	switch(d[s->floor][s->playerY][s->playerX])
+	{
+		case 9:
+		updateStatus("There's a hole in the wall, press enter to go through it.");
+		break;
 	}
 }
 
@@ -461,6 +478,7 @@ void dungeonLogic(void *data, struct gameState * s)
 			displayRange(s);
 			s->playerY--;
 			direction = 0;
+			description(s);
 		}
 		break;
 		case DOWN:
@@ -470,6 +488,7 @@ void dungeonLogic(void *data, struct gameState * s)
 			displayRange(s);
 			s->playerY++;
 			direction = 2;
+			description(s);
 		}
 		break;
 		case LEFT:
@@ -479,6 +498,7 @@ void dungeonLogic(void *data, struct gameState * s)
 			displayRange(s);
 			s->playerX--;
 			direction = 3;
+			description(s);
 		}
 		break;
 		case RIGHT:
@@ -488,6 +508,7 @@ void dungeonLogic(void *data, struct gameState * s)
 			displayRange(s);
 			s->playerX++;
 			direction = 1;
+			description(s);
 		}
 		break;
 		case ENTER:
@@ -500,6 +521,7 @@ void dungeonLogic(void *data, struct gameState * s)
 		break;
 	}
 	
+	// move enemies 
 	enemyHandler(s);
 	
 	// check if player has run into enemies 
@@ -668,8 +690,6 @@ void initDungeonFloor(void *data)
 	setColor(WHITE);
 	
 	updateStatus("WELCOME TO THE DUNGEON");
-	
-	borders();
 }
 
 #endif
