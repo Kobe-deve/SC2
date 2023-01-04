@@ -14,7 +14,8 @@ enum input
 	LEFT = 75,
 	RIGHT = 77,
 	ENTER = 13,
-	ESC = 27
+	ESC = 27,
+	BACKSPACE = 127
 };
 
 // free menu selection variables when done 

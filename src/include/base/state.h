@@ -71,6 +71,9 @@
 		struct character protag_stats; // stats of the main character 
 	};
 	
+	// debug mode toggle
+	int debug = 0;
+	
 	// initialize a new game 
 	void initNewGame(struct gameState * s);
 	void loadGame(struct gameState *s);

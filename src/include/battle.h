@@ -148,17 +148,11 @@ void initBattle(void *data)
 	// initialize battle display 
 	system("cls");
 
+	// display outlines 
+	borders();
+	
 	// display sprites
 	battleDisplay();
-	
-	// display outlines 
-	int i = 0;
-	for(i = 21;i<41;i++)
-	{
-		// for text description 
-		setCursor(109,i);
-		printf("|");
-	}
 	
 	generateCommands(s);
 }

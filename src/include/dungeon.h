@@ -32,8 +32,8 @@ Uint32 capTicks = 0;
 int frames = 0;
 
 // coord to print dungeon at 
-int dungeonPrintCoordX = 10;
-int dungeonPrintCoordY = 10;
+int dungeonPrintCoordX = 1;
+int dungeonPrintCoordY = 1;
 
 // struct for movable enemies
 struct enemies 
@@ -53,6 +53,11 @@ int dungeonSize = 10;
 
 int numEnemies = 0;
 struct enemies * activeEnemies = NULL;
+
+// status text lines 
+int maxStatus = 20; // max number of status lines visible 
+char ** statusText = NULL;
+int numStatusLines = 0;
 
 int d[10][10][10] = {  {0,0,0,1,0,0,0,0,4,0,
 						0,0,0,1,0,1,1,1,1,1,
@@ -167,6 +172,52 @@ int d[10][10][10] = {  {0,0,0,1,0,0,0,0,4,0,
 
 void initDungeonFloor(void *data);
 
+// display status in dungeon 
+void displayStatus()
+{
+	int i;
+	
+	// reset displayed order 
+	for(i=0;i<numStatusLines;i++)
+	{
+		setCursor(1,21+i);
+		printf("%s",statusText[i]);
+	}
+}
+
+// update status text and display it 
+void updateStatus(char * text)
+{
+	int i;
+	
+	// set order of text
+	if(numStatusLines < maxStatus)
+	{
+		statusText[numStatusLines] = text;
+		++numStatusLines;
+	}
+	else // move recent to bottom if max is filled 
+	{
+		// clear top
+		for(i=0;i<strlen(statusText[0])+1;i++)
+		{
+			setCursor(i,21);
+			setColor(BLACK);
+			printf("%c",219);
+		}
+		setColor(WHITE);
+		
+		free(statusText[0]);
+		for(i=0;i<numStatusLines-1;i++)
+		{
+			statusText[i] = statusText[i+1];
+		}
+		statusText[numStatusLines-1] = text;
+	}
+	
+	displayStatus();
+}
+
 // briefly using this function to convert old dungeon 
 int quickConvert(int x)
 {
@@ -210,6 +261,10 @@ int quickConvert(int x)
 		return 234;
 		break;
 		
+		case 9:
+		return 206;
+		break;
+		
 		default:
 		return 178;
 		break;
@@ -249,11 +304,14 @@ void resetDungeon(void *data)
 		}
 	}
 	
-	s->music = Mix_LoadMUS("music/Live.mp3");
+	s->music = Mix_LoadMUS(DUNGEON_MUSIC);
 	Mix_FadeInMusic(s->music, -1, 100); // fades into new music 
 	
 	destroyListener(DISPLAY,s->listeners);
 	registerEvent(DISPLAY,walkAround,s->listeners);
+	
+	displayStatus();
+	borders();
 }
 
 // start encounter 
@@ -379,8 +437,12 @@ void enemyHandler(struct gameState * s)
 				printf("+");
 			}
 		}
-		setCursor(50,20+i);
-		printf("ENEMY #%d: (%d, %d) STATUS:%d MOVEMENT: %d",i,activeEnemies[i].x,activeEnemies[i].y,activeEnemies[i].active,((int)(SDL_GetTicks() - activeEnemies[i].startTicks))% 1000);
+		
+		if(debug == 1)
+		{
+			setCursor(50,20+i);
+			printf("ENEMY #%d: (%d, %d) STATUS:%d MOVEMENT: %d",i,activeEnemies[i].x,activeEnemies[i].y,activeEnemies[i].active,((int)(SDL_GetTicks() - activeEnemies[i].startTicks))% 1000);
+		}
 	}
 }
 
@@ -427,6 +489,10 @@ void dungeonLogic(void *data, struct gameState * s)
 		}
 		break;
 		case ENTER:
+		updateStatus("You pressed enter");
+		break;
+		case BACKSPACE:
+		debug = !debug;
 		break;
 		default:
 		break;
@@ -455,10 +521,13 @@ void display(struct gameState * s)
 	setCursor(dungeonPrintCoordX+s->playerX,dungeonPrintCoordY+s->playerY);
 	printf("%c",1);	
 	
-	setCursor(60,10);
-	printf("FLOOR: %d",s->floor);
-	setCursor(60,15);
-	printf("VALUE: %d  ",d[s->floor][s->playerY][s->playerX]);
+	if(debug == 1)
+	{
+		setCursor(60,10);
+		printf("FLOOR: %d",s->floor);
+		setCursor(60,15);
+		printf("VALUE: %d  ",d[s->floor][s->playerY][s->playerX]);
+	}
 }
 
 // main dungeon crawling function 
@@ -518,9 +587,10 @@ void initDungeonFloor(void *data)
 		free(activeEnemies);
 		activeEnemies = NULL;
 	}
-	numEnemies = 0;
+	numEnemies = 1;
 	activeEnemies = malloc(numEnemies * sizeof(struct enemies));
 	
+	// generate enemies to specific coordinates 
 	int i;
 	for(i = 0;i<numEnemies;i++)
 	{
@@ -536,7 +606,7 @@ void initDungeonFloor(void *data)
 		activeEnemies[i].type = rand()%3+1;
 	}
 	
-	// reset visibility array 
+	// reset visibility array if it is empty/deleted
 	int iz,ix,iy;
 			
 	if(visible == NULL)
@@ -553,6 +623,20 @@ void initDungeonFloor(void *data)
 			}	
 		}
 	}		
+	
+	// reset status text
+	if(statusText != NULL)
+	{
+		for(iy=0;iy<numStatusLines;iy++)
+		{
+			free(statusText[iy]);
+		}
+		free(statusText);
+		statusText = NULL;
+	}
+	
+	numStatusLines = 0;
+	statusText = malloc(maxStatus * sizeof(char *));	
 	
 	// initial display range 
 	displayRange(s);
@@ -580,6 +664,10 @@ void initDungeonFloor(void *data)
 		}
 	}		
 	setColor(WHITE);
+	
+	updateStatus("WELCOME TO THE DUNGEON");
+	
+	borders();
 }
 
 #endif
