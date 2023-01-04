@@ -171,6 +171,8 @@ int d[10][10][10] = {  {0,0,0,1,0,0,0,0,4,0,
 						};
 
 void initDungeonFloor(void *data);
+void displayRange(struct gameState * s);
+void generateEnemies(struct gameState * s);
 
 // display status in dungeon 
 void displayStatus()
@@ -299,6 +301,8 @@ void resetDungeon(void *data)
 			setColor(WHITE);
 		}
 	}
+	
+	displayRange(s);
 	
 	// display visible enemies 
 	for(i = 0;i<numEnemies;i++)
@@ -578,7 +582,8 @@ void walkAround(void *data)
 			s->floor = s->floor-1;
 			break;
 		}	
-		registerEvent(DISPLAY,initDungeonFloor,s->listeners);
+		registerEvent(DISPLAY,resetDungeon,s->listeners);
+		generateEnemies(s);
 	}
 	else
 	{
@@ -600,17 +605,16 @@ void readDungeonFile()
 {
 }
 
-// display the dungeon floor initially
-void initDungeonFloor(void *data)
-{		
-	struct gameState * s = (struct gameState *)data;
-	
+// generate enemies on the floor 
+void generateEnemies(struct gameState * s)
+{
 	// set enemies on floor
 	if(activeEnemies != NULL)
 	{
 		free(activeEnemies);
 		activeEnemies = NULL;
 	}
+	
 	numEnemies = 1;
 	activeEnemies = malloc(numEnemies * sizeof(struct enemies));
 	
@@ -629,10 +633,18 @@ void initDungeonFloor(void *data)
 		activeEnemies[i].active = 1;
 		activeEnemies[i].type = rand()%3+1;
 	}
+}
+
+// display the dungeon floor initially
+void initDungeonFloor(void *data)
+{		
+	struct gameState * s = (struct gameState *)data;
 	
 	// reset visibility array if it is empty/deleted
 	int iz,ix,iy;
-			
+	
+	generateEnemies(s);
+		
 	if(visible == NULL)
 	{
 		visible = malloc(dungeonSize * sizeof(int **));
