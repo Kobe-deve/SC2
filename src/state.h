@@ -61,7 +61,11 @@
 		
 		int building; // what building the player is in 
 	};
-
+	
+	// initialize a new game 
+	void initNewGame(struct gameState * s);
+	void loadGame(struct gameState *s);
+	
 	// functions used for going between states
 	void initBattle(void *data);
 	void walkAround(void *data);

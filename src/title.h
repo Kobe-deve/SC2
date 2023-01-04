@@ -38,19 +38,17 @@ void titleScreenLogic(void *data)
 {
 	struct gameState * s = (struct gameState *)data;
 	
-	if(s->input == ENTER)
+	if(s->input == ENTER) // start dungeon 
 	{
-		destroyListener(MENU_SELECTION,s->listeners);
-		system("cls");
-		
-		destroyListener(LOGIC_HANDLER,s->listeners);
-		registerEvent(DISPLAY,initDungeonFloor,s->listeners);
-		
-		switchTrack(DUNGEON_MUSIC,s);
-		
-		s->playerX = 0;
-		s->playerY = 0;
-		s->floor = 0;
+		switch(s->option)
+		{
+			case 0:
+			freeMenuProcess(s);
+			initNewGame(s);
+			break;
+			case 1:
+			break;
+		}
 	}
 }
 

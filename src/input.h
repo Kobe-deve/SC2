@@ -16,6 +16,18 @@ enum input
 	ESC = 27
 };
 
+// free menu selection variables when done 
+void freeMenuProcess(struct gameState * s)
+{
+	for(int i=0;i<s->numOptions;i++)
+	{	
+		free(s->options[i]);
+	}
+	free(s->options);
+	s->options = NULL;
+}
+
+// menu selection handling 
 void menuSelection(void *data)
 {
 	struct gameState * s = (struct gameState *)data;
@@ -46,14 +58,6 @@ void menuSelection(void *data)
 		
 				s->option++;
 			}
-			break;
-			case ENTER:
-			for(int i=0;i<s->numOptions;i++)
-			{	
-				free(s->options[i]);
-			}
-			free(s->options);
-			s->options = NULL;
 			break;
 		}
 		

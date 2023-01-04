@@ -21,6 +21,23 @@
 
 // gcc main.c -lSDL2 -lSDL2_mixer -o main
 
+// initialize new game 
+void initNewGame(struct gameState * s)
+{
+	destroyListener(MENU_SELECTION,s->listeners);
+	system("cls");
+	
+	destroyListener(LOGIC_HANDLER,s->listeners);
+	registerEvent(DISPLAY,initDungeonFloor,s->listeners);
+	
+	switchTrack(DUNGEON_MUSIC,s);
+	
+	s->playerX = 0;
+	s->playerY = 0;
+	s->floor = 0;
+
+};
+
 int main()
 {
 	srand((unsigned)time(NULL));
