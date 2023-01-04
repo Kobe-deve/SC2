@@ -1,5 +1,7 @@
 // character stats/moves 
 
+#include <string.h>
+
 #ifndef CHARACTER_HANDLED
 #define CHARACTER_HANDLED
 
@@ -108,4 +110,62 @@ struct character
 	
 	int personality; // personality type of the character 
 };
+
+// generate a character based on the type given 
+struct character generateCharacter(int characterType)
+{
+	struct character returnedChar = {};
+	
+	switch(characterType)
+	{
+		case HUMAN:
+		strcpy(returnedChar.name,"Human");
+		break;
+		case STRANJER:
+		strcpy(returnedChar.name,"Stranjer");
+		break;
+		case LOST_SPIRIT:
+		strcpy(returnedChar.name,"Lost Spirit");
+		break;
+		case GUARD_DUCK:
+		strcpy(returnedChar.name,"Guard Duck");
+		break;
+		case WILLFUL_WISP:
+		strcpy(returnedChar.name,"Willful Wisp");
+		break;
+		case CHILLER:
+		strcpy(returnedChar.name,"Chiller");
+		break;
+		case BRASS:
+		strcpy(returnedChar.name,"Brass");
+		break;
+		case STARIP:
+		strcpy(returnedChar.name,"Starip");
+		break;
+		case GUMMO:
+		strcpy(returnedChar.name,"Gummo");
+		break;
+		case LOST_HERO:
+		strcpy(returnedChar.name,"Lost Hero");
+		break;
+		case MICRONOS:
+		strcpy(returnedChar.name,"Micronos");
+		break;
+		case DIASNAK:
+		strcpy(returnedChar.name,"Diasnak");
+		break;
+		case WANDERER:
+		strcpy(returnedChar.name,"Wanderer");
+		break;
+		case DIAMAN:
+		strcpy(returnedChar.name,"Diaman");
+		break;
+		case REVENGE:
+		strcpy(returnedChar.name,"Vengence");
+		break;
+	}
+	
+	return returnedChar;
+}
+
 #endif

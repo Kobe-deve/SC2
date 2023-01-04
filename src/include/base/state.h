@@ -38,7 +38,12 @@
 	// data structure for handling battles 
 	struct battle
 	{
+		int turns; // number of turns passed in the game
+		struct character * enemies; // enemies in combat 
+		int numEnemies; // number of enemies in combat 
 		
+		struct character * turnOrder; // turn order of combat 
+		int numChars; // number of characters in combat 
 	};
 	
 	// data structure for handling the state/data of the game 
@@ -60,6 +65,10 @@
 		int floor; // floor in dungeon 
 		
 		int building; // what building the player is in 
+		
+		struct battle currentBattle; // the current battle the player is in 
+		
+		struct character protag_stats; // stats of the main character 
 	};
 	
 	// initialize a new game 
