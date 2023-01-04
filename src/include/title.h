@@ -1,11 +1,11 @@
 #ifndef TITLE_HANDLED
 #define TITLE_HANDLED
 
-#include "state.h"
-#include "music.h"
-#include "event_handler.h"
-#include "input.h"
-#include "graphics.h"
+#include "base/state.h"
+#include "base/music.h"
+#include "base/event_handler.h"
+#include "base/input.h"
+#include "base/graphics.h"
 
 #ifndef DUNGEON_HANDLED
 #include "dungeon.h"

@@ -1,21 +1,21 @@
 #ifndef STATE_HANDLED
-#include "state.h"
+#include "base/state.h"
 #endif
 
 #ifndef MUSIC_HANDLED
-#include "music.h"
+#include "base/music.h"
 #endif
 
 #ifndef EVENT_HANDLING
-#include "event_handler.h"
+#include "base/event_handler.h"
 #endif
 
 #ifndef MENU_HANDLED
-#include "input.h"
+#include "base/input.h"
 #endif
 
 #ifndef GRAPHICS
-#include "graphics.h"
+#include "base/graphics.h"
 #endif
 
 #ifndef DUNGEON_HANDLED

@@ -10,14 +10,14 @@
 #include <time.h>
 #include <string.h>
 
-#include "state.h"
-#include "music.h"
-#include "event_handler.h"
-#include "input.h"
-#include "graphics.h"
-#include "battle.h"
-#include "dungeon.h"
-#include "title.h"
+#include "include/base/state.h"
+#include "include/base/music.h"
+#include "include/base/event_handler.h"
+#include "include/base/input.h"
+#include "include/base/graphics.h"
+#include "include/battle.h"
+#include "include/dungeon.h"
+#include "include/title.h"
 
 // gcc main.c -lSDL2 -lSDL2_mixer -o main
 
