@@ -450,6 +450,8 @@ void enemyHandler(struct gameState * s)
 void dungeonLogic(void *data, struct gameState * s)
 {
 	int i;
+	char test;
+	
 	switch(s->input)
 	{
 		case UP:
