@@ -4,7 +4,7 @@
 	12/17/2022 - 
 	
 	Original Stone Crawler
-	1/16/2019
+	1/16/2019 - 6/9/2019
 */
 #include <stdio.h>
 #include <time.h>
@@ -61,6 +61,7 @@ int main()
 	
 	int i = 0;
 	
+	// main loop
 	while(state.input != 27)
 	{
 		// input handling
@@ -78,6 +79,7 @@ int main()
 		}
 	}
 	
+	// destroy all listeners when game is done
 	destroyListeners(state.listeners,MAX_EVENTS);
 	
 	return 0;

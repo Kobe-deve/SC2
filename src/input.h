@@ -5,7 +5,8 @@
 
 #ifndef MENU_HANDLED
 #define MENU_HANDLED
-// input handling 
+
+// input handling enumerations 
 enum input
 {
 	UP = 72,
@@ -25,6 +26,8 @@ void freeMenuProcess(struct gameState * s)
 	}
 	free(s->options);
 	s->options = NULL;
+	
+	destroyListener(MENU_SELECTION,s->listeners);
 }
 
 // menu selection handling 

@@ -43,6 +43,22 @@ void partyStats()
 	
 }
 
+// generate battle menu commands 
+void generateCommands(struct gameState * s)
+{
+	registerEvent(MENU_SELECTION,menuSelection,s->listeners);
+	char ** array = malloc(5 * sizeof(char*));
+	array[0] = "1";
+	array[1] = "2";
+	array[2] = "3";
+	array[3] = "4";
+	array[4] = "5";
+		
+	initMenu(s,5,array,50,21);
+		
+	free(array);
+}
+
 // displaying during battle
 void battleDisplay()
 {
@@ -81,7 +97,9 @@ void battleLoop(void *data)
 	
 	if(s->input == ENTER)
 	{
-		system("cls");
+		freeMenuProcess(s);
+		
+		system("cls");		
 		destroyListener(DISPLAY,s->listeners);
 		registerEvent(DISPLAY,resetDungeon,s->listeners);
 
@@ -114,8 +132,9 @@ void initBattle(void *data)
 		// for text description 
 		setCursor(109,i);
 		printf("|");
-		
 	}
+	
+	generateCommands(s);
 }
 
 #endif
