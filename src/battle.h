@@ -43,7 +43,7 @@ void partyStats()
 	
 }
 
-// generate battle menu commands 
+// generate basic battle menu commands 
 void generateCommands(struct gameState * s)
 {
 	registerEvent(MENU_SELECTION,menuSelection,s->listeners);
@@ -52,7 +52,7 @@ void generateCommands(struct gameState * s)
 	array[1] = "2";
 	array[2] = "3";
 	array[3] = "4";
-	array[4] = "5";
+	array[4] = "Exit";
 		
 	initMenu(s,5,array,50,21);
 		
@@ -97,13 +97,39 @@ void battleLoop(void *data)
 	
 	if(s->input == ENTER)
 	{
-		freeMenuProcess(s);
+		switch(s->option)
+		{
+			case 0:
+			freeMenuProcess(s);
+			
+			registerEvent(MENU_SELECTION,menuSelection,s->listeners);
+			char ** array = malloc(5 * sizeof(char*));
+			array[0] = "1";
+			array[1] = "2";
+			array[2] = "3";
+			array[3] = "4";
+			array[4] = "Exit";
 		
-		system("cls");		
-		destroyListener(DISPLAY,s->listeners);
-		registerEvent(DISPLAY,resetDungeon,s->listeners);
+			initMenu(s,5,array,70,21);
+		
+			free(array);
+			break;
+			case 1:
+			break;
+			case 2:
+			break;
+			case 3:
+			break;
+			case 4:
+			freeMenuProcess(s);
+			
+			system("cls");		
+			destroyListener(DISPLAY,s->listeners);
+			registerEvent(DISPLAY,resetDungeon,s->listeners);
 
-		switchTrack(DUNGEON_MUSIC,s);
+			switchTrack(DUNGEON_MUSIC,s);
+			break;
+		}
 	}
 }
 

@@ -20,14 +20,17 @@ enum input
 // free menu selection variables when done 
 void freeMenuProcess(struct gameState * s)
 {
-	for(int i=0;i<s->numOptions;i++)
-	{	
-		free(s->options[i]);
-	}
-	free(s->options);
-	s->options = NULL;
+	if(s->options != NULL)
+	{
+		for(int i=0;i<s->numOptions;i++)
+		{	
+			free(s->options[i]);
+		}	
+		free(s->options);
+		s->options = NULL;
 	
-	destroyListener(MENU_SELECTION,s->listeners);
+		destroyListener(MENU_SELECTION,s->listeners);
+	}
 }
 
 // menu selection handling 
