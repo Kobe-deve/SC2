@@ -28,9 +28,10 @@ enum wpn_types
 struct weapon
 {
 	char name[20];
-	int vitality;
-	int level;
-	int chambers; 
+	int vitality; // health of the weapon 
+	int level; // level of the weapon 
+	int type; // the type of weapon 
+	int chambers; // max ammo of weapon if it takes any 
 };
 
 // type of character in the game 
@@ -55,20 +56,56 @@ enum char_type
 	REVENGE
 };
 
+enum personality_type
+{
+	OPTIMISTIC,
+	DEPRESSED,
+	PESSIMIST,
+	GOOFY,
+	ANGRY,
+	NEUTRAL,
+	CURIOUS,
+	ANNOYED
+};
+
 // struct for characters 
 struct character
 {
-	char name[20];
-	int health;
+	char name[20]; 
+	int health; // health stats 
 	int maxHealth;
 	
+	// general stats 
 	int strength;
+	int damageCap;
+	int maxStr;
+
 	int resistance;
-	int agility;
-	int dexterity;
-	int spirit;
+	int painCap;
+	int maxRes;
 	
-	int stamina;
+	int agility;
+	int exhaustCounter;
+	int maxAgi;
+	
+	int dexterity;
+	int efficiencyCounter;
+	int maxDex;
+	
+	int spirit;
+	int maxSpr;
+	int attunementPoints;
+	
+	int stamina; // stamina stats 
 	int maxStamina;
+	
+	int dnaSize; // dna of the specific character, uses char_type enum 
+	int * dna;
+
+	int weakness; // move type the character is weak to
+	
+	struct weapon heldWeapon; // the weapon the character is holding
+	
+	int personality; // personality type of the character 
 };
 #endif
