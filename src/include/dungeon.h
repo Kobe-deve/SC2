@@ -38,11 +38,23 @@ int dungeonPrintCoordY = 1;
 // struct for movable enemies
 struct enemies 
 {
-	int x;
+	int x; // coordinates
 	int y;
-	int active;
-	int type;
-	Uint32 startTicks;
+	int active; // is the enemy alive 
+	int type; // the type of enemy for the encounter 
+	int inCombat; // is the enemy fighting an npc 
+	Uint32 startTicks; // for movement timer 
+};
+
+struct npc
+{
+	int x; // coordinates 
+	int y;
+	int floor; // what floor the npc is on 
+	int active; // is the npc alive 
+	int type; // type of npc for dialogue/stats  
+	int inCombat; // is the npc fighting an npc 
+	Uint32 startTicks; // for movement timer 	
 };
 
 // array of visible tiles in an area
@@ -51,8 +63,13 @@ int *** visible = NULL;
 // width/height of the current dungeon
 int dungeonSize = 10;
 
+// enemy movement information for dungeon 
 int numEnemies = 0;
 struct enemies * activeEnemies = NULL;
+
+// npc information for dungeon 
+int numNPCs = 0;
+struct npc * activeNPCs = NULL;
 
 // status text lines 
 int maxStatus = 10; // max number of status lines visible 
@@ -482,6 +499,12 @@ void enemyHandler(struct gameState * s)
 	}
 }
 
+// handling npcs on the floor 
+void npcHandler(struct gameState * s)
+{
+	
+}
+
 // logic handling in dungeon section for moving player/npcs/etc
 void dungeonLogic(void *data, struct gameState * s)
 {
@@ -606,13 +629,10 @@ void walkAround(void *data)
 			break;
 		}	
 		registerEvent(DISPLAY,resetDungeon,s->listeners);
-		generateEnemies(1,s);
+		generateEnemies(0,s);
 	}
-	else
-	{
-		// display 
+	else // display 
 		display(s);
-	}
 		
 }
 
@@ -652,7 +672,7 @@ void generateEnemies(int numGenerate, struct gameState * s)
 	}
 }
 
-// display the dungeon floor initially
+// display the dungeon floor and set up used varaiables initially
 void initDungeonFloor(void *data)
 {		
 	struct gameState * s = (struct gameState *)data;
@@ -660,7 +680,7 @@ void initDungeonFloor(void *data)
 	// reset visibility array if it is empty/deleted
 	int iz,ix,iy;
 	
-	generateEnemies(1,s);
+	generateEnemies(0,s);
 		
 	if(visible == NULL)
 	{
