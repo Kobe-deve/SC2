@@ -172,7 +172,7 @@ int d[10][10][10] = {  {0,0,0,1,0,0,0,0,4,0,
 
 void initDungeonFloor(void *data);
 void displayRange(struct gameState * s);
-void generateEnemies(struct gameState * s);
+void generateEnemies(int numGenerate,struct gameState * s);
 
 // display status in dungeon 
 void displayStatus()
@@ -382,8 +382,14 @@ void description(struct gameState * s)
 	// update status text based on where the player is at 
 	switch(d[s->floor][s->playerY][s->playerX])
 	{
+		case 5:
+		updateStatus("You stand near an opened empty steel chest.");
+		break;
+		case 4:
+		updateStatus("You stand near a closed steel chest, press enter to open it.");
+		break;
 		case 9:
-		updateStatus("There's a hole in the wall, press enter to go through it.");
+		updateStatus("You stand near a hole in the wall, press enter to go through it.");
 		break;
 	}
 }
@@ -516,7 +522,13 @@ void dungeonLogic(void *data, struct gameState * s)
 		}
 		break;
 		case ENTER:
-		updateStatus("You pressed enter");
+		if(d[s->floor][s->playerY][s->playerX] == 4)
+		{
+			d[s->floor][s->playerY][s->playerX] = 5;
+			updateStatus("You opened the chest and found... nothing wow awesome.");
+		}
+		else
+			updateStatus("You pressed enter");
 		break;
 		case BACKSPACE:
 		debug = !debug;
@@ -576,14 +588,16 @@ void walkAround(void *data)
 		switch(d[s->floor][s->playerY][s->playerX])
 		{
 			case 2:
+			updateStatus("You walk upstairs.");
 			s->floor = s->floor+1;
 			break;
 			case 3:
+			updateStatus("You walk downstairs.");
 			s->floor = s->floor-1;
 			break;
 		}	
 		registerEvent(DISPLAY,resetDungeon,s->listeners);
-		generateEnemies(s);
+		generateEnemies(0,s);
 	}
 	else
 	{
@@ -606,7 +620,7 @@ void readDungeonFile()
 }
 
 // generate enemies on the floor 
-void generateEnemies(struct gameState * s)
+void generateEnemies(int numGenerate, struct gameState * s)
 {
 	// set enemies on floor
 	if(activeEnemies != NULL)
@@ -615,7 +629,7 @@ void generateEnemies(struct gameState * s)
 		activeEnemies = NULL;
 	}
 	
-	numEnemies = 1;
+	numEnemies = numGenerate;
 	activeEnemies = malloc(numEnemies * sizeof(struct enemies));
 	
 	// generate enemies to specific coordinates 
@@ -643,7 +657,7 @@ void initDungeonFloor(void *data)
 	// reset visibility array if it is empty/deleted
 	int iz,ix,iy;
 	
-	generateEnemies(s);
+	generateEnemies(0,s);
 		
 	if(visible == NULL)
 	{
