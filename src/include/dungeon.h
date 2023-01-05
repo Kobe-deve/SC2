@@ -333,6 +333,8 @@ void startEncounter(void *data)
 	destroyListener(DISPLAY,s->listeners);
 	destroyListener(LOGIC_HANDLER,s->listeners);
 	registerEvent(LOGIC_HANDLER,initBattle,s->listeners);
+	
+	updateStatus("You encountered a curse!");
 }
 
 // display range when moving  
@@ -420,6 +422,8 @@ void enemyHandler(struct gameState * s)
 				setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
 				printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
 			}	
+			else
+				updateStatus("A footstep echoes from the darkness...");	
 			
 			if(s->playerX > activeEnemies[i].x)
 				directionX = 1;
@@ -431,26 +435,31 @@ void enemyHandler(struct gameState * s)
 			else 
 				directionY = 2;
 			
+			int cY = activeEnemies[i].y;
+			int cX = activeEnemies[i].x; 
+			
 			switch(directionY)
 			{
 				case 1:
-				if(activeEnemies[i].y < dungeonSize-1 && d[s->floor][activeEnemies[i].y+1][activeEnemies[i].x] != 1)
+				if(cY < dungeonSize-1 && d[s->floor][cY+1][cX] != 1)
 					activeEnemies[i].y++;
 				break;
 				case 2:
-				if(activeEnemies[i].y > 0 && d[s->floor][activeEnemies[i].y-1][activeEnemies[i].x] != 1)
+				if(cY > 0 && d[s->floor][cY-1][cX] != 1)
 					activeEnemies[i].y--;
 				break;
 			}
 			
+			cY = activeEnemies[i].y;
+			
 			switch(directionX)
 			{
 				case 1:
-				if(activeEnemies[i].x < dungeonSize-1 && d[s->floor][activeEnemies[i].y][activeEnemies[i].x+1] != 1)
+				if(cX < dungeonSize-1 && d[s->floor][cY][cX+1] != 1)
 					activeEnemies[i].x++;
 				break;
 				case 3:
-				if(activeEnemies[i].x > 0 && d[s->floor][activeEnemies[i].y][activeEnemies[i].x-1] != 1)
+				if(cX > 0 && d[s->floor][cY][cX-1] != 1)
 					activeEnemies[i].x--;
 				break;
 			}
@@ -597,18 +606,12 @@ void walkAround(void *data)
 			break;
 		}	
 		registerEvent(DISPLAY,resetDungeon,s->listeners);
-		generateEnemies(0,s);
+		generateEnemies(1,s);
 	}
 	else
 	{
 		// display 
 		display(s);
-			
-		// frame capping	
-		++frames;
-		int framet = SDL_GetTicks() - capTicks;
-		if( framet < SCREEN_TICK_PER_FRAME)
-			pause( SCREEN_TICK_PER_FRAME - framet );
 	}
 		
 }
@@ -657,7 +660,7 @@ void initDungeonFloor(void *data)
 	// reset visibility array if it is empty/deleted
 	int iz,ix,iy;
 	
-	generateEnemies(0,s);
+	generateEnemies(1,s);
 		
 	if(visible == NULL)
 	{
