@@ -265,6 +265,7 @@ void displayRange(struct gameState * s)
 						setCursor(dungeonPrintCoordX+x,dungeonPrintCoordY+y);
 			
 						visible[s->floor][y][x] = 1;
+						
 						printf("%c",quickConvert(d[s->floor][y][x]));
 					}
 				}
@@ -468,7 +469,7 @@ void dungeonLogic(void *data, struct gameState * s)
 	}
 	
 	// move enemies 
-	enemyHandler(s);
+	//enemyHandler(s);
 	
 	// move npcs 
 	//npcHandler(s);
@@ -561,8 +562,10 @@ void readDungeonFile(char * fileName)
 		// read size of dungeon 
 		fscanf(readFile,"%s",fileReader);
 		
-		// get dungeon size 
+		// set dungeon size 
 		dungeonSize = atoi(fileReader);
+		
+		//
 		
 		// allocate size 
 		d = malloc(dungeonSize * sizeof(int **));
@@ -588,28 +591,15 @@ void readDungeonFile(char * fileName)
 				for(ix=0;ix<dungeonSize;ix++)
 				{	
 					fscanf(readFile,"%s",fileReader);
-					if(strcmp(fileReader," ") != 0)
+					
+					// checks if character is a letter 
+					if(fileReader[0] >= 'A' && (strcmp(fileReader," ") != 0))
+						d[iz][iy][ix] = 10+(fileReader[0]-65);		
+					else if(strcmp(fileReader," ") != 0)
 						d[iz][iy][ix] = atoi(fileReader);
 				}
 			}	
 		}
-		/*
-		printf("\n%d",dungeonSize);
-		getchar();
-		
-		for(iz=0;iz<dungeonSize;iz++)
-		{
-			for(iy=0;iy<dungeonSize;iy++)
-			{	
-				for(ix=0;ix<dungeonSize;ix++)
-				{	
-					printf("%d",d[iz][iy][ix]);
-				}
-				printf("\n");
-			}	
-			printf("\n");
-		}
-		getchar();*/
 	}
 	
 	fclose(readFile);
