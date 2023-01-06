@@ -162,7 +162,6 @@ int quickConvert(int x)
 		case B:
 		case C:
 		case D:
-		case E:
 		case F:
 		case G:
 		case 7:
@@ -469,7 +468,7 @@ void dungeonLogic(void *data, struct gameState * s)
 	}
 	
 	// move enemies 
-	//enemyHandler(s);
+	enemyHandler(s);
 	
 	// move npcs 
 	//npcHandler(s);
@@ -609,6 +608,11 @@ void readDungeonFile(char * fileName)
 // generate enemies on the floor 
 void generateEnemies(int numGenerate, struct gameState * s)
 {
+	// number of spawn points specifically on the map
+	int numSpawnPoints = 0;
+	int ix,iy;
+	int i = 0;
+	
 	// set enemies on floor
 	if(activeEnemies != NULL)
 	{
@@ -619,20 +623,41 @@ void generateEnemies(int numGenerate, struct gameState * s)
 	numEnemies = numGenerate;
 	activeEnemies = malloc(numEnemies * sizeof(struct enemies));
 	
-	// generate enemies to specific coordinates 
-	int i;
-	for(i = 0;i<numEnemies;i++)
-	{
-		activeEnemies[i].startTicks = 1;
-		activeEnemies[i].x = rand()%dungeonSize;
-		activeEnemies[i].y = rand()%dungeonSize;
-		while(d[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1)
-		{
-			activeEnemies[i].x = rand()%dungeonSize;
-			activeEnemies[i].y = rand()%dungeonSize;	
+	// check if the map has any specific enemy spawn points 
+	for(iy=0;iy<dungeonSize;iy++)
+	{	
+		for(ix=0;ix<dungeonSize;ix++)
+		{	
+			if(d[s->floor][iy][ix] == E && numGenerate > 0)
+			{
+				activeEnemies[numGenerate-1].startTicks = 1;
+				activeEnemies[numGenerate-1].x = ix;
+				activeEnemies[numGenerate-1].y = iy;
+				
+				activeEnemies[numGenerate-1].active = 1;
+				activeEnemies[numGenerate-1].type = rand()%3+1;
+				numGenerate--;
+			}
 		}
-		activeEnemies[i].active = 1;
-		activeEnemies[i].type = rand()%3+1;
+	}
+	
+	// if there are no specific spawn point coordinates, randomly spawn the remaining number of enemies 
+	if(numGenerate > 0)
+	{
+		// generate enemies to specific coordinates 
+		for(i = 0;i<numEnemies;i++)
+		{
+			activeEnemies[i].startTicks = 1;
+			activeEnemies[i].x = rand()%dungeonSize;
+			activeEnemies[i].y = rand()%dungeonSize;
+			while(d[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1)
+			{
+				activeEnemies[i].x = rand()%dungeonSize;
+				activeEnemies[i].y = rand()%dungeonSize;	
+			}
+			activeEnemies[i].active = 1;
+			activeEnemies[i].type = rand()%3+1;
+		}
 	}
 }
 
@@ -728,7 +753,7 @@ void initDungeonFloor(void *data)
 	setColor(WHITE);
 	
 	// generate enemies on the first floor 
-	generateEnemies(0,s);
+	generateEnemies(2,s);
 	
 	// generate npc array 
 	numNPCs = 0;
