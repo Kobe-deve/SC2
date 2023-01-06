@@ -4,7 +4,6 @@ A rebuild of Stone Crawler from the ground up using
 C and the SDL2 (along with SDL2_Mixer) library
 
 File Organization:
-
 src: - main.c
      -> include
 		-battle.h - handles battle system operations 
@@ -19,5 +18,10 @@ src: - main.c
 			-sprite_data.h - contains graphic arrays
 			-state.h - game state operations
 			-stats.h - character stat operations
+     -> maps - contains map files read by the game 
+     -> music - contains music/sound assets
+     -> dlls - contains dlls used for compiling 
 
+Compiling command:
+gcc main.c -lSDL2 -lSDL2_mixer -o main
 

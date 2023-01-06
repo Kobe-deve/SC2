@@ -1,0 +1,25 @@
+Map File:
+	-First Line: Dungeon Size (the x/y/floor size of the dungeon)
+	-Space/Dash
+	
+	-Repeat the following for all dungeon floors 
+		-Array Ex: 0 0 0 1 0 E 0 0 E 0 
+			   0 0 1 1 1 1 1 1 0 0 
+			   0 0 0 0 0 0 0 1 0 0 
+			   0 0 0 A 0 1 0 1 1 1 
+			   0 0 0 9 1 0 0 0 0 0 
+			   1 1 1 1 1 0 0 0 2 0 
+			   0 4 0 0 1 0 0 0 0 0 
+			   0 4 4 0 0 0 0 0 0 0 
+			   1 1 0 1 0 0 0 0 0 0 
+			   4 4 0 0 0 0 0 0 0 0 
+		-Space
+
+Characters:
+	1 - Wall
+	2 - Stairs(up)
+	3 - Stairs(down)
+	4 - chest
+	9 - shop
+	B - Dungeon boss spawn point 
+	E - Enemy spawn point 
