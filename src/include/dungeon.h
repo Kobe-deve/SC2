@@ -194,6 +194,15 @@ void resetDungeon(void *data)
 	
 	int counterx,countery;
 	int i;
+	
+	// if variables used in battle aren't null, free them
+	if(s->currentBattle.enemies != NULL)
+	{
+		free(s->currentBattle.enemies);
+		s->currentBattle.enemies = NULL;
+	}
+	
+	// display visible spaces and dungeon border 
 	for(countery = -1;countery < dungeonSize+1;countery++)
 	{
 		for(counterx = -1;counterx < dungeonSize+1;counterx++)
@@ -235,6 +244,11 @@ void resetDungeon(void *data)
 void startEncounter(void *data)
 {
 	struct gameState * s = (struct gameState *)data;
+	
+	// set up battle structure based on the type of enemy 
+	s->currentBattle.turns = 0;
+	s->currentBattle.numEnemies = 0;
+	s->currentBattle.enemies = malloc(s->currentBattle.numEnemies * sizeof(struct character));
 	
 	// set events to start battle processing
 	destroyListener(MENU_SELECTION,s->listeners);
