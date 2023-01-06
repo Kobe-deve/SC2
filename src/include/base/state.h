@@ -82,5 +82,8 @@
 	void initBattle(void *data);
 	void walkAround(void *data);
 	void resetDungeon(void *data);
+	
+	// free data functions
+	void freeDungeonData(void *data);
 #endif
 

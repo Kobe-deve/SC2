@@ -54,6 +54,7 @@ struct npc
 	int active; // is the npc alive 
 	int type; // type of npc for dialogue/stats  
 	int inCombat; // is the npc fighting an npc 
+	int talking; // is the npc talking to the player 
 	Uint32 startTicks; // for movement timer 	
 };
 
@@ -61,7 +62,7 @@ struct npc
 int *** visible = NULL;
 
 // width/height of the current dungeon
-int dungeonSize = 10;
+int dungeonSize = 0;
 
 // enemy movement information for dungeon 
 int numEnemies = 0;
@@ -76,116 +77,7 @@ int maxStatus = 10; // max number of status lines visible
 char ** statusText = NULL;
 int numStatusLines = 0;
 
-int d[10][10][10] = {  {0,0,0,1,0,0,0,0,4,0,
-						0,0,0,1,0,1,1,1,1,1,
-						0,0,0,28,0,0,0,0,0,0,
-						0,0,0,0,0,1,0,0,0,0,
-						0,0,0,9,1,0,0,0,0,0,
-						1,1,1,1,1,0,0,0,2,0,
-						0,4,0,0,1,0,0,0,0,0,
-						0,4,4,0,0,0,0,0,0,0,
-						1,1,0,1,0,0,0,0,0,0,
-						4,4,0,0,0,0,0,0,0,0},
-						
-						{4,0,0,0,0,0,0,0,0,0,
-						 1,1,1,1,0,0,0,0,2,0,
-						 4,4,1,0,0,0,0,0,0,0,
-						 4,9,1,0,1,1,1,1,1,1,
-						 0,0,1,0,1,0,0,0,0,0,
-						 1,0,1,0,1,0,1,0,0,0,
-						 0,0,1,0,1,0,1,0,3,0,
-					 	 0,0,1,0,1,0,1,0,0,0,
-						 0,0,1,0,1,0,0,1,1,1,
-						 0,0,0,0,0,0,0,0,0,4},
-						
-						{0,0,0,0,0,0,0,0,0,0,
-						 0,0,1,1,1,0,0,0,0,0,
-						 0,0,0,0,1,9,0,0,3,0,
-						 0,0,0,0,1,1,1,1,1,1,
-						 0,0,0,0,0,0,0,0,0,0,
-						 1,1,1,1,0,0,0,0,0,0,
-						 0,0,4,1,0,0,0,0,0,0,
-						 0,0,0,1,0,1,1,1,1,1,
-						 0,2,0,0,0,1,0,4,4,0,
-						 0,0,0,1,0,0,0,4,4,0},
-						
-						{1,1,4,4,0,0,0,0,0,0,
-						 0,1,4,4,0,0,0,0,0,0,
-						 0,1,1,1,1,1,1,1,1,0,
-						 0,0,0,0,0,0,0,0,0,0,
-						 1,1,1,0,1,1,1,0,1,1,
-						 4,0,0,0,1,0,1,0,1,4,
-						 1,1,1,0,1,0,1,0,1,0,
-						 0,3,1,0,1,0,1,0,2,0,
-						 0,0,1,0,1,0,0,0,0,0,
-						 0,0,0,0,1,0,0,0,0,0},
-						
-						{0,1,0,0,0,0,0,0,0,0,
-						 0,0,0,0,0,0,0,0,0,0,
-						 0,1,0,0,0,0,0,0,0,0,
-						 0,1,0,0,0,0,0,0,0,0,
-						 0,1,0,1,1,1,1,1,0,0,
-						 0,1,0,0,0,0,2,1,20,0,
-						 0,1,1,0,1,0,0,1,0,0,
-						 0,4,1,0,1,1,1,1,0,0,
-						 0,9,1,0,0,0,4,1,3,0,
-						 0,4,1,0,0,0,4,1,0,0},
-						 		
-						{4,0,0,0,0,0,0,0,0,0,
-						 1,1,1,0,0,0,0,1,0,2,
-						 0,0,0,0,0,0,0,1,0,0,
-						 0,0,0,1,1,1,1,1,0,0,
-						 0,1,1,1,0,0,0,1,4,4,
-						 0,0,0,1,0,0,0,1,1,1,
-						 1,1,0,1,0,1,3,1,4,4,
-						 0,0,0,1,0,1,1,1,4,4,
-						 0,1,1,1,0,1,0,0,0,0,
-						 0,0,0,0,0,0,0,0,0,0},
-						
-						{ 0,0,0,0,0,0,0,0,0,3,
-						  0,0,1,1,1,1,1,1,0,0,
-						  0,1,2,0,0,0,0,0,1,1,
-						  0,1,0,0,0,1,1,0,0,0,
-						  0,1,1,1,1,0,0,1,0,0,
-						  0,0,0,0,0,2,0,1,0,0,
-						  0,1,1,1,0,0,0,1,0,0,
-						  0,1,0,0,1,1,1,0,0,0,
-						  0,1,4,4,0,0,0,0,0,0,
-						  0,1,9,0,0,0,0,0,0,0},
-						 
-						 {0,0,0,0,0,0,0,0,0,4,
-						  0,0,0,0,0,0,0,0,1,1,
-						  0,0,0,1,1,0,0,0,0,0,
-						  0,0,3,1,0,0,0,0,0,0,
-						  0,0,0,1,0,1,1,1,1,1,
-						  0,0,1,0,0,0,3,1,0,0,
-						  0,0,1,0,2,1,1,0,0,0,
-						  0,1,0,0,0,0,1,0,0,0,
-						  0,0,1,1,1,1,1,0,0,0,
-						  0,0,0,0,0,0,0,0,0,0},
-						 
-						 {0,0,0,1,0,0,0,0,2,0,
-						  0,2,0,1,0,0,1,0,0,0,
-						  0,0,0,1,0,0,1,0,0,0,
-						  0,0,0,1,0,0,1,1,1,1,
-						  0,0,0,1,0,0,0,0,0,0,
-						  0,0,0,1,0,0,0,0,0,0,
-						  0,0,0,1,0,1,1,1,1,0,
-						  0,0,0,1,3,1,4,4,0,0,
-						  0,0,0,1,1,1,0,0,0,0,
-						  0,0,0,0,0,0,0,0,0,0},
-						 
-						 {0,3,1,4,4,4,4,1,0,3,
-						  0,0,1,4,7,4,4,1,0,0,
-						  0,0,1,0,0,0,0,1,0,0,
-						  0,9,1,0,0,0,0,1,0,0,
-						  1,1,0,0,0,0,0,1,0,0,
-						  0,0,0,0,0,0,0,1,0,0,
-						  0,0,0,0,1,0,0,1,0,0,
-						  0,0,0,0,1,1,1,0,0,0,
-						  0,0,0,0,0,0,0,0,0,0,
-						  0,0,0,0,0,0,0,0,0,0},
-						};
+int *** d = NULL;
 
 void initDungeonFloor(void *data);
 void displayRange(struct gameState * s);
@@ -380,6 +272,7 @@ void displayRange(struct gameState * s)
 				setColor(WHITE);
 			}
 			
+			// checks if any enemies are visible with the updated range
 			if((y >= 0 && x >= 0 && y < dungeonSize && x < dungeonSize))
 			{
 				for(i = 0;i<numEnemies;i++)
@@ -502,7 +395,12 @@ void enemyHandler(struct gameState * s)
 // handling npcs on the floor 
 void npcHandler(struct gameState * s)
 {
+	int i;
 	
+	for(i = 0;i<numNPCs;i++)
+	{	
+		printf("%c",233);
+	}
 }
 
 // logic handling in dungeon section for moving player/npcs/etc
@@ -572,6 +470,9 @@ void dungeonLogic(void *data, struct gameState * s)
 	// move enemies 
 	enemyHandler(s);
 	
+	// move npcs 
+	//npcHandler(s);
+	
 	// check if player has run into enemies 
 	for(i=0;i<numEnemies;i++)
 	{
@@ -638,8 +539,81 @@ void walkAround(void *data)
 
 // define dungeon based on file
 // TODO
-void readDungeonFile()
+void readDungeonFile(char * fileName)
 {
+	// the file to be read 
+	FILE *readFile;
+	char * fileReader = malloc(128 * sizeof(char)); 
+	
+	readFile = fopen(fileName,"r");
+	
+	int iy, iz, ix;
+	
+	// check if file is opened
+	if(!readFile)
+	{
+		printf("ERROR:DUNGEON FILE COULD NOT BE READ");
+		getchar();
+		exit(0);
+	}
+	else
+	{
+		// read size of dungeon 
+		fscanf(readFile,"%s",fileReader);
+		
+		// get dungeon size 
+		dungeonSize = atoi(fileReader);
+		
+		// allocate size 
+		d = malloc(dungeonSize * sizeof(int **));
+		for(iz=0;iz<dungeonSize;iz++)
+		{
+			d[iz] = malloc(dungeonSize * sizeof(int *));
+			for(iy=0;iy<dungeonSize;iy++)
+			{	
+				d[iz][iy] = malloc(dungeonSize * sizeof(int));
+				for(ix=0;ix<dungeonSize;ix++)
+					d[iz][iy][ix] = 0;
+			}	
+		}
+		
+		// skip empty space 
+		fscanf(readFile,"%s",fileReader);
+		
+		// read file data 
+		for(iz=0;iz<dungeonSize;iz++)
+		{
+			for(iy=0;iy<dungeonSize;iy++)
+			{	
+				for(ix=0;ix<dungeonSize;ix++)
+				{	
+					fscanf(readFile,"%s",fileReader);
+					if(strcmp(fileReader," ") != 0)
+						d[iz][iy][ix] = atoi(fileReader);
+				}
+			}	
+		}
+		/*
+		printf("\n%d",dungeonSize);
+		getchar();
+		
+		for(iz=0;iz<dungeonSize;iz++)
+		{
+			for(iy=0;iy<dungeonSize;iy++)
+			{	
+				for(ix=0;ix<dungeonSize;ix++)
+				{	
+					printf("%d",d[iz][iy][ix]);
+				}
+				printf("\n");
+			}	
+			printf("\n");
+		}
+		getchar();*/
+	}
+	
+	fclose(readFile);
+	free(fileReader);
 }
 
 // generate enemies on the floor 
@@ -672,6 +646,12 @@ void generateEnemies(int numGenerate, struct gameState * s)
 	}
 }
 
+// for freeing data when exiting a dungeon 
+void freeDungeonData(void *data)
+{
+	
+}
+
 // display the dungeon floor and set up used varaiables initially
 void initDungeonFloor(void *data)
 {		
@@ -680,8 +660,30 @@ void initDungeonFloor(void *data)
 	// reset visibility array if it is empty/deleted
 	int iz,ix,iy;
 	
-	generateEnemies(0,s);
-		
+	// the dungeon file that needs to be read 
+	char * fileName; 
+
+	// set specific conditions based on what dungeon is being initialized 	
+	switch(s->building)
+	{
+		default:
+		case 0:
+		fileName = ORIGINAL_DUNGEON;
+		break;
+	}
+	
+	// read dungeon file 
+	readDungeonFile(fileName);
+	
+	// check if dungeon array is filled with data 
+	if(d == NULL)
+	{
+		printf("ERROR:DUNGEON FILE NOT COMPATIBLE");
+		getchar();
+		exit(0);
+	}
+	
+	// allocate visible array 
 	if(visible == NULL)
 	{
 		visible = malloc(dungeonSize * sizeof(int **));
@@ -707,9 +709,6 @@ void initDungeonFloor(void *data)
 		free(statusText);
 		statusText = NULL;
 	}
-	
-	numStatusLines = 0;
-	statusText = malloc(maxStatus * sizeof(char *));	
 	
 	// initial display range 
 	displayRange(s);
@@ -738,7 +737,20 @@ void initDungeonFloor(void *data)
 	}		
 	setColor(WHITE);
 	
-	updateStatus("WELCOME TO THE DUNGEON");
+	// generate enemies on the first floor 
+	generateEnemies(0,s);
+	
+	// generate npc array 
+	numNPCs = 0;
+	activeNPCs = malloc(maxStatus * sizeof(struct npc));
+
+	// set up status handling array 
+	numStatusLines = 0;
+	statusText = malloc(maxStatus * sizeof(char *));	
+	
+	updateStatus("You wake up in a strange stone room, dimly lit but still dark.");
+
+	printf("AH");
 }
 
 #endif

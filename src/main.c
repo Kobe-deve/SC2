@@ -35,7 +35,7 @@ void initNewGame(struct gameState * s)
 	s->playerX = 0;
 	s->playerY = 0;
 	s->floor = 0;
-
+	s->building = 0;
 };
 
 int main()

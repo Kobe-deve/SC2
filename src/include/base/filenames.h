@@ -7,4 +7,6 @@
 #define DUNGEON_MUSIC "music/Live.wav"
 #define BATTLE_MUSIC "music/39 Arms vs 2.wav"
 
+#define ORIGINAL_DUNGEON "maps/original_dungeon.txt"
+
 #endif

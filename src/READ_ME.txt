@@ -3,7 +3,7 @@ Stone Crawler Rebuild
 A rebuild of Stone Crawler from the ground up using 
 C and the SDL2 (along with SDL2_Mixer) library
 
-Organization:
+File Organization:
 
 src: - main.c
      -> include
@@ -19,3 +19,5 @@ src: - main.c
 			-sprite_data.h - contains graphic arrays
 			-state.h - game state operations
 			-stats.h - character stat operations
+
+
