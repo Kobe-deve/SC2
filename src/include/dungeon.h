@@ -678,7 +678,44 @@ void generateEnemies(int numGenerate, struct gameState * s)
 // for freeing data when exiting a dungeon 
 void freeDungeonData(void *data)
 {
+	int iy, iz, ix;
 	
+	if(d != NULL && visible != NULL)
+	{
+		// free dungeon and visibility array 
+		for(iz=0;iz<dungeonSize;iz++)
+		{
+			for(iy=0;iy<dungeonSize;iy++)
+			{		
+				for(ix=0;ix<dungeonSize;ix++)
+				{
+					free(&d[iz][iy][ix]);
+					free(&visible[iz][iy][ix]);
+				}
+				free(d[iz][iy]);
+				free(visible[iz][iy]);
+			}
+			free(visible[iz]);
+			free(d[iz]);
+		}
+	}
+	
+	// free enemies/NPCs
+	if(activeEnemies != NULL)
+		free(activeEnemies);
+	
+	if(activeNPCs != NULL)
+		free(activeNPCs);
+
+	// free status
+	if(statusText != NULL)
+		free(statusText);
+	
+	statusText = NULL;
+	d = NULL;
+	visible = NULL;
+	activeNPCs = NULL;
+	activeEnemies = NULL;
 }
 
 // display the dungeon floor and set up used varaiables initially
@@ -779,7 +816,7 @@ void initDungeonFloor(void *data)
 	
 	updateStatus("You wake up in a strange stone room, dimly lit but still dark.");
 
-	printf("AH");
+	free(fileName);
 }
 
 #endif
