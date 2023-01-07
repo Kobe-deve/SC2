@@ -79,6 +79,10 @@ int main()
 		}
 	}
 	
+	// free variables based on what is being used
+	if(state.listeners[DISPLAY] != NULL && (state.listeners[DISPLAY]->mainFunction == walkAround))
+		freeDungeonData(&state);
+	
 	// destroy all listeners when game is done
 	destroyListeners(state.listeners,MAX_EVENTS);
 	
