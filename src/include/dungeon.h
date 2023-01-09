@@ -43,7 +43,6 @@ struct enemies
 	int active; // is the enemy alive 
 	int type; // the type of enemy for the encounter 
 	int inCombat; // is the enemy fighting an npc 
-	Uint32 startTicks; // for movement timer 
 	int speed; // what interval does the enemy move 
 };
 
@@ -56,7 +55,7 @@ struct npc
 	int type; // type of npc for dialogue/stats  
 	int inCombat; // is the npc fighting an npc 
 	int talking; // is the npc talking to the player 
-	Uint32 startTicks; // for movement timer 	
+	int speed; // interval the npc moves at 
 };
 
 // array of visible tiles in an area
@@ -344,6 +343,8 @@ void clearDisplay(struct gameState * s)
 void enemyHandler(struct gameState * s)
 {
 	int i = 0;
+	int j,enemyHere;
+	int cYo;
 	int directionX, directionY;
 	
 	if(debug == 1)
@@ -354,18 +355,23 @@ void enemyHandler(struct gameState * s)
 	
 	for(i = 0;i<numEnemies;i++)
 	{
+		enemyHere = 0;
+		
 		directionY = 0;
 		directionX = 0;
-		if(activeEnemies[i].active == 1 && ((int)(SDL_GetTicks() - activeEnemies[i].startTicks)) % activeEnemies[i].speed == 0)
+		if(activeEnemies[i].active == 1 && ((int)(SDL_GetTicks())) % activeEnemies[i].speed == 0)
 		{
+			// erase/update current spot when moving 
 			if(visible[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1)
 			{
+				// make sure there isn't another enemy on this spot if updating 
 				setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
 				printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
 			}	
 			else
 				updateStatus("A footstep echoes from the darkness...");	
 			
+			// set up direction variables 
 			if(s->playerX > activeEnemies[i].x)
 				directionX = 1;
 			else if(s->playerX < activeEnemies[i].x)
@@ -378,7 +384,9 @@ void enemyHandler(struct gameState * s)
 			
 			int cY = activeEnemies[i].y;
 			int cX = activeEnemies[i].x; 
+			cYo = 0;
 			
+			// move in y direction 
 			switch(directionY)
 			{
 				case 1:
@@ -391,6 +399,8 @@ void enemyHandler(struct gameState * s)
 				break;
 			}
 			
+			// move in x direction 
+			cYo = cY;
 			cY = activeEnemies[i].y;
 			
 			switch(directionX)
@@ -404,8 +414,17 @@ void enemyHandler(struct gameState * s)
 					activeEnemies[i].x--;
 				break;
 			}
-		
-			activeEnemies[i].startTicks = 10;
+			
+			// make sure enemies don't overlap when moving, if so then keep them at their spot 
+			for(j=0;j<numEnemies;j++)
+			{
+				if(j!=i && ((activeEnemies[i].y == activeEnemies[j].y) && (activeEnemies[i].x == activeEnemies[j].x)))
+				{
+					activeEnemies[i].x = cX;
+					activeEnemies[i].y = cYo;
+					break;
+				}
+			}
 		
 			// display enemy 
 			if(visible[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1)
@@ -418,7 +437,7 @@ void enemyHandler(struct gameState * s)
 		if(debug == 1)
 		{
 			setCursor(50,20+i);
-			printf("ENEMY #%d: (%d, %d) STATUS:%d MOVEMENT: %d",i,activeEnemies[i].x,activeEnemies[i].y,activeEnemies[i].active,((int)(SDL_GetTicks() - activeEnemies[i].startTicks))% 1000);
+			printf("ENEMY #%d: (%d, %d) STATUS:%d MOVEMENT: %d",i,activeEnemies[i].x,activeEnemies[i].y,activeEnemies[i].active,((int)(SDL_GetTicks()))% activeEnemies[i].speed);
 		}
 	}
 }
@@ -663,8 +682,7 @@ void generateEnemies(struct gameState * s)
 		{	
 			if(d[s->floor][iy][ix] == E && numGenerate > 0)
 			{
-				activeEnemies[numGenerate-1].speed = (rand()%5+2)*500; 
-				activeEnemies[numGenerate-1].startTicks = 1;
+				activeEnemies[numGenerate-1].speed = 1500; 
 				activeEnemies[numGenerate-1].x = ix;
 				activeEnemies[numGenerate-1].y = iy;
 				
@@ -681,8 +699,7 @@ void generateEnemies(struct gameState * s)
 		// generate enemies to specific coordinates 
 		for(i = 0;i<numEnemies;i++)
 		{
-			activeEnemies[i].speed = (rand()%5+2)*500; 
-			activeEnemies[i].startTicks = 1;
+			activeEnemies[i].speed = 1500; 
 			activeEnemies[i].x = rand()%dungeonSize;
 			activeEnemies[i].y = rand()%dungeonSize;
 			while(d[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1)
