@@ -187,7 +187,7 @@ int quickConvert(int x)
 	}
 }
 
-// reset after encounter 
+// reset after encounter or moving to a new floor
 void resetDungeon(void *data)
 {
 	struct gameState * s = (struct gameState *)data;
@@ -239,7 +239,7 @@ void resetDungeon(void *data)
 }
 
 // start encounter 
-void startEncounter(void *data)
+void startEncounter(int type, void *data)
 {
 	struct gameState * s = (struct gameState *)data;
 	
@@ -247,6 +247,17 @@ void startEncounter(void *data)
 	s->currentBattle.turns = 0;
 	s->currentBattle.numEnemies = 0;
 	s->currentBattle.enemies = malloc(s->currentBattle.numEnemies * sizeof(struct character));
+	switch(type)
+	{
+		case 0:
+		break;
+		case 1:
+		break;
+		case 2:
+		break;
+		case 3:
+		break;
+	}
 	
 	// set events to start battle processing
 	destroyListener(MENU_SELECTION,s->listeners);
@@ -498,7 +509,7 @@ void dungeonLogic(void *data, struct gameState * s)
 		if(activeEnemies[i].active == 1 && activeEnemies[i].y == s->playerY && activeEnemies[i].x == s->playerX)
 		{
 			activeEnemies[i].active = 0;
-			startEncounter(data);
+			startEncounter(activeEnemies[i].type,data);
 			
 			setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
 			printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
@@ -548,8 +559,8 @@ void walkAround(void *data)
 			s->floor = s->floor-1;
 			break;
 		}	
+		generateEnemies(2,s);
 		resetDungeon(data);
-		generateEnemies(0,s);
 	}
 	else // display 
 		display(s);
@@ -557,7 +568,6 @@ void walkAround(void *data)
 }
 
 // define dungeon based on file
-// TODO
 void readDungeonFile(char * fileName)
 {
 	// the file to be read 
@@ -579,11 +589,14 @@ void readDungeonFile(char * fileName)
 	{
 		// read size of dungeon 
 		fscanf(readFile,"%s",fileReader);
-		
-		// set dungeon size 
 		dungeonSize = atoi(fileReader);
 		
-		//
+		// read number of enemies spawned per floor 
+		fscanf(readFile,"%s",fileReader);
+		numEnemies = atoi(fileReader);
+		
+		// skip line
+		fscanf(readFile,"%s",fileReader);
 		
 		// allocate size 
 		d = malloc(dungeonSize * sizeof(int **));
@@ -597,9 +610,6 @@ void readDungeonFile(char * fileName)
 					d[iz][iy][ix] = 0;
 			}	
 		}
-		
-		// skip empty space 
-		fscanf(readFile,"%s",fileReader);
 		
 		// read file data 
 		for(iz=0;iz<dungeonSize;iz++)
@@ -619,10 +629,11 @@ void readDungeonFile(char * fileName)
 			}	
 		}
 	}
-	
+		
 	fclose(readFile);
 	free(fileReader);
 }
+
 
 // generate enemies on the floor 
 void generateEnemies(int numGenerate, struct gameState * s)
@@ -788,6 +799,9 @@ void initDungeonFloor(void *data)
 		statusText = NULL;
 	}
 	
+	// generate enemies on the first floor 
+	generateEnemies(2,s);
+	
 	// initial display range 
 	displayRange(s);
 	
@@ -814,9 +828,6 @@ void initDungeonFloor(void *data)
 		}
 	}		
 	setColor(WHITE);
-	
-	// generate enemies on the first floor 
-	generateEnemies(0,s);
 	
 	// generate npc array 
 	numNPCs = 0;
