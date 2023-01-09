@@ -819,8 +819,8 @@ void initDungeonFloor(void *data)
 	generateEnemies(0,s);
 	
 	// generate npc array 
-	//numNPCs = 0;
-	//activeNPCs = malloc(maxStatus * sizeof(struct npc));
+	numNPCs = 0;
+	activeNPCs = malloc(maxStatus * sizeof(struct npc));
 
 	// set up status handling array 
 	numStatusLines = 0;

@@ -37,6 +37,8 @@ void initMusic(struct gameState * input)
 	input->option = 0;
 	input->options = NULL;
 	
+	input->currentBattle.turns = 0;
+	input->currentBattle.numEnemies = 0;
 	input->currentBattle.enemies = NULL;
 	input->currentBattle.turnOrder = NULL;
 	input->options = NULL;

@@ -81,6 +81,7 @@ int main()
 	
 	// free data
 	freeDungeonData(&state);
+	freeBattleData(&state);
 	
 	// destroy all listeners when game is done
 	destroyListeners(state.listeners,MAX_EVENTS);

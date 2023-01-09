@@ -133,6 +133,32 @@ void battleLoop(void *data)
 	}
 }
 
+// free battle data 
+void freeBattleData(void *data)
+{
+	struct gameState * s = (struct gameState *)data;
+	
+	int i;
+
+	if(s->currentBattle.enemies != NULL)
+	{
+		for(i=0;i<s->currentBattle.numEnemies;i++)
+			free(&s->currentBattle.enemies[i]);
+		
+		free(s->currentBattle.enemies);
+	}
+
+	if(s->currentBattle.turnOrder != NULL)
+		free(s->currentBattle.turnOrder);
+	
+	s->currentBattle.turns = 0;
+	s->currentBattle.numChars = 0;
+	s->currentBattle.numEnemies = 0;
+	s->currentBattle.turnOrder = NULL;
+	s->currentBattle.enemies = NULL;
+	
+}
+
 // start battle 
 void initBattle(void *data)
 {
