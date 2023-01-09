@@ -30,7 +30,6 @@ void titleScreenDisplay(void *data)
 		free(array);
 	}
 	destroyListener(DISPLAY,s->listeners);
-	printf("%d",rand()%10+1);
 }
 
 // logic at the title screen 

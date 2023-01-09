@@ -25,3 +25,11 @@ src: - main.c
 Compiling command:
 gcc main.c -lSDL2 -lSDL2_mixer -o main
 
+Event Handling:
+	Events are registered through the registerEvent function specifically with 
+	a certain enumerated value to represent said function, it's important to
+	deallocate this with destroyListener when said function/event does not need
+	to be utilized.
+	
+	For example menu handling in this game is done with MENU_SELECTION
+	but it first must be initialized with values before being used

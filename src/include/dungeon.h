@@ -682,7 +682,7 @@ void generateEnemies(struct gameState * s)
 		{	
 			if(d[s->floor][iy][ix] == E && numGenerate > 0)
 			{
-				activeEnemies[numGenerate-1].speed = 1000; 
+				activeEnemies[numGenerate-1].speed = 1500; 
 				activeEnemies[numGenerate-1].x = ix;
 				activeEnemies[numGenerate-1].y = iy;
 				
@@ -699,7 +699,7 @@ void generateEnemies(struct gameState * s)
 		// generate enemies to specific coordinates 
 		for(i = 0;i<numEnemies;i++)
 		{
-			activeEnemies[i].speed = 1000; 
+			activeEnemies[i].speed = 1500; 
 			activeEnemies[i].x = rand()%dungeonSize;
 			activeEnemies[i].y = rand()%dungeonSize;
 			while(d[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1)

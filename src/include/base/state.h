@@ -72,7 +72,7 @@
 	};
 	
 	// debug mode toggle
-	int debug = 1;
+	int debug = 0;
 	
 	// initialize a new game 
 	void initNewGame(struct gameState * s);
