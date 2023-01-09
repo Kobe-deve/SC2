@@ -355,7 +355,7 @@ void enemyHandler(struct gameState * s)
 	{
 		directionY = 0;
 		directionX = 0;
-		if(activeEnemies[i].active == 1 && ((int)(SDL_GetTicks() - activeEnemies[i].startTicks)) % 1000 == 0)
+		if(activeEnemies[i].active == 1 && ((int)(SDL_GetTicks() - activeEnemies[i].startTicks)) % 1500 == 0)
 		{
 			if(visible[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1)
 			{
@@ -404,7 +404,7 @@ void enemyHandler(struct gameState * s)
 				break;
 			}
 		
-			activeEnemies[i].startTicks = 1;
+			activeEnemies[i].startTicks = 10;
 		
 			// display enemy 
 			if(visible[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1)
