@@ -82,7 +82,7 @@ int *** d = NULL;
 
 void initDungeonFloor(void *data);
 void displayRange(struct gameState * s);
-void generateEnemies(int numGenerate,struct gameState * s);
+void generateEnemies(struct gameState * s);
 
 // display status in dungeon 
 void displayStatus()
@@ -560,7 +560,7 @@ void walkAround(void *data)
 			s->floor = s->floor-1;
 			break;
 		}	
-		generateEnemies(2,s);
+		generateEnemies(s);
 		resetDungeon(data);
 	}
 	else // display 
@@ -637,7 +637,7 @@ void readDungeonFile(char * fileName)
 
 
 // generate enemies on the floor 
-void generateEnemies(int numGenerate, struct gameState * s)
+void generateEnemies(struct gameState * s)
 {
 	// number of spawn points specifically on the map
 	int numSpawnPoints = 0;
@@ -651,7 +651,9 @@ void generateEnemies(int numGenerate, struct gameState * s)
 		activeEnemies = NULL;
 	}
 	
-	numEnemies = numGenerate;
+	int numGenerate = numEnemies;
+	
+	// allocate memory
 	activeEnemies = malloc(numEnemies * sizeof(struct enemies));
 	
 	// check if the map has any specific enemy spawn points 
@@ -803,7 +805,7 @@ void initDungeonFloor(void *data)
 	}
 	
 	// generate enemies on the first floor 
-	generateEnemies(2,s);
+	generateEnemies(s);
 	
 	// initial display range 
 	displayRange(s);
