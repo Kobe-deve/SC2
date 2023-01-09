@@ -71,6 +71,16 @@
 		struct character protag_stats; // stats of the main character 
 	};
 	
+	// load state save data
+	void loadState(char * fileName)
+	{
+	};
+	
+	// save state data 
+	void saveState(struct gameState * data)
+	{
+	};
+	
 	// debug mode toggle
 	int debug = 0;
 	

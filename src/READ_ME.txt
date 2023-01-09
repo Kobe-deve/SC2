@@ -25,6 +25,12 @@ src: - main.c
 Compiling command:
 gcc main.c -lSDL2 -lSDL2_mixer -o main
 
+Controls:
+	Arrow Keys - Movement/Selecting
+	Enter - Confirm
+	Esc - Exit the game
+	M - (in dungeon) menu
+
 Event Handling:
 	Events are registered through the registerEvent function specifically with 
 	a certain enumerated value to represent said function, it's important to

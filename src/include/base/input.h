@@ -15,6 +15,7 @@ enum input
 	RIGHT = 77,
 	ENTER = 13,
 	ESC = 27,
+	MENU = 109, 
 	BACKSPACE = 8
 };
 

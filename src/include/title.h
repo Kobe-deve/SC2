@@ -14,7 +14,13 @@
 // title screen functions 
 void titleScreenDisplay(void *data)
 {
-	printPattern(TITLE,10,10,80,10);
+	// display title 
+	printPattern(TITLE,45,10,80,10);
+	
+	setCursor(55,20);
+	printf("Version 2.0: Idle on the Grindstone");
+	setCursor(55,21);
+	printf("Finality Games - Developed by Demi");
 	
 	struct gameState * s = (struct gameState *)data;
 	
@@ -25,7 +31,7 @@ void titleScreenDisplay(void *data)
 		array[0] = "New Game";
 		array[1] = "Continue";
 		
-		initMenu(s,2,array,50,21);
+		initMenu(s,2,array,85,24);
 		
 		free(array);
 	}
