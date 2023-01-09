@@ -379,7 +379,7 @@ void enemyHandler(struct gameState * s)
 				
 			if(s->playerY > activeEnemies[i].y)
 				directionY = 1;
-			else 
+			else if(s->playerY < activeEnemies[i].y)
 				directionY = 2;
 			
 			int cY = activeEnemies[i].y;
