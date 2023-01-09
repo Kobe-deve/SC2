@@ -32,8 +32,13 @@ void initMusic(struct gameState * input)
 	// start title music 
 	switchTrack(TITLE_MUSIC,input);
 	
+	// set initial game state variables 
 	input->input = 0;
 	input->option = 0;
+	input->options = NULL;
+	
+	input->currentBattle.enemies = NULL;
+	input->currentBattle.turnOrder = NULL;
 	input->options = NULL;
 }
 #endif

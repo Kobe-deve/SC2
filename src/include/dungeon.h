@@ -197,10 +197,8 @@ void resetDungeon(void *data)
 	
 	// if variables used in battle aren't null, free them
 	if(s->currentBattle.enemies != NULL)
-	{
 		free(s->currentBattle.enemies);
-		s->currentBattle.enemies = NULL;
-	}
+	s->currentBattle.enemies = NULL;
 	
 	// display visible spaces and dungeon border 
 	for(countery = -1;countery < dungeonSize+1;countery++)
@@ -335,6 +333,13 @@ void enemyHandler(struct gameState * s)
 {
 	int i = 0;
 	int directionX, directionY;
+	
+	if(debug == 1)
+	{
+		setCursor(50,19);
+		printf("ENEMIES: %d",numEnemies);
+	}
+	
 	for(i = 0;i<numEnemies;i++)
 	{
 		directionY = 0;
@@ -543,7 +548,7 @@ void walkAround(void *data)
 			s->floor = s->floor-1;
 			break;
 		}	
-		registerEvent(DISPLAY,resetDungeon,s->listeners);
+		resetDungeon(data);
 		generateEnemies(0,s);
 	}
 	else // display 
@@ -679,7 +684,7 @@ void generateEnemies(int numGenerate, struct gameState * s)
 void freeDungeonData(void *data)
 {
 	int iy, iz, ix;
-	
+
 	if(d != NULL && visible != NULL)
 	{
 		// free dungeon and visibility array 
@@ -709,7 +714,14 @@ void freeDungeonData(void *data)
 
 	// free status
 	if(statusText != NULL)
+	{
+		for(iy=0;iy<maxStatus;iy++)
+		{
+			if(statusText[iy] != NULL)
+				free(statusText[iy]);
+		}
 		free(statusText);
+	}
 	
 	statusText = NULL;
 	d = NULL;
@@ -768,7 +780,7 @@ void initDungeonFloor(void *data)
 	// reset status text
 	if(statusText != NULL)
 	{
-		for(iy=0;iy<numStatusLines;iy++)
+		for(iy=0;iy<maxStatus;iy++)
 		{
 			free(statusText[iy]);
 		}
@@ -804,16 +816,19 @@ void initDungeonFloor(void *data)
 	setColor(WHITE);
 	
 	// generate enemies on the first floor 
-	generateEnemies(2,s);
+	generateEnemies(0,s);
 	
 	// generate npc array 
-	numNPCs = 0;
-	activeNPCs = malloc(maxStatus * sizeof(struct npc));
+	//numNPCs = 0;
+	//activeNPCs = malloc(maxStatus * sizeof(struct npc));
 
 	// set up status handling array 
 	numStatusLines = 0;
 	statusText = malloc(maxStatus * sizeof(char *));	
+	for(iy=0;iy<maxStatus;iy++)
+		statusText[iy] = NULL;
 	
+	// set initial status 
 	updateStatus("You wake up in a strange stone room, dimly lit but still dark.");
 
 	free(fileName);
