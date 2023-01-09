@@ -44,6 +44,7 @@ struct enemies
 	int type; // the type of enemy for the encounter 
 	int inCombat; // is the enemy fighting an npc 
 	Uint32 startTicks; // for movement timer 
+	int speed; // what interval does the enemy move 
 };
 
 struct npc
@@ -355,7 +356,7 @@ void enemyHandler(struct gameState * s)
 	{
 		directionY = 0;
 		directionX = 0;
-		if(activeEnemies[i].active == 1 && ((int)(SDL_GetTicks() - activeEnemies[i].startTicks)) % 1500 == 0)
+		if(activeEnemies[i].active == 1 && ((int)(SDL_GetTicks() - activeEnemies[i].startTicks)) % activeEnemies[i].speed == 0)
 		{
 			if(visible[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1)
 			{
@@ -660,6 +661,7 @@ void generateEnemies(int numGenerate, struct gameState * s)
 		{	
 			if(d[s->floor][iy][ix] == E && numGenerate > 0)
 			{
+				activeEnemies[numGenerate-1].speed = (rand()%5+2)*500; 
 				activeEnemies[numGenerate-1].startTicks = 1;
 				activeEnemies[numGenerate-1].x = ix;
 				activeEnemies[numGenerate-1].y = iy;
@@ -677,6 +679,7 @@ void generateEnemies(int numGenerate, struct gameState * s)
 		// generate enemies to specific coordinates 
 		for(i = 0;i<numEnemies;i++)
 		{
+			activeEnemies[i].speed = (rand()%5+2)*500; 
 			activeEnemies[i].startTicks = 1;
 			activeEnemies[i].x = rand()%dungeonSize;
 			activeEnemies[i].y = rand()%dungeonSize;
