@@ -24,14 +24,17 @@
 // initialize new game 
 void initNewGame(struct gameState * s)
 {
+	// destroy title screen logic and menu handlers 
 	destroyListener(MENU_SELECTION,s->listeners);
-	system("cls");
-	
 	destroyListener(LOGIC_HANDLER,s->listeners);
+	
+	// start initializing dungeon process 
 	registerEvent(DISPLAY,initDungeonFloor,s->listeners);
 	
-	switchTrack(DUNGEON_MUSIC,s);
+	// clear screen 
+	system("cls");
 	
+	// set up initial dungeon crawling variables 
 	s->playerX = 0;
 	s->playerY = 0;
 	s->floor = 0;
@@ -52,7 +55,7 @@ int main()
 	// initialize listeners 
 	initListeners(state.listeners,MAX_EVENTS);
 	
-	// register events 
+	// register events used at the title screen 
 	registerEvent(DISPLAY,titleScreenDisplay,state.listeners);
 	registerEvent(MENU_SELECTION,menuSelection,state.listeners);
 	registerEvent(LOGIC_HANDLER,titleScreenLogic,state.listeners);

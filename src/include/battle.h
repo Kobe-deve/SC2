@@ -25,6 +25,8 @@
 #ifndef BATTLE_HANDLED
 #define BATTLE_HANDLED
 
+void freeBattleData(void *data);
+
 // logic during battle 
 void battleLogic()
 {
@@ -122,9 +124,10 @@ void battleLoop(void *data)
 			break;
 			case 4:
 			freeMenuProcess(s);
+			freeBattleData(s);
 			
 			system("cls");		
-			destroyListener(DISPLAY,s->listeners);
+			destroyListeners(s->listeners,MAX_EVENTS);
 			registerEvent(DISPLAY,resetDungeon,s->listeners);
 
 			switchTrack(DUNGEON_MUSIC,s);
@@ -163,6 +166,9 @@ void freeBattleData(void *data)
 void initBattle(void *data)
 {
 	struct gameState * s = (struct gameState *)data;
+	
+	// destroy all listeners to make way for ones used in battle
+	destroyListeners(s->listeners,MAX_EVENTS);
 
 	// set specific event handlers 
 	destroyListener(LOGIC_HANDLER,s->listeners);

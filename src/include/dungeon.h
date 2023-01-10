@@ -767,9 +767,13 @@ void freeDungeonData(void *data)
 }
 
 // display the dungeon floor and set up used varaiables initially
+// used for start of dungeon crawling 
 void initDungeonFloor(void *data)
-{		
+{	
 	struct gameState * s = (struct gameState *)data;
+	
+	// destroy all listeners to make way for ones used in dungeon crawling 
+	destroyListeners(s->listeners,MAX_EVENTS);
 	
 	// reset visibility array if it is empty/deleted
 	int iz,ix,iy;
@@ -830,10 +834,6 @@ void initDungeonFloor(void *data)
 	// initial display range 
 	displayRange(s);
 	
-	// set to main loop of dungeon 
-	destroyListener(DISPLAY,s->listeners);
-	registerEvent(DISPLAY,walkAround,s->listeners);
-	
 	// display dungeon walls 
 	for(iy = -1;iy < dungeonSize+1;iy++)
 	{
@@ -867,7 +867,15 @@ void initDungeonFloor(void *data)
 	// set initial status 
 	updateStatus("You wake up in a strange stone room, dimly lit but still dark.");
 
+	// free used filename for loading data 
 	free(fileName);
+	
+	// set to main loop of dungeon in event listener 
+	destroyListener(DISPLAY,s->listeners);
+	registerEvent(DISPLAY,walkAround,s->listeners);
+	
+	// start dungeon crawling music 
+	switchTrack(DUNGEON_MUSIC,s);
 }
 
 #endif
