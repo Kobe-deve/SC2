@@ -65,10 +65,10 @@
 		int floor; // floor in dungeon 
 		
 		int building; // what building the player is in 
+	
+		struct character protag_stats; // stats of the main character 
 		
 		struct battle currentBattle; // the current battle the player is in 
-		
-		struct character protag_stats; // stats of the main character 
 	};
 	
 	// load state save data

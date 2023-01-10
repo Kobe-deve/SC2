@@ -1,0 +1,42 @@
+playerX 
+playerY
+floor
+building
+
+---- Protagonist stats 	
+char name[20]; 
+int health; // health stats 
+int maxHealth;
+	
+int strength;
+int damageCap;
+int maxStr;
+
+int resistance;
+int painCap;
+int maxRes;
+	
+int agility;
+int exhaustCounter;
+int maxAgi;
+	
+int dexterity;
+int efficiencyCounter;
+int maxDex;
+	
+int spirit;
+int maxSpr;
+int attunementPoints;
+	
+int stamina; // stamina stats 
+int maxStamina;
+	
+int dnaSize; // dna of the specific character, uses char_type enum 
+int * dna;
+	
+int weakness; // move type the character is weak to
+	
+struct weapon heldWeapon; // the weapon the character is holding
+	
+int personality; // personality type of the character 
+		

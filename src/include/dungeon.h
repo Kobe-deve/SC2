@@ -44,6 +44,7 @@ struct enemies
 	int type; // the type of enemy for the encounter 
 	int inCombat; // is the enemy fighting an npc 
 	int speed; // what interval does the enemy move 
+	int startTicks;
 };
 
 struct npc
@@ -56,6 +57,7 @@ struct npc
 	int inCombat; // is the npc fighting an npc 
 	int talking; // is the npc talking to the player 
 	int speed; // interval the npc moves at 
+	int startTicks;
 };
 
 // array of visible tiles in an area
@@ -229,9 +231,6 @@ void resetDungeon(void *data)
 		}
 	}
 	
-	s->music = Mix_LoadMUS(DUNGEON_MUSIC);
-	Mix_FadeInMusic(s->music, -1, 100); // fades into new music 
-	
 	destroyListener(DISPLAY,s->listeners);
 	registerEvent(DISPLAY,walkAround,s->listeners);
 	
@@ -359,7 +358,7 @@ void enemyHandler(struct gameState * s)
 		
 		directionY = 0;
 		directionX = 0;
-		if(activeEnemies[i].active == 1 && ((int)(SDL_GetTicks())) % activeEnemies[i].speed == 0)
+		if(activeEnemies[i].active == 1 && ((int)(SDL_GetTicks() - activeEnemies[i].startTicks))/1000.f >= activeEnemies[i].speed)
 		{
 			// erase/update current spot when moving 
 			if(visible[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1)
@@ -418,7 +417,7 @@ void enemyHandler(struct gameState * s)
 			// make sure enemies don't overlap when moving, if so then keep them at their spot 
 			for(j=0;j<numEnemies;j++)
 			{
-				if(j!=i && ((activeEnemies[i].y == activeEnemies[j].y) && (activeEnemies[i].x == activeEnemies[j].x)))
+				if(j !=i && activeEnemies[j].active == 1 && ((activeEnemies[i].y == activeEnemies[j].y) && (activeEnemies[i].x == activeEnemies[j].x)))
 				{
 					activeEnemies[i].x = cX;
 					activeEnemies[i].y = cYo;
@@ -432,6 +431,8 @@ void enemyHandler(struct gameState * s)
 				setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
 				printf("+");
 			}
+			
+			activeEnemies[i].startTicks = SDL_GetTicks();
 		}
 		
 		if(debug == 1)
@@ -682,7 +683,8 @@ void generateEnemies(struct gameState * s)
 		{	
 			if(d[s->floor][iy][ix] == E && numGenerate > 0)
 			{
-				activeEnemies[numGenerate-1].speed = 1500; 
+				activeEnemies[numGenerate-1].speed = 1; 
+				activeEnemies[numGenerate-1].startTicks = 0;
 				activeEnemies[numGenerate-1].x = ix;
 				activeEnemies[numGenerate-1].y = iy;
 				
@@ -699,8 +701,9 @@ void generateEnemies(struct gameState * s)
 		// generate enemies to specific coordinates 
 		for(i = 0;i<numEnemies;i++)
 		{
-			activeEnemies[i].speed = 1500; 
+			activeEnemies[i].speed = 1; 
 			activeEnemies[i].x = rand()%dungeonSize;
+			activeEnemies[i].startTicks = 0;
 			activeEnemies[i].y = rand()%dungeonSize;
 			while(d[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1)
 			{

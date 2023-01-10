@@ -4,8 +4,8 @@
 #define FILENAMES
 
 #define TITLE_MUSIC "music/Killing Nature.wav"
-#define DUNGEON_MUSIC "music/Live.wav"
-#define BATTLE_MUSIC "music/39 Arms vs 2.wav"
+#define BATTLE_MUSIC "music/Stone Crawler Battle.wav"
+#define DUNGEON_MUSIC "music/39 Arms vs 2.wav"
 
 #define ORIGINAL_DUNGEON "maps/original_dungeon.txt"
 

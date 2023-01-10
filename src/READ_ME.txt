@@ -21,7 +21,9 @@ src: - main.c
      -> maps - contains map files read by the game 
      -> music - contains music/sound assets
      -> dlls - contains dlls used for compiling 
-
+	 -> data - save data files 
+	 
+	 
 Compiling command:
 gcc main.c -lSDL2 -lSDL2_mixer -o main
 
@@ -29,7 +31,7 @@ Controls:
 	Arrow Keys - Movement/Selecting
 	Enter - Confirm
 	Esc - Exit the game
-	M - (in dungeon) menu
+	M - (in dungeon) menu 
 
 Event Handling:
 	Events are registered through the registerEvent function specifically with 
