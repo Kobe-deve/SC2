@@ -85,6 +85,19 @@ void initDungeonFloor(void *data);
 void displayRange(struct gameState * s);
 void generateEnemies(struct gameState * s);
 
+// function to check if an npc is at a certain coordinate 
+int npcNearby(int x, int y)
+{
+	int i;
+	
+	for(i=0;i<numNPCs;i++)
+	{
+		if(y == activeNPCs[i].y && x == activeNPCs[i].x)
+			return i+1;
+	}
+	return 0;
+}
+
 // display status in dungeon 
 void displayStatus()
 {
@@ -197,6 +210,12 @@ void resetDungeon(void *data)
 	int counterx,countery;
 	int i;
 	
+	// clear screen
+	system("cls");	
+
+	// clear all event functions
+	destroyListeners(s->listeners,MAX_EVENTS);
+	
 	// if variables used in battle aren't null, free them
 	if(s->currentBattle.enemies != NULL)
 		free(s->currentBattle.enemies);
@@ -219,6 +238,7 @@ void resetDungeon(void *data)
 		}
 	}
 	
+	// check main display range around the player 
 	displayRange(s);
 	
 	// display visible enemies 
@@ -231,7 +251,10 @@ void resetDungeon(void *data)
 		}
 	}
 	
-	destroyListener(DISPLAY,s->listeners);
+	// switch back to dungeon track 
+	switchTrack(DUNGEON_MUSIC,s);
+			
+	// register back to main dungeon loop 
 	registerEvent(DISPLAY,walkAround,s->listeners);
 	
 	displayStatus();
@@ -324,6 +347,13 @@ void description(struct gameState * s)
 		break;
 		case 9:
 		updateStatus("You stand near a hole in the wall, press enter to go through it.");
+		break;
+		default:
+		// if an npc is nearby, update status 
+		if(npcNearby(s->playerX,s->playerY-1) || npcNearby(s->playerX,s->playerY+1) || npcNearby(s->playerX+1,s->playerY) || npcNearby(s->playerX-1,s->playerY))
+		{
+			updateStatus("You see a person nearby, press enter to talk to them.");	
+		}
 		break;
 	}
 }
@@ -450,7 +480,11 @@ void npcHandler(struct gameState * s)
 	
 	for(i = 0;i<numNPCs;i++)
 	{	
-		printf("%c",233);
+		if(visible[s->floor][activeNPCs[i].y][activeNPCs[i].x] == 1)
+		{
+			setCursor(dungeonPrintCoordX+activeNPCs[i].x,dungeonPrintCoordX+activeNPCs[i].y);
+			printf("%c",1);
+		}
 	}
 }
 
@@ -460,11 +494,12 @@ void dungeonLogic(void *data, struct gameState * s)
 	int i;
 	char test;
 	
+	// input handling with moving the player and other commands 
 	switch(s->input)
 	{
 		case UP:
 		direction = 0;
-		if(s->playerY > 0 && d[s->floor][s->playerY-1][s->playerX] != 1)
+		if(s->playerY > 0 && d[s->floor][s->playerY-1][s->playerX] != 1 && !npcNearby(s->playerX,s->playerY-1))
 		{
 			displayRange(s);
 			s->playerY--;
@@ -474,7 +509,7 @@ void dungeonLogic(void *data, struct gameState * s)
 		break;
 		case DOWN:
 		direction = 2;
-		if(s->playerY < dungeonSize-1 && d[s->floor][s->playerY+1][s->playerX] != 1)
+		if(s->playerY < dungeonSize-1 && d[s->floor][s->playerY+1][s->playerX] != 1 && !npcNearby(s->playerX,s->playerY+1))
 		{
 			displayRange(s);
 			s->playerY++;
@@ -484,7 +519,7 @@ void dungeonLogic(void *data, struct gameState * s)
 		break;
 		case LEFT:
 		direction = 3;
-		if(s->playerX > 0 && d[s->floor][s->playerY][s->playerX-1] != 1)
+		if(s->playerX > 0 && d[s->floor][s->playerY][s->playerX-1] != 1 && !npcNearby(s->playerX-1,s->playerY))
 		{
 			displayRange(s);
 			s->playerX--;
@@ -494,7 +529,7 @@ void dungeonLogic(void *data, struct gameState * s)
 		break;
 		case RIGHT:
 		direction = 1;
-		if(s->playerX < dungeonSize-1 && d[s->floor][s->playerY][s->playerX+1] != 1)
+		if(s->playerX < dungeonSize-1 && d[s->floor][s->playerY][s->playerX+1] != 1  && !npcNearby(s->playerX+1,s->playerY))
 		{
 			displayRange(s);
 			s->playerX++;
@@ -522,7 +557,7 @@ void dungeonLogic(void *data, struct gameState * s)
 	enemyHandler(s);
 	
 	// move npcs 
-	//npcHandler(s);
+	npcHandler(s);
 	
 	// check if player has run into enemies 
 	for(i=0;i<numEnemies;i++)
@@ -655,7 +690,6 @@ void readDungeonFile(char * fileName)
 	free(fileReader);
 }
 
-
 // generate enemies on the floor 
 void generateEnemies(struct gameState * s)
 {
@@ -671,6 +705,7 @@ void generateEnemies(struct gameState * s)
 		activeEnemies = NULL;
 	}
 	
+	// variable used to check how many predetermined spawn points there are vs generated number from file 
 	int numGenerate = numEnemies;
 	
 	// allocate memory
@@ -713,6 +748,25 @@ void generateEnemies(struct gameState * s)
 			activeEnemies[i].active = 1;
 			activeEnemies[i].type = rand()%3+1;
 		}
+	}
+}
+
+// generate npcs in the dungeon 
+void generateNPCs()
+{
+	int i;
+	
+	for(i=0;i<numNPCs;i++)
+	{
+		activeNPCs[i].x = i*2+1; // coordinates 
+		activeNPCs[i].y = i*2+1;
+		activeNPCs[i].floor = 1; // what floor the npc is on 
+		activeNPCs[i].active = 1; // is the npc alive 
+		activeNPCs[i].type = 1; // type of npc for dialogue/stats  
+		activeNPCs[i].inCombat = 0; // is the npc fighting an npc 
+		activeNPCs[i].talking = 0; // is the npc talking to the player 
+		activeNPCs[i].speed = 2; // interval the npc moves at 
+		activeNPCs[i].startTicks = 0;
 	}
 }
 
@@ -855,8 +909,11 @@ void initDungeonFloor(void *data)
 	setColor(WHITE);
 	
 	// generate npc array 
-	numNPCs = 0;
+	numNPCs = 1;
 	activeNPCs = malloc(maxStatus * sizeof(struct npc));
+
+	// generate npcs
+	generateNPCs();
 
 	// set up status handling array 
 	numStatusLines = 0;

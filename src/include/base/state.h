@@ -74,11 +74,17 @@
 	// load state save data
 	void loadState(char * fileName)
 	{
+		FILE *dataFile;
+		
+		dataFile = fopen(fileName,"r");
+		
+		
 	};
 	
 	// save state data 
 	void saveState(struct gameState * data)
 	{
+		FILE *dataFile;
 	};
 	
 	// debug mode toggle
@@ -86,7 +92,6 @@
 	
 	// initialize a new game 
 	void initNewGame(struct gameState * s);
-	void loadGame(struct gameState *s);
 	
 	// functions used for going between states
 	void initBattle(void *data);

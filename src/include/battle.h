@@ -123,14 +123,8 @@ void battleLoop(void *data)
 			case 3:
 			break;
 			case 4:
-			freeMenuProcess(s);
 			freeBattleData(s);
-			
-			system("cls");		
-			destroyListeners(s->listeners,MAX_EVENTS);
 			registerEvent(DISPLAY,resetDungeon,s->listeners);
-
-			switchTrack(DUNGEON_MUSIC,s);
 			break;
 		}
 	}
@@ -142,7 +136,11 @@ void freeBattleData(void *data)
 	struct gameState * s = (struct gameState *)data;
 	
 	int i;
-
+	
+	// clear menu process if used 
+	freeMenuProcess(s);
+			
+	// deallocate enemy data 
 	if(s->currentBattle.enemies != NULL)
 	{
 		for(i=0;i<s->currentBattle.numEnemies;i++)
@@ -151,9 +149,11 @@ void freeBattleData(void *data)
 		free(s->currentBattle.enemies);
 	}
 
+	// free turn pointer 
 	if(s->currentBattle.turnOrder != NULL)
 		free(s->currentBattle.turnOrder);
 	
+	// reset all variables used 
 	s->currentBattle.turns = 0;
 	s->currentBattle.numChars = 0;
 	s->currentBattle.numEnemies = 0;

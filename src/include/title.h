@@ -52,6 +52,8 @@ void titleScreenLogic(void *data)
 			initNewGame(s);
 			break;
 			case 1:
+			
+			
 			break;
 		}
 	}
