@@ -1,6 +1,0 @@
-Coding event handler
-
-Functions:
-	Register event
-	Listen for event
-	loop through event stack
