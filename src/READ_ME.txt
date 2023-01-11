@@ -31,6 +31,7 @@ Controls:
 	Arrow Keys - Movement/Selecting
 	Enter - Confirm
 	Esc - Exit the game
+	Backspace - exit conversation with npc
 	M - (in dungeon) menu 
 
 Event Handling:

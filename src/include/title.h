@@ -12,11 +12,14 @@
 #endif
 
 // title screen functions 
+
+// display function, called once at the start 
 void titleScreenDisplay(void *data)
 {
 	// display title 
 	printPattern(TITLE,45,10,80,10);
 	
+	// descriptions 
 	setCursor(55,20);
 	printf("Version 2.0: Idle on the Grindstone");
 	setCursor(55,21);

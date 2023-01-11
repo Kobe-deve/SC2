@@ -79,6 +79,11 @@ int maxStatus = 10; // max number of status lines visible
 char ** statusText = NULL;
 int numStatusLines = 0;
 
+// is the player talking to an npc 
+int talking = 0;
+int npcNearPlayer = 0; // the npc the player is talking to 
+int npcTalked = 0; // the npc the player is talking to 
+
 int *** d = NULL;
 
 void initDungeonFloor(void *data);
@@ -86,15 +91,21 @@ void displayRange(struct gameState * s);
 void generateEnemies(struct gameState * s);
 
 // function to check if an npc is at a certain coordinate 
-int npcNearby(int x, int y)
+int npcNearby(int x, int y, int f, int isPlayer)
 {
 	int i;
 	
 	for(i=0;i<numNPCs;i++)
 	{
-		if(y == activeNPCs[i].y && x == activeNPCs[i].x)
-			return i+1;
+		if(activeNPCs[i].floor == f && (y == activeNPCs[i].y && x == activeNPCs[i].x))
+		{
+			// if the coordinates are for the player, set the talked variable to this npc 
+			if(isPlayer)
+				npcTalked = i;
+			return 1;
+		}
 	}
+			
 	return 0;
 }
 
@@ -335,7 +346,10 @@ void displayRange(struct gameState * s)
 
 // generate text status descriptions based on where the player is 
 void description(struct gameState * s)
-{
+{	
+	// check nearby npcs close to the player 
+	npcNearPlayer = (npcNearby(s->playerX,s->playerY-1,s->floor,1) || npcNearby(s->playerX,s->playerY+1,s->floor,1) || npcNearby(s->playerX+1,s->playerY,s->floor,1) || npcNearby(s->playerX-1,s->playerY,s->floor,1));
+				
 	// update status text based on where the player is at 
 	switch(d[s->floor][s->playerY][s->playerX])
 	{
@@ -350,13 +364,23 @@ void description(struct gameState * s)
 		break;
 		default:
 		// if an npc is nearby, update status 
-		if(npcNearby(s->playerX,s->playerY-1) || npcNearby(s->playerX,s->playerY+1) || npcNearby(s->playerX+1,s->playerY) || npcNearby(s->playerX-1,s->playerY))
+		if(npcNearPlayer)
 		{
-			updateStatus("You see a person nearby, press enter to talk to them.");	
+			switch(npcTalked)
+			{
+				case 0:
+				updateStatus("You see a person nearby, press enter to talk to them.");	
+				break;
+				case 1:
+				updateStatus("A cloaked figure stands before you, press enter to talk to them.");	
+				break;
+			}
 		}
 		break;
 	}
 }
+
+
 
 // clear display when player moves  
 void clearDisplay(struct gameState * s)
@@ -480,7 +504,7 @@ void npcHandler(struct gameState * s)
 	
 	for(i = 0;i<numNPCs;i++)
 	{	
-		if(visible[s->floor][activeNPCs[i].y][activeNPCs[i].x] == 1)
+		if(s->floor == activeNPCs[i].floor && (visible[s->floor][activeNPCs[i].y][activeNPCs[i].x] == 1))
 		{
 			setCursor(dungeonPrintCoordX+activeNPCs[i].x,dungeonPrintCoordX+activeNPCs[i].y);
 			printf("%c",1);
@@ -494,65 +518,89 @@ void dungeonLogic(void *data, struct gameState * s)
 	int i;
 	char test;
 	
-	// input handling with moving the player and other commands 
-	switch(s->input)
+	// check if the player is talking with an npc 
+	if(talking) 
 	{
-		case UP:
-		direction = 0;
-		if(s->playerY > 0 && d[s->floor][s->playerY-1][s->playerX] != 1 && !npcNearby(s->playerX,s->playerY-1))
+		// walking away from conversation 
+		if(s->input == BACKSPACE) 
 		{
-			displayRange(s);
-			s->playerY--;
-			direction = 0;
-			description(s);
+			talking = 0;
+			updateStatus("You walked away suddenly.");	
 		}
-		break;
-		case DOWN:
-		direction = 2;
-		if(s->playerY < dungeonSize-1 && d[s->floor][s->playerY+1][s->playerX] != 1 && !npcNearby(s->playerX,s->playerY+1))
-		{
-			displayRange(s);
-			s->playerY++;
-			direction = 2;
-			description(s);
-		}
-		break;
-		case LEFT:
-		direction = 3;
-		if(s->playerX > 0 && d[s->floor][s->playerY][s->playerX-1] != 1 && !npcNearby(s->playerX-1,s->playerY))
-		{
-			displayRange(s);
-			s->playerX--;
-			direction = 3;
-			description(s);
-		}
-		break;
-		case RIGHT:
-		direction = 1;
-		if(s->playerX < dungeonSize-1 && d[s->floor][s->playerY][s->playerX+1] != 1  && !npcNearby(s->playerX+1,s->playerY))
-		{
-			displayRange(s);
-			s->playerX++;
-			direction = 1;
-			description(s);
-		}
-		break;
-		case ENTER:
-		if(d[s->floor][s->playerY][s->playerX] == 4)
-		{
-			d[s->floor][s->playerY][s->playerX] = 5;
-			updateStatus("You opened the chest and found... nothing wow awesome.");
-		}
-		else
-			updateStatus("You pressed enter");
-		break;
-		case BACKSPACE:
-		debug = !debug;
-		break;
-		default:
-		break;
 	}
-	
+	else
+	{
+		// input handling with moving the player and other commands 
+		switch(s->input)
+		{
+			case UP:
+			direction = 0;
+			if(s->playerY > 0 && d[s->floor][s->playerY-1][s->playerX] != 1 && !npcNearby(s->playerX,s->playerY-1,s->floor,0))
+			{
+				displayRange(s);
+				s->playerY--;
+				direction = 0;
+				description(s);
+			}
+			break;
+			case DOWN:
+			direction = 2;
+			if(s->playerY < dungeonSize-1 && d[s->floor][s->playerY+1][s->playerX] != 1 && !npcNearby(s->playerX,s->playerY+1,s->floor,0))
+			{
+				displayRange(s);
+				s->playerY++;
+				direction = 2;
+				description(s);
+			}
+			break;
+			case LEFT:
+			direction = 3;
+			if(s->playerX > 0 && d[s->floor][s->playerY][s->playerX-1] != 1 && !npcNearby(s->playerX-1,s->playerY,s->floor,0))
+			{
+				displayRange(s);
+				s->playerX--;
+				direction = 3;
+				description(s);
+			}
+			break;
+			case RIGHT:
+			direction = 1;
+			if(s->playerX < dungeonSize-1 && d[s->floor][s->playerY][s->playerX+1] != 1  && !npcNearby(s->playerX+1,s->playerY,s->floor,0))
+			{
+				displayRange(s);
+				s->playerX++;
+				direction = 1;
+				description(s);
+			}	
+			break;
+			case ENTER:
+			
+			// handle interacting with items/objects 
+			if(d[s->floor][s->playerY][s->playerX] != 0 && d[s->floor][s->playerY][s->playerX] != E)
+			{
+				switch(d[s->floor][s->playerY][s->playerX])
+				{
+					case 4:
+					d[s->floor][s->playerY][s->playerX] = 5;
+					updateStatus("You opened the chest and found... nothing wow awesome.");
+					break;
+				}
+			}	
+			else if(npcNearPlayer) // interact with npc
+			{
+				
+				// set up menu and variables for talking 
+				updateStatus("You began talking with the person.");
+				talking = 1;
+			}	
+			break;
+			case BACKSPACE:
+			debug = !debug;
+			break;
+			default:
+			break;
+		}
+	}
 	// move enemies 
 	enemyHandler(s);
 	
@@ -760,7 +808,7 @@ void generateNPCs()
 	{
 		activeNPCs[i].x = i*2+1; // coordinates 
 		activeNPCs[i].y = i*2+1;
-		activeNPCs[i].floor = 1; // what floor the npc is on 
+		activeNPCs[i].floor = 0; // what floor the npc is on 
 		activeNPCs[i].active = 1; // is the npc alive 
 		activeNPCs[i].type = 1; // type of npc for dialogue/stats  
 		activeNPCs[i].inCombat = 0; // is the npc fighting an npc 
@@ -909,7 +957,7 @@ void initDungeonFloor(void *data)
 	setColor(WHITE);
 	
 	// generate npc array 
-	numNPCs = 1;
+	numNPCs = 2;
 	activeNPCs = malloc(maxStatus * sizeof(struct npc));
 
 	// generate npcs
