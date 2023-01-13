@@ -25,6 +25,10 @@
 #include "battle.h"
 #endif
 
+#ifndef SHOP_HANDLED
+#include "shop.h"
+#endif
+
 int direction = 0;
 
 Uint32 startTicks = 1;
@@ -518,6 +522,25 @@ void dungeonLogic(void *data, struct gameState * s)
 	int i;
 	char test;
 	
+	// move enemies 
+	enemyHandler(s);
+	
+	// move npcs 
+	npcHandler(s);
+	
+	// check if player has run into enemies 
+	for(i=0;i<numEnemies;i++)
+	{
+		if(activeEnemies[i].active == 1 && activeEnemies[i].y == s->playerY && activeEnemies[i].x == s->playerX)
+		{
+			activeEnemies[i].active = 0;
+			startEncounter(activeEnemies[i].type,data);
+			
+			setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
+			printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
+		}
+	}
+	
 	// check if the player is talking with an npc 
 	if(talking) 
 	{
@@ -580,7 +603,10 @@ void dungeonLogic(void *data, struct gameState * s)
 			{
 				switch(d[s->floor][s->playerY][s->playerX])
 				{
-					case 4:
+					case 9: // shop 
+					initShop(s);
+					break;
+					case 4: // chest
 					d[s->floor][s->playerY][s->playerX] = 5;
 					updateStatus("You opened the chest and found... nothing wow awesome.");
 					break;
@@ -599,24 +625,6 @@ void dungeonLogic(void *data, struct gameState * s)
 			break;
 			default:
 			break;
-		}
-	}
-	// move enemies 
-	enemyHandler(s);
-	
-	// move npcs 
-	npcHandler(s);
-	
-	// check if player has run into enemies 
-	for(i=0;i<numEnemies;i++)
-	{
-		if(activeEnemies[i].active == 1 && activeEnemies[i].y == s->playerY && activeEnemies[i].x == s->playerX)
-		{
-			activeEnemies[i].active = 0;
-			startEncounter(activeEnemies[i].type,data);
-			
-			setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
-			printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
 		}
 	}
 }
@@ -666,7 +674,7 @@ void walkAround(void *data)
 		generateEnemies(s);
 		resetDungeon(data);
 	}
-	else // display 
+	else if(s->listeners[DISPLAY]->mainFunction == walkAround)// display 
 		display(s);
 		
 }
@@ -957,7 +965,7 @@ void initDungeonFloor(void *data)
 	setColor(WHITE);
 	
 	// generate npc array 
-	numNPCs = 2;
+	numNPCs = 0;
 	activeNPCs = malloc(maxStatus * sizeof(struct npc));
 
 	// generate npcs
