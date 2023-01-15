@@ -234,14 +234,6 @@ void printPattern(enum sprites patternType, int xPos, int yPos, int maxX, int ma
 				color = combr[y][x];	
 				break;
 			}
-			// handle background color for certain areas 
-			if(color == 0 && patternType == SHOP)
-			{
-				setColor(DARK_BABY_BLUE);
-				setCursor(xPos+x,yPos+y);
-				printf("%c",219);
-			}
-			
 			if(color != 0)
 			{
 				setColor(color);
