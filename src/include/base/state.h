@@ -97,7 +97,6 @@
 	void initBattle(void *data);
 	void walkAround(void *data);
 	void resetDungeon(void *data);
-	void initShop(struct gameState * s);
 	
 	// free data functions
 	void freeDungeonData(void *data);
