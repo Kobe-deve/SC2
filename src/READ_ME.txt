@@ -9,6 +9,7 @@ src: - main.c
 		-battle.h - handles battle system operations 
 		-dungeon.h - handles dungeon system operations
 		-title.h - handles title screen operations
+		-shop.h - handles shop operations 
 		-> base
 			-event_handler.h - event handling operations
 			-filenames.h - holds filenames for assets used
