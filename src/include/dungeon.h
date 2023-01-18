@@ -674,7 +674,7 @@ void walkAround(void *data)
 		generateEnemies(s);
 		resetDungeon(data);
 	}
-	else if(s->listeners[DISPLAY]->mainFunction == walkAround)// display 
+	else if(s->listeners[DISPLAY] != NULL && s->listeners[DISPLAY]->mainFunction == walkAround)// display 
 		display(s);
 		
 }

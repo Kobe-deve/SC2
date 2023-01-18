@@ -68,6 +68,7 @@ void destroyListeners(struct EventHandler *handlers[], int size)
 		deleteMe = handlers[i];
 		if(deleteMe != NULL)
 			free(deleteMe);
+		handlers[i] = NULL;
 	}
 }
 
