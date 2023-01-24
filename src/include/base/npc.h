@@ -22,18 +22,27 @@ struct npc
 	int curiosity; // how curious the npc is of the player 
 };
 
+// conversation phase enumerations
+enum conversationPhase
+{
+	NONE,
+	NO_DISCUSS,
+	GREETING,
+	QUESTION,
+	PASS,
+	NPC_RESPONSE,
+	PASS_BY,
+	END,
+	BATTLE,
+	LEAVE
+};
+
+int conversation = NONE;
+
 // is the player talking to an npc 
-int talking = 0;
 int npcNearPlayer = 0; // the npc the player is talking to 
 int npcTalked = 0; // the npc the player is talking to 
-
-// variables for npc discussion
-int questionAsked = 0; // was a question asked?
-int talkOver = 0; // is the talk over? 
-
-int passBy = 0; // can the player pass through the npc 
-
-
+ 
 // npc information for dungeon 
 int numNPCs = 0;
 struct npc * activeNPCs = NULL;

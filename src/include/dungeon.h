@@ -409,7 +409,7 @@ void enemyHandler(struct gameState * s)
 				setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
 				printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
 			}	
-			else if(talking == 0)
+			else if(conversation == NONE)
 				updateStatus("A footstep echoes from the darkness...");	
 			
 			// set up direction variables 
@@ -501,9 +501,10 @@ void npcHandler(struct gameState * s)
 	}
 	
 	// if talking, handle discussion logic 
-	if(talking == 1)
+	if(conversation != NONE)
 	{
-		talkOver = 1;
+		if(s->input == ENTER)
+			conversation = LEAVE;
 	}
 }
 
@@ -533,21 +534,22 @@ void dungeonLogic(void *data, struct gameState * s)
 	}
 	
 	// check if the player is talking with an npc 
-	if(talking) 
+	if(conversation != NONE) 
 	{
 		// walking away from conversation 
-		if(talkOver == 1 && s->input == ENTER) 
+		if(conversation == LEAVE || conversation == PASS_BY && s->input == ENTER) 
 		{
-			questionAsked = 0;
-			talkOver = 0;
-			talking = 0;
-			updateStatus("You walked away.");	
+			if(conversation == PASS_BY)
+				updateStatus("They stepped aside for you to pass by.");	
+			else
+				updateStatus("You walked away.");	
+			
+			conversation = NONE;
 		}
 		else if(s->input == BACKSPACE) 
 		{
-			questionAsked = 0;
-			talkOver = 0;
-			talking = 0;
+			conversation = NONE;
+			
 			updateStatus("You walked away suddenly.");	
 		}
 	}
@@ -617,7 +619,7 @@ void dungeonLogic(void *data, struct gameState * s)
 				
 				// set up menu and variables for talking 
 				updateStatus("You began talking with the person.");
-				talking = 1;
+				conversation = NO_DISCUSS;
 			}	
 			break;
 			case BACKSPACE:
