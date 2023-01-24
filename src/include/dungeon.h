@@ -29,6 +29,14 @@
 #include "shop.h"
 #endif
 
+#ifndef CHARACTER_HANDLED
+#include "stats.h"
+#endif
+
+#ifndef NPC_HANDLED
+#include "base/npc.h"
+#endif
+
 int direction = 0;
 
 Uint32 startTicks = 1;
@@ -51,19 +59,6 @@ struct enemies
 	int startTicks;
 };
 
-struct npc
-{
-	int x; // coordinates 
-	int y;
-	int floor; // what floor the npc is on 
-	int active; // is the npc alive 
-	int type; // type of npc for dialogue/stats  
-	int inCombat; // is the npc fighting an npc 
-	int talking; // is the npc talking to the player 
-	int speed; // interval the npc moves at 
-	int startTicks;
-};
-
 // array of visible tiles in an area
 int *** visible = NULL;
 
@@ -74,20 +69,12 @@ int dungeonSize = 0;
 int numEnemies = 0;
 struct enemies * activeEnemies = NULL;
 
-// npc information for dungeon 
-int numNPCs = 0;
-struct npc * activeNPCs = NULL;
-
 // status text lines 
 int maxStatus = 10; // max number of status lines visible 
 char ** statusText = NULL;
 int numStatusLines = 0;
 
-// is the player talking to an npc 
-int talking = 0;
-int npcNearPlayer = 0; // the npc the player is talking to 
-int npcTalked = 0; // the npc the player is talking to 
-
+// dungeon array pointer 
 int *** d = NULL;
 
 void initDungeonFloor(void *data);
@@ -134,7 +121,7 @@ void displayStatus()
 void updateStatus(char * text)
 {
 	int i;
-	
+
 	// set order of text
 	if(numStatusLines < maxStatus)
 	{
@@ -153,7 +140,7 @@ void updateStatus(char * text)
 			}
 			setColor(WHITE);
 		}
-		
+	
 		free(statusText[0]);
 		for(i=0;i<numStatusLines-1;i++)
 		{
@@ -161,7 +148,6 @@ void updateStatus(char * text)
 		}
 		statusText[numStatusLines-1] = text;
 	}
-	
 	displayStatus();
 }
 
@@ -384,8 +370,6 @@ void description(struct gameState * s)
 	}
 }
 
-
-
 // clear display when player moves  
 void clearDisplay(struct gameState * s)
 {	
@@ -425,7 +409,7 @@ void enemyHandler(struct gameState * s)
 				setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
 				printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
 			}	
-			else
+			else if(talking == 0)
 				updateStatus("A footstep echoes from the darkness...");	
 			
 			// set up direction variables 
@@ -506,6 +490,7 @@ void npcHandler(struct gameState * s)
 {
 	int i;
 	
+	// display/move npcs  
 	for(i = 0;i<numNPCs;i++)
 	{	
 		if(s->floor == activeNPCs[i].floor && (visible[s->floor][activeNPCs[i].y][activeNPCs[i].x] == 1))
@@ -513,6 +498,12 @@ void npcHandler(struct gameState * s)
 			setCursor(dungeonPrintCoordX+activeNPCs[i].x,dungeonPrintCoordX+activeNPCs[i].y);
 			printf("%c",1);
 		}
+	}
+	
+	// if talking, handle discussion logic 
+	if(talking == 1)
+	{
+		talkOver = 1;
 	}
 }
 
@@ -545,8 +536,17 @@ void dungeonLogic(void *data, struct gameState * s)
 	if(talking) 
 	{
 		// walking away from conversation 
-		if(s->input == BACKSPACE) 
+		if(talkOver == 1 && s->input == ENTER) 
 		{
+			questionAsked = 0;
+			talkOver = 0;
+			talking = 0;
+			updateStatus("You walked away.");	
+		}
+		else if(s->input == BACKSPACE) 
+		{
+			questionAsked = 0;
+			talkOver = 0;
 			talking = 0;
 			updateStatus("You walked away suddenly.");	
 		}
@@ -807,25 +807,6 @@ void generateEnemies(struct gameState * s)
 	}
 }
 
-// generate npcs in the dungeon 
-void generateNPCs()
-{
-	int i;
-	
-	for(i=0;i<numNPCs;i++)
-	{
-		activeNPCs[i].x = i*2+1; // coordinates 
-		activeNPCs[i].y = i*2+1;
-		activeNPCs[i].floor = 0; // what floor the npc is on 
-		activeNPCs[i].active = 1; // is the npc alive 
-		activeNPCs[i].type = 1; // type of npc for dialogue/stats  
-		activeNPCs[i].inCombat = 0; // is the npc fighting an npc 
-		activeNPCs[i].talking = 0; // is the npc talking to the player 
-		activeNPCs[i].speed = 2; // interval the npc moves at 
-		activeNPCs[i].startTicks = 0;
-	}
-}
-
 // for freeing data when exiting a dungeon 
 void freeDungeonData(void *data)
 {
@@ -965,7 +946,7 @@ void initDungeonFloor(void *data)
 	setColor(WHITE);
 	
 	// generate npc array 
-	numNPCs = 0;
+	numNPCs = 2;
 	activeNPCs = malloc(maxStatus * sizeof(struct npc));
 
 	// generate npcs

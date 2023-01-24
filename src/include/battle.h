@@ -106,10 +106,10 @@ void battleLoop(void *data)
 			
 			registerEvent(MENU_SELECTION,menuSelection,s->listeners);
 			char ** array = malloc(5 * sizeof(char*));
-			array[0] = "1";
-			array[1] = "2";
-			array[2] = "3";
-			array[3] = "4";
+			array[0] = "Attack";
+			array[1] = "Magic";
+			array[2] = "Talk";
+			array[3] = "Lol";
 			array[4] = "Exit";
 		
 			initMenu(s,5,array,70,21);
