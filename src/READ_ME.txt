@@ -19,6 +19,8 @@ src: - main.c
 			-sprite_data.h - contains graphic arrays
 			-state.h - game state operations
 			-stats.h - character stat operations
+			-npc.h - npc operations in dungeon crawling 
+			-text.h - all text/dialogue in the game is stored here
      -> maps - contains map files read by the game 
      -> music - contains music/sound assets
      -> dlls - contains dlls used for compiling 
