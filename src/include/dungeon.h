@@ -107,6 +107,7 @@ void displayStatus()
 	
 	setCursor(1,30);
 	printf("STATUS:");
+	
 	// reset displayed order 
 	for(i=0;i<numStatusLines;i++)
 	{
@@ -503,7 +504,20 @@ void npcHandler(struct gameState * s)
 	// if talking, handle discussion logic 
 	if(conversation != NONE)
 	{
-		if(s->input == ENTER)
+		// checks if a menu is being used for responding 
+		if(s->listeners[MENU_SELECTION] == NULL)
+			npcDialogueHandler(s);
+		else if(s->input == ENTER) // free menu if selection made and push conversation in direction 
+		{
+			if(conversation == NO_DISCUSS)
+				conversation = s->option;
+			
+			clearMenu(s);
+			freeMenuProcess(s);
+		}
+		
+		// if conversation over, press enter to leave 
+		if(talkOver == 1 && s->input == ENTER)
 			conversation = LEAVE;
 	}
 }
@@ -551,6 +565,17 @@ void dungeonLogic(void *data, struct gameState * s)
 			conversation = NONE;
 			
 			updateStatus("You walked away suddenly.");	
+		}
+		
+		// free menu if conversation over
+		if(conversation == NONE)
+		{
+			talkOver = 0;
+			if(s->listeners[MENU_SELECTION] != NULL)
+			{
+				clearMenu(s);
+				freeMenuProcess(s);	
+			}
 		}
 	}
 	else
@@ -616,10 +641,21 @@ void dungeonLogic(void *data, struct gameState * s)
 			}	
 			else if(npcNearPlayer) // interact with npc
 			{
-				
 				// set up menu and variables for talking 
 				updateStatus("You began talking with the person.");
 				conversation = NO_DISCUSS;
+				
+				// set up initial dialogue process 
+				freeMenuProcess(s);
+			
+				registerEvent(MENU_SELECTION,menuSelection,s->listeners);
+				char ** array = malloc(3 * sizeof(char*));
+				array[0] = "Greet";
+				array[1] = "Ask a question";
+				array[2] = "Ask to pass by";
+				initMenu(s,3,array,70,31);
+		
+				free(array);
 			}	
 			break;
 			case BACKSPACE:

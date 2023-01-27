@@ -35,6 +35,26 @@ void freeMenuProcess(struct gameState * s)
 	}
 }
 
+// clear the menu from the display 
+void clearMenu(struct gameState * s) 
+{
+	int i;
+	int j;
+	
+	setColor(BLACK);
+	for(int i=0;i<s->numOptions;i++)
+	{
+		setCursor(s->menuX,s->menuY+i);
+		
+		for(j=0;j<strlen(s->options[i]);j++)
+		{
+			setCursor(s->menuX+j,s->menuY+i);
+			printf("%c",219);
+		}
+	}
+	setColor(WHITE);
+}
+
 // menu selection handling 
 void menuSelection(void *data)
 {
@@ -82,6 +102,7 @@ void initMenu(struct gameState * s, int numOpts, char ** options, int x, int y)
 {
 	s->options = malloc(numOpts * sizeof(char*));
 	
+	// set options to options listed in array given 
 	for(int i=0;i<numOpts;i++)
 	{
 		s->options[i] = malloc((strlen(options[i]) + 1) * sizeof(char));
@@ -91,6 +112,9 @@ void initMenu(struct gameState * s, int numOpts, char ** options, int x, int y)
 	s->numOptions = numOpts;		
 	s->menuX = x;
 	s->menuY = y;
+	
+	if(s->option >= numOpts)
+		s->option = 0;
 	
 	// set initial display
 	setCursor(s->menuX-1,s->menuY+s->option);
