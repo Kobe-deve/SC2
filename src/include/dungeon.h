@@ -37,6 +37,10 @@
 #include "base/npc.h"
 #endif
 
+#ifndef TEXT_DEFINED
+#include "base/text.h"
+#endif 
+
 int direction = 0;
 
 Uint32 startTicks = 1;
@@ -289,7 +293,7 @@ void startEncounter(int type, void *data)
 	destroyListener(LOGIC_HANDLER,s->listeners);
 	registerEvent(LOGIC_HANDLER,initBattle,s->listeners);
 	
-	updateStatus("You encountered a curse!");
+	updateStatus(ENCOUNTERED);
 }
 
 // display range when moving  
@@ -345,13 +349,13 @@ void description(struct gameState * s)
 	switch(d[s->floor][s->playerY][s->playerX])
 	{
 		case 5:
-		updateStatus("You stand near an opened empty steel chest.");
+		updateStatus(EMPTY_CHEST);
 		break;
 		case 4:
-		updateStatus("You stand near a closed steel chest, press enter to open it.");
+		updateStatus(CLOSED_CHEST);
 		break;
 		case 9:
-		updateStatus("You stand near a hole in the wall, press enter to go through it.");
+		updateStatus(SHOP_ENTRANCE);
 		break;
 		default:
 		// if an npc is nearby, update status 
@@ -360,15 +364,15 @@ void description(struct gameState * s)
 			switch(npcTalked)
 			{
 				case 0:
-				updateStatus("You see a person nearby, press enter to talk to them.");	
+				updateStatus(NPC1);	
 				break;
 				case 1:
-				updateStatus("A cloaked figure stands before you, press enter to talk to them.");	
+				updateStatus(NPC2);	
 				break;
 			}
 		}
 		else if(npcNearPlayer)
-			updateStatus("You see someone fighting a curse! Press enter to help them!");	
+			updateStatus(NPC_FIGHT);	
 				
 		break;
 	}
@@ -414,7 +418,7 @@ void enemyHandler(struct gameState * s)
 				printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
 			}	
 			else if(conversation == NONE)
-				updateStatus("A footstep echoes from the darkness...");	
+				updateStatus(ENEMY_MOVEMENT);	
 			
 			// set up direction variables 
 			if(s->playerX > activeEnemies[i].x)
@@ -492,7 +496,7 @@ void enemyHandler(struct gameState * s)
 
 			if(checkNPC != -1)
 			{
-				updateStatus("You hear a fight breaking out.");
+				updateStatus(HEAR_FIGHT);
 				activeEnemies[i].inCombat = 1;
 				activeNPCs[checkNPC].inCombat = 1;
 				activeNPCs[checkNPC].enemyCombat = i;
@@ -581,9 +585,9 @@ void dungeonLogic(void *data, struct gameState * s)
 		if(conversation == LEAVE || conversation == PASS_BY && s->input == ENTER) 
 		{
 			if(conversation == PASS_BY)
-				updateStatus("They stepped aside for you to pass by.");	
+				updateStatus(PASS_NPC);	
 			else
-				updateStatus("You walked away.");	
+				updateStatus(NPC_DONE_TALK);	
 			
 			conversation = NONE;
 		}
@@ -591,7 +595,7 @@ void dungeonLogic(void *data, struct gameState * s)
 		{
 			conversation = NONE;
 			
-			updateStatus("You walked away suddenly.");	
+			updateStatus(NPC_RUN_AWAY);	
 		}
 		
 		// free menu if conversation over
@@ -662,14 +666,14 @@ void dungeonLogic(void *data, struct gameState * s)
 					break;
 					case 4: // chest
 					d[s->floor][s->playerY][s->playerX] = 5;
-					updateStatus("You opened the chest and found... nothing wow awesome.");
+					updateStatus(OPENED_CHEST);
 					break;
 				}
 			}	
 			else if(npcNearPlayer && !activeNPCs[npcTalked].inCombat) // interact with npc
 			{
 				// set up menu and variables for talking 
-				updateStatus("You began talking with the person.");
+				updateStatus(TALK_TO_NPC);
 				conversation = NO_DISCUSS;
 				
 				// set up initial dialogue process 
@@ -677,9 +681,9 @@ void dungeonLogic(void *data, struct gameState * s)
 			
 				registerEvent(MENU_SELECTION,menuSelection,s->listeners);
 				char ** array = malloc(3 * sizeof(char*));
-				array[0] = "Greet";
-				array[1] = "Ask a question";
-				array[2] = "Ask to pass by";
+				array[0] = G_COMMAND;
+				array[1] = Q_COMMAND;
+				array[2] = P_COMMAND;
 				initMenu(s,3,array,70,31);
 		
 				free(array);
@@ -733,11 +737,11 @@ void walkAround(void *data)
 		switch(d[s->floor][s->playerY][s->playerX])
 		{
 			case 2:
-			updateStatus("You walk upstairs.");
+			updateStatus(WALK_UP);
 			s->floor = s->floor+1;
 			break;
 			case 3:
-			updateStatus("You walk downstairs.");
+			updateStatus(WALK_DOWN);
 			s->floor = s->floor-1;
 			break;
 		}	
@@ -1031,7 +1035,7 @@ void initDungeonFloor(void *data)
 		statusText[iy] = NULL;
 	
 	// set initial status 
-	updateStatus("You wake up in a strange stone room, dimly lit but still dark.");
+	updateStatus(FIRST_FLOOR_TEXT);
 
 	// free used filename for loading data 
 	free(fileName);
