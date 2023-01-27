@@ -355,7 +355,7 @@ void description(struct gameState * s)
 		break;
 		default:
 		// if an npc is nearby, update status 
-		if(npcNearPlayer)
+		if(npcNearPlayer && !activeNPCs[npcTalked].inCombat)
 		{
 			switch(npcTalked)
 			{
@@ -367,6 +367,9 @@ void description(struct gameState * s)
 				break;
 			}
 		}
+		else if(npcNearPlayer)
+			updateStatus("You see someone fighting a curse! Press enter to help them!");	
+				
 		break;
 	}
 }
@@ -401,7 +404,7 @@ void enemyHandler(struct gameState * s)
 		
 		directionY = 0;
 		directionX = 0;
-		if(activeEnemies[i].active == 1 && ((int)(SDL_GetTicks() - activeEnemies[i].startTicks))/1000.f >= activeEnemies[i].speed)
+		if(activeEnemies[i].inCombat == 0 && activeEnemies[i].active == 1 && ((int)(SDL_GetTicks() - activeEnemies[i].startTicks))/1000.f >= activeEnemies[i].speed)
 		{
 			// erase/update current spot when moving 
 			if(visible[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1)
@@ -475,6 +478,27 @@ void enemyHandler(struct gameState * s)
 				printf("+");
 			}
 			
+			// starting fight with npc 
+			int checkNPC = -1;
+			
+			for(j=0;j<numNPCs;j++)
+			{
+				if(activeNPCs[j].floor == s->floor && (activeEnemies[i].y == activeNPCs[j].y && activeEnemies[i].x == activeNPCs[j].x))
+				{
+					checkNPC = j;
+					break;
+				}
+			}
+
+			if(checkNPC != -1)
+			{
+				updateStatus("You hear a fight breaking out.");
+				activeEnemies[i].inCombat = 1;
+				activeNPCs[checkNPC].inCombat = 1;
+				activeNPCs[checkNPC].enemyCombat = i;
+			}
+			
+			// reset start tick 
 			activeEnemies[i].startTicks = SDL_GetTicks();
 		}
 		
@@ -497,7 +521,10 @@ void npcHandler(struct gameState * s)
 		if(s->floor == activeNPCs[i].floor && (visible[s->floor][activeNPCs[i].y][activeNPCs[i].x] == 1))
 		{
 			setCursor(dungeonPrintCoordX+activeNPCs[i].x,dungeonPrintCoordX+activeNPCs[i].y);
-			printf("%c",1);
+			if(activeNPCs[i].inCombat)
+				printf("X");
+			else
+				printf("%c",1);
 		}
 	}
 	
@@ -639,7 +666,7 @@ void dungeonLogic(void *data, struct gameState * s)
 					break;
 				}
 			}	
-			else if(npcNearPlayer) // interact with npc
+			else if(npcNearPlayer && !activeNPCs[npcTalked].inCombat) // interact with npc
 			{
 				// set up menu and variables for talking 
 				updateStatus("You began talking with the person.");
@@ -657,6 +684,11 @@ void dungeonLogic(void *data, struct gameState * s)
 		
 				free(array);
 			}	
+			else if(npcNearPlayer && activeNPCs[npcTalked].inCombat) // help npc in combat 
+			{
+				activeEnemies[activeNPCs[i].enemyCombat].active = 0;
+				activeNPCs[i].inCombat = 0;
+			}
 			break;
 			case BACKSPACE:
 			debug = !debug;
@@ -816,6 +848,7 @@ void generateEnemies(struct gameState * s)
 				activeEnemies[numGenerate-1].startTicks = 0;
 				activeEnemies[numGenerate-1].x = ix;
 				activeEnemies[numGenerate-1].y = iy;
+				activeEnemies[numGenerate-1].inCombat = 0;
 				
 				activeEnemies[numGenerate-1].active = 1;
 				activeEnemies[numGenerate-1].type = rand()%3+1;
@@ -834,6 +867,7 @@ void generateEnemies(struct gameState * s)
 			activeEnemies[i].x = rand()%dungeonSize;
 			activeEnemies[i].startTicks = 0;
 			activeEnemies[i].y = rand()%dungeonSize;
+			activeEnemies[i].inCombat = 0;
 			while(d[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1)
 			{
 				activeEnemies[i].x = rand()%dungeonSize;

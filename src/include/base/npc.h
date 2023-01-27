@@ -13,6 +13,7 @@ struct npc
 	int active; // is the npc alive 
 	int type; // type of npc for dialogue/stats  
 	int inCombat; // is the npc fighting an npc 
+	int enemyCombat; // what enemy the npc is in combat with 
 	int talking; // is the npc talking to the player 
 	int speed; // interval the npc moves at 
 	int startTicks;
@@ -44,6 +45,7 @@ int conversation = NONE;
 int npcNearPlayer = 0; // the npc the player is talking to 
 int npcTalked = 0; // the npc the player is talking to 
 int talkOver = 0; // is the conversation over?
+int topicNum = 0; // what topic is being used? 
  
 // npc information for dungeon 
 int numNPCs = 0;
@@ -69,6 +71,7 @@ void generateNPCs()
 		activeNPCs[i].talking = 0; // is the npc talking to the player 
 		activeNPCs[i].speed = 2; // interval the npc moves at 
 		activeNPCs[i].startTicks = 0;
+		activeNPCs[i].enemyCombat = -1;
 		
 		activeNPCs[i].reception = 0;
 		activeNPCs[i].curiosity = 0;
