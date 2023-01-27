@@ -22,6 +22,10 @@
 #include "dungeon.h"
 #endif
 
+#ifndef TEXT_DEFINED
+#include "base/text.h"
+#endif 
+
 #ifndef BATTLE_HANDLED
 #define BATTLE_HANDLED
 
@@ -50,12 +54,12 @@ void generateCommands(struct gameState * s)
 {
 	registerEvent(MENU_SELECTION,menuSelection,s->listeners);
 	char ** array = malloc(5 * sizeof(char*));
-	array[0] = "1";
-	array[1] = "2";
-	array[2] = "3";
-	array[3] = "4";
-	array[4] = "Exit";
-		
+	array[0] = A_COMMAND;
+	array[1] = M_COMMAND;
+	array[2] = T_COMMAND;
+	array[3] = W_COMMAND;
+	array[4] = E_COMMAND;
+				
 	initMenu(s,5,array,50,21);
 		
 	free(array);
@@ -106,11 +110,11 @@ void battleLoop(void *data)
 			
 			registerEvent(MENU_SELECTION,menuSelection,s->listeners);
 			char ** array = malloc(5 * sizeof(char*));
-			array[0] = "Attack";
-			array[1] = "Magic";
-			array[2] = "Talk";
-			array[3] = "Lol";
-			array[4] = "Exit";
+			array[0] = A_COMMAND;
+			array[1] = M_COMMAND;
+			array[2] = T_COMMAND;
+			array[3] = W_COMMAND;
+			array[4] = E_COMMAND;
 		
 			initMenu(s,5,array,70,21);
 		

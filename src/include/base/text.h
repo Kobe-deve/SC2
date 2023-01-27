@@ -3,6 +3,10 @@
 #ifndef TEXT_DEFINED
 #define TEXT_DEFINED
 
+// title screen text 
+#define TITLE_DESC1 "Version 2.0: Idle on the Grindstone" 
+#define TITLE_DESC2 "Finality Games - Developed by Demi"
+
 // dungeon status text 
 #define HEAR_FIGHT "You hear a fight breaking out."
 #define ENCOUNTERED "You encountered a curse!"
@@ -31,6 +35,17 @@
 #define G_COMMAND "Greet" 
 #define Q_COMMAND "Ask a question"
 #define P_COMMAND "Ask to pass by"
+
+// combat options 
+#define A_COMMAND "Attack" 
+#define M_COMMAND "Magic"
+#define T_COMMAND "Talk"
+#define W_COMMAND "Lol" 
+#define E_COMMAND "Exit"
+
+//title screen options 
+#define NG "New Game"
+#define CT "Continue"
 
 
 #endif

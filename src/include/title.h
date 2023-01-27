@@ -11,6 +11,10 @@
 #include "dungeon.h"
 #endif
 
+#ifndef TEXT_DEFINED
+#include "base/text.h"
+#endif 
+
 // title screen functions 
 
 // display function, called once at the start 
@@ -21,9 +25,9 @@ void titleScreenDisplay(void *data)
 	
 	// descriptions 
 	setCursor(55,20);
-	printf("Version 2.0: Idle on the Grindstone");
+	printf(TITLE_DESC1);
 	setCursor(55,21);
-	printf("Finality Games - Developed by Demi");
+	printf(TITLE_DESC2);
 	
 	struct gameState * s = (struct gameState *)data;
 	
@@ -31,8 +35,8 @@ void titleScreenDisplay(void *data)
 	if(s->options == NULL)
 	{
 		char ** array = malloc(2 * sizeof(char*));
-		array[0] = "New Game";
-		array[1] = "Continue";
+		array[0] = NG;
+		array[1] = CT;
 		
 		initMenu(s,2,array,85,24);
 		
