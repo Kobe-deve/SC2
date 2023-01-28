@@ -537,6 +537,32 @@ void npcHandler(struct gameState * s)
 				printf("%c",1);
 		}
 	}
+}
+
+// logic handling in dungeon section for moving player/npcs/etc
+void dungeonLogic(void *data, struct gameState * s)
+{
+	int i;
+	char test;
+	
+	// move enemies 
+	enemyHandler(s);
+	
+	// move npcs 
+	npcHandler(s);
+	
+	// check if player has run into enemies 
+	for(i=0;i<numEnemies;i++)
+	{
+		if(activeEnemies[i].active == 1 && activeEnemies[i].y == s->playerY && activeEnemies[i].x == s->playerX)
+		{
+			activeEnemies[i].active = 0;
+			startEncounter(activeEnemies[i].type,data);
+			
+			setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
+			printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
+		}
+	}
 	
 	// if talking, handle discussion logic 
 	if(conversation != NONE)
@@ -573,37 +599,7 @@ void npcHandler(struct gameState * s)
 		// if conversation over, press enter to leave 
 		if(conversation != BATTLE && talkOver == 1 && s->input == ENTER )
 			conversation = LEAVE;
-	}
-}
-
-// logic handling in dungeon section for moving player/npcs/etc
-void dungeonLogic(void *data, struct gameState * s)
-{
-	int i;
-	char test;
 	
-	// move enemies 
-	enemyHandler(s);
-	
-	// move npcs 
-	npcHandler(s);
-	
-	// check if player has run into enemies 
-	for(i=0;i<numEnemies;i++)
-	{
-		if(activeEnemies[i].active == 1 && activeEnemies[i].y == s->playerY && activeEnemies[i].x == s->playerX)
-		{
-			activeEnemies[i].active = 0;
-			startEncounter(activeEnemies[i].type,data);
-			
-			setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
-			printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
-		}
-	}
-	
-	// check if the player is talking with an npc 
-	if(conversation != NONE) 
-	{
 		// walking away from conversation 
 		if(conversation == LEAVE || conversation == PASS_BY)  // being done with conversation 
 		{
@@ -646,7 +642,7 @@ void dungeonLogic(void *data, struct gameState * s)
 			}
 		}
 	}
-	else
+	else // regular dungeon crawling controls 
 	{
 		// input handling with moving the player and other commands 
 		switch(s->input)
