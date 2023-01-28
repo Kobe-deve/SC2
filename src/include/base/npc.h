@@ -18,7 +18,6 @@ struct npc
 	int speed; // interval the npc moves at 
 	int startTicks;
 	
-	char * name; // name of the npc 
 	struct character stats; // stats of the npc 
 	int reception; // reception to player
 	int curiosity; // how curious the npc is of the player 
@@ -29,6 +28,7 @@ enum conversationPhase
 {
 	NONE = -1,
 	NO_DISCUSS = -2,
+	INTRO = -3,
 	GREETING = 0,
 	QUESTION = 1,
 	PASS = 2,
@@ -61,12 +61,11 @@ void generateNPCs()
 	
 	for(i=0;i<numNPCs;i++)
 	{
-		activeNPCs[i].name = ""; // name
 		activeNPCs[i].x = i*2+1; // coordinates 
 		activeNPCs[i].y = i*2+1;
 		activeNPCs[i].floor = 0; // what floor the npc is on 
 		activeNPCs[i].active = 1; // is the npc alive 
-		activeNPCs[i].type = 1; // type of npc for dialogue/stats  
+		activeNPCs[i].type = i; // type of npc for dialogue/stats  
 		activeNPCs[i].inCombat = 0; // is the npc fighting an npc 
 		activeNPCs[i].talking = 0; // is the npc talking to the player 
 		activeNPCs[i].speed = 2; // interval the npc moves at 
@@ -79,13 +78,35 @@ void generateNPCs()
 }
 
 // handles dialogue process with npc
-void npcDialogueHandler(struct gameState * s)
-{
+void npcDialogueHandler(int type, struct gameState * s)
+{	
+	switch(type)
+	{
+		case 0:
+		break;
+		case 1:
+		break;
+	}
+	
 	switch(conversation)
 	{
+		case NO_DISCUSS:
+		if(s->listeners[MENU_SELECTION] == NULL)
+		{
+			registerEvent(MENU_SELECTION,menuSelection,s->listeners);
+			char ** array = malloc(3 * sizeof(char*));
+			array[0] = Q_COMMAND;
+			array[1] = P_COMMAND;
+			array[2] = L_COMMAND;
+			initMenu(s,3,array,70,31);
+	
+			free(array);		
+		}
+		break;
 		case GREETING:
-		conversation = NPC_RESPONSE;
+		conversation = NO_DISCUSS;
 		updateStatus("Person: \"Yeah hello.\"");	
+		updateStatus("Person: \"What do you want?\"");	
 		break;
 		case QUESTION:
 		conversation = NPC_RESPONSE;

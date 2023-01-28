@@ -96,7 +96,7 @@ int npcNearby(int x, int y, int f, int isPlayer)
 		{
 			// if the coordinates are for the player, set the talked variable to this npc 
 			if(isPlayer)
-				npcTalked = i;
+				npcTalked = activeNPCs[i].type;
 			return 1;
 		}
 	}
@@ -537,11 +537,28 @@ void npcHandler(struct gameState * s)
 	{
 		// checks if a menu is being used for responding 
 		if(s->listeners[MENU_SELECTION] == NULL)
-			npcDialogueHandler(s);
+			npcDialogueHandler(npcTalked,s);
 		else if(s->input == ENTER) // free menu if selection made and push conversation in direction 
 		{
-			if(conversation == NO_DISCUSS)
+			// handle response based on option selected
+			if(conversation == INTRO)
 				conversation = s->option;
+			else if(conversation == NO_DISCUSS)
+			{
+				switch(s->option)
+				{
+					case 0:
+					conversation = QUESTION;
+					break;
+					case 1:
+					conversation = PASS;
+					break;
+					case 2:
+					talkOver = 1;
+					conversation = LEAVE;
+					break;
+				}
+			}
 			
 			clearMenu(s);
 			freeMenuProcess(s);
@@ -674,7 +691,7 @@ void dungeonLogic(void *data, struct gameState * s)
 			{
 				// set up menu and variables for talking 
 				updateStatus(TALK_TO_NPC);
-				conversation = NO_DISCUSS;
+				conversation = INTRO;
 				
 				// set up initial dialogue process 
 				freeMenuProcess(s);
@@ -690,8 +707,11 @@ void dungeonLogic(void *data, struct gameState * s)
 			}	
 			else if(npcNearPlayer && activeNPCs[npcTalked].inCombat) // help npc in combat 
 			{
-				activeEnemies[activeNPCs[i].enemyCombat].active = 0;
-				activeNPCs[i].inCombat = 0;
+				activeEnemies[activeNPCs[npcTalked].enemyCombat].active = 0;
+				activeNPCs[npcTalked].inCombat = 0;
+				
+				// start encounter 
+				startEncounter(activeNPCs[npcTalked].enemyCombat,data);
 			}
 			break;
 			case BACKSPACE:

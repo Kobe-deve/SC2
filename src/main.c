@@ -83,6 +83,9 @@ int main()
 	}
 	
 	// free data
+	if(state.listeners[MENU_SELECTION] != NULL)
+		freeMenuProcess(&state);
+		
 	freeDungeonData(&state);
 	freeBattleData(&state);
 	

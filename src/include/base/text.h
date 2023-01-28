@@ -25,27 +25,33 @@
 
 #define FIRST_FLOOR_TEXT "You wake up in a strange stone room, dimly lit but still dark."
 
-// npc description
+// npc names/description
+#define NPC1_N "Stranger"
+#define NPC2_N "Mysterious Figure"
 #define NPC1 "You see a person nearby, press enter to talk to them."
 #define NPC2 "A cloaked figure stands before you, press enter to talk to them."
 
+// npc dialogue 
+	
+
 // menu options 
 
-// initial talking with npc in dungeon 
-#define G_COMMAND "Greet" 
-#define Q_COMMAND "Ask a question"
-#define P_COMMAND "Ask to pass by"
+	// initial talking with npc in dungeon 
+	#define G_COMMAND "Greet" 
+	#define Q_COMMAND "Ask a question"
+	#define P_COMMAND "Ask to pass by"
+	#define L_COMMAND "Leave"
 
-// combat options 
-#define A_COMMAND "Attack" 
-#define M_COMMAND "Magic"
-#define T_COMMAND "Talk"
-#define W_COMMAND "Lol" 
-#define E_COMMAND "Exit"
+	// combat options 
+	#define A_COMMAND "Attack" 
+	#define M_COMMAND "Magic"
+	#define T_COMMAND "Talk"
+	#define W_COMMAND "Lol" 
+	#define E_COMMAND "Exit"
 
-//title screen options 
-#define NG "New Game"
-#define CT "Continue"
+	//title screen options 
+	#define NG "New Game"
+	#define CT "Continue"
 
 
 #endif
