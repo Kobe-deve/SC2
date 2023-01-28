@@ -16,7 +16,7 @@
 #define NPC_FIGHT "You see someone fighting a curse! Press enter to help them!"
 #define ENEMY_MOVEMENT "A footstep echoes from the darkness..."
 #define PASS_NPC "They stepped aside for you to pass by."
-#define NPC_DONE_TALK "You walked away."
+#define NPC_DONE_TALK "They stopped talking to you."
 #define NPC_RUN_AWAY "You walked away suddenly."
 #define OPENED_CHEST "You opened the chest and found... nothing wow awesome."
 #define TALK_TO_NPC "You began talking with the person."

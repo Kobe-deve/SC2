@@ -605,7 +605,7 @@ void dungeonLogic(void *data, struct gameState * s)
 	if(conversation != NONE) 
 	{
 		// walking away from conversation 
-		if(conversation == LEAVE || conversation == PASS_BY && s->input == ENTER)  // being done with conversation 
+		if(conversation == LEAVE || conversation == PASS_BY)  // being done with conversation 
 		{
 			if(conversation == PASS_BY)
 				updateStatus(PASS_NPC);	

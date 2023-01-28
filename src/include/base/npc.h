@@ -27,18 +27,17 @@ struct npc
 // conversation phase enumerations
 enum conversationPhase
 {
-	NONE = -1,
-	NO_DISCUSS = -2,
-	INTRO = -3,
-	GREETING = 0,
-	QUESTION = 1,
-	PASS = 2,
+	NONE = -1, // no conversation happening 
+	NO_DISCUSS = -2, // base loop of asking a question, to pass, or to leave 
+	INTRO = -3, // initial start of convesation with greeting, question, or ask to pass 
+	GREETING = 0, // greeting option 
+	QUESTION = 1, // asking a question to the npc 
+	PASS = 2, // asking to pass 
 	NPC_RESPONSE = 3,
-	PASS_BY = 4,
-	END = 5,
-	BATTLE = 6,
+	BATTLE = 6, // starting fight with npc (will be followed by pressing enter) 
 	WAIT_RESPONSE = 7,
-	LEAVE = 8
+	PASS_BY = 9,
+	LEAVE = 8 // end of conversation 
 };
 
 int conversation = NONE;
@@ -117,7 +116,7 @@ void npcDialogueHandler(int spot, struct gameState * s)
 		break;
 		case PASS:
 		updateStatus("Person: \"Sure.\"");	
-		conversation = NPC_RESPONSE;
+		conversation = PASS_BY;
 		activeNPCs[spot].passBy = 1;
 		break;
 		case BATTLE:
