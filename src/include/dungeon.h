@@ -92,11 +92,11 @@ int npcNearby(int x, int y, int f, int isPlayer)
 	
 	for(i=0;i<numNPCs;i++)
 	{
-		if(activeNPCs[i].active && (activeNPCs[i].floor == f && (y == activeNPCs[i].y && x == activeNPCs[i].x)))
+		if(!activeNPCs[i].passBy && activeNPCs[i].active && (activeNPCs[i].floor == f && (y == activeNPCs[i].y && x == activeNPCs[i].x)))
 		{
 			// if the coordinates are for the player, set the talked variable to this npc 
 			if(isPlayer)
-				npcTalked = activeNPCs[i].type;
+				npcTalked = i;
 			return 1;
 		}
 	}
@@ -257,6 +257,12 @@ void resetDungeon(void *data)
 		}
 	}
 	
+	// reset passBy variable for npcs 
+	for(i=0;i<numNPCs;i++)
+	{
+		activeNPCs[i].passBy = 0;
+	}
+	
 	// switch back to dungeon track 
 	switchTrack(DUNGEON_MUSIC,s);
 			
@@ -361,7 +367,7 @@ void description(struct gameState * s)
 		// if an npc is nearby, update status 
 		if(npcNearPlayer && !activeNPCs[npcTalked].inCombat && activeNPCs[npcTalked].active == 1)
 		{
-			switch(npcTalked)
+			switch(activeNPCs[npcTalked].type)
 			{
 				case 0:
 				updateStatus(NPC1);	

@@ -17,6 +17,7 @@ struct npc
 	int talking; // is the npc talking to the player 
 	int speed; // interval the npc moves at 
 	int startTicks;
+	int passBy; // can pass by the npc 
 	
 	struct character stats; // stats of the npc 
 	int reception; // reception to player
@@ -71,6 +72,7 @@ void generateNPCs(int dungeonType)
 		activeNPCs[i].speed = 2; // interval the npc moves at 
 		activeNPCs[i].startTicks = 0;
 		activeNPCs[i].enemyCombat = -1;
+		activeNPCs[i].passBy = 0;
 		
 		activeNPCs[i].reception = 0;
 		activeNPCs[i].curiosity = 0;
@@ -78,9 +80,9 @@ void generateNPCs(int dungeonType)
 }
 
 // handles dialogue process with npc
-void npcDialogueHandler(int type, struct gameState * s)
+void npcDialogueHandler(int spot, struct gameState * s)
 {	
-	switch(type)
+	switch(activeNPCs[spot].type)
 	{
 		case 0:
 		break;
@@ -114,11 +116,13 @@ void npcDialogueHandler(int type, struct gameState * s)
 		updateStatus("Person: \"What? Sorry I don't care.\"");	
 		break;
 		case PASS:
-		updateStatus("Person: \"Nah.\"");	
+		updateStatus("Person: \"Sure.\"");	
 		conversation = NPC_RESPONSE;
+		activeNPCs[spot].passBy = 1;
 		break;
 		case BATTLE:
 		updateStatus("Person: \"Die :).\"");	
+		updateStatus("Press Enter.");	
 		talkOver = 1;
 		break;
 		
