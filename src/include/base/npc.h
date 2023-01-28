@@ -55,7 +55,7 @@ struct npc * activeNPCs = NULL;
 void updateStatus(char * text);
 
 // generate blank npcs in the dungeon 
-void generateNPCs()
+void generateNPCs(int dungeonType)
 {
 	int i;
 	
@@ -109,12 +109,17 @@ void npcDialogueHandler(int type, struct gameState * s)
 		updateStatus("Person: \"What do you want?\"");	
 		break;
 		case QUESTION:
-		conversation = NPC_RESPONSE;
+		//conversation = NPC_RESPONSE;
+		conversation = BATTLE;
 		updateStatus("Person: \"What? Sorry I don't care.\"");	
 		break;
 		case PASS:
 		updateStatus("Person: \"Nah.\"");	
 		conversation = NPC_RESPONSE;
+		break;
+		case BATTLE:
+		updateStatus("Person: \"Die :).\"");	
+		talkOver = 1;
 		break;
 		
 		case NPC_RESPONSE:

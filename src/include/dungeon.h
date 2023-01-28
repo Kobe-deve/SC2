@@ -92,7 +92,7 @@ int npcNearby(int x, int y, int f, int isPlayer)
 	
 	for(i=0;i<numNPCs;i++)
 	{
-		if(activeNPCs[i].floor == f && (y == activeNPCs[i].y && x == activeNPCs[i].x))
+		if(activeNPCs[i].active && (activeNPCs[i].floor == f && (y == activeNPCs[i].y && x == activeNPCs[i].x)))
 		{
 			// if the coordinates are for the player, set the talked variable to this npc 
 			if(isPlayer)
@@ -359,7 +359,7 @@ void description(struct gameState * s)
 		break;
 		default:
 		// if an npc is nearby, update status 
-		if(npcNearPlayer && !activeNPCs[npcTalked].inCombat)
+		if(npcNearPlayer && !activeNPCs[npcTalked].inCombat && activeNPCs[npcTalked].active == 1)
 		{
 			switch(npcTalked)
 			{
@@ -371,7 +371,7 @@ void description(struct gameState * s)
 				break;
 			}
 		}
-		else if(npcNearPlayer)
+		else if(npcNearPlayer && activeNPCs[npcTalked].inCombat )
 			updateStatus(NPC_FIGHT);	
 				
 		break;
@@ -522,7 +522,7 @@ void npcHandler(struct gameState * s)
 	// display/move npcs  
 	for(i = 0;i<numNPCs;i++)
 	{	
-		if(s->floor == activeNPCs[i].floor && (visible[s->floor][activeNPCs[i].y][activeNPCs[i].x] == 1))
+		if(activeNPCs[i].active && s->floor == activeNPCs[i].floor && (visible[s->floor][activeNPCs[i].y][activeNPCs[i].x] == 1))
 		{
 			setCursor(dungeonPrintCoordX+activeNPCs[i].x,dungeonPrintCoordX+activeNPCs[i].y);
 			if(activeNPCs[i].inCombat)
@@ -536,9 +536,9 @@ void npcHandler(struct gameState * s)
 	if(conversation != NONE)
 	{
 		// checks if a menu is being used for responding 
-		if(s->listeners[MENU_SELECTION] == NULL)
+		if(!talkOver && s->listeners[MENU_SELECTION] == NULL)
 			npcDialogueHandler(npcTalked,s);
-		else if(s->input == ENTER) // free menu if selection made and push conversation in direction 
+		else if(conversation != BATTLE && s->input == ENTER) // free menu if selection made and push conversation in direction 
 		{
 			// handle response based on option selected
 			if(conversation == INTRO)
@@ -565,7 +565,7 @@ void npcHandler(struct gameState * s)
 		}
 		
 		// if conversation over, press enter to leave 
-		if(talkOver == 1 && s->input == ENTER)
+		if(conversation != BATTLE && talkOver == 1 && s->input == ENTER )
 			conversation = LEAVE;
 	}
 }
@@ -599,7 +599,7 @@ void dungeonLogic(void *data, struct gameState * s)
 	if(conversation != NONE) 
 	{
 		// walking away from conversation 
-		if(conversation == LEAVE || conversation == PASS_BY && s->input == ENTER) 
+		if(conversation == LEAVE || conversation == PASS_BY && s->input == ENTER)  // being done with conversation 
 		{
 			if(conversation == PASS_BY)
 				updateStatus(PASS_NPC);	
@@ -608,11 +608,25 @@ void dungeonLogic(void *data, struct gameState * s)
 			
 			conversation = NONE;
 		}
-		else if(s->input == BACKSPACE) 
+		else if(conversation != BATTLE && s->input == BACKSPACE) // walking away
 		{
 			conversation = NONE;
 			
 			updateStatus(NPC_RUN_AWAY);	
+		}
+		else if(talkOver == 1 && conversation == BATTLE && s->input == ENTER) // battling npc 
+		{
+			activeNPCs[npcTalked].active = 0;
+			talkOver = 0;
+			conversation = NONE;
+			
+			if(s->listeners[MENU_SELECTION] != NULL)
+			{
+				clearMenu(s);
+				freeMenuProcess(s);	
+			}
+			
+			startEncounter(activeNPCs[npcTalked].enemyCombat,data);
 		}
 		
 		// free menu if conversation over
@@ -687,7 +701,7 @@ void dungeonLogic(void *data, struct gameState * s)
 					break;
 				}
 			}	
-			else if(npcNearPlayer && !activeNPCs[npcTalked].inCombat) // interact with npc
+			else if(activeNPCs[npcTalked].active == 1 && npcNearPlayer && !activeNPCs[npcTalked].inCombat) // interact with npc
 			{
 				// set up menu and variables for talking 
 				updateStatus(TALK_TO_NPC);
@@ -705,7 +719,7 @@ void dungeonLogic(void *data, struct gameState * s)
 		
 				free(array);
 			}	
-			else if(npcNearPlayer && activeNPCs[npcTalked].inCombat) // help npc in combat 
+			else if(activeNPCs[npcTalked].active == 1 && npcNearPlayer && activeNPCs[npcTalked].inCombat) // help npc in combat 
 			{
 				activeEnemies[activeNPCs[npcTalked].enemyCombat].active = 0;
 				activeNPCs[npcTalked].inCombat = 0;
@@ -1046,7 +1060,7 @@ void initDungeonFloor(void *data)
 	activeNPCs = malloc(maxStatus * sizeof(struct npc));
 
 	// generate npcs
-	generateNPCs();
+	generateNPCs(s->building);
 
 	// set up status handling array 
 	numStatusLines = 0;
