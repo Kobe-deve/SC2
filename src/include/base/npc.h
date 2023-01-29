@@ -2,6 +2,10 @@
 #include "stats.h"
 #endif
 
+#ifndef TEXT_DEFINED
+#include "base/text.h"
+#endif 
+
 #ifndef NPC_HANDLED
 #define NPC_HANDLED
 
@@ -22,6 +26,9 @@ struct npc
 	struct character stats; // stats of the npc 
 	int reception; // reception to player
 	int curiosity; // how curious the npc is of the player 
+	
+	int numSaved; // number of times the player has stepped into a fight an npc had with a curse 
+	int numPassed; // number of times the player has passed by the npc 
 };
 
 // conversation phase enumerations
@@ -45,7 +52,7 @@ enum conversationPhase
 int conversation = NONE;
 
 int npcNearPlayer = 0; // the npc the player is talking to 
-int npcTalked = 0; // the npc the player is talking to 
+int npcTalked = 0; // the npc the player is talking to (from the activeNPCs list)
 int talkOver = 0; // is the conversation over?
 int topicNum = 0; // what topic is being used? For NPC/Player questions  
  
@@ -76,7 +83,9 @@ void generateNPCs(int dungeonType)
 		activeNPCs[i].passBy = 0;
 		
 		activeNPCs[i].reception = 0;
-		activeNPCs[i].curiosity = 0;
+		activeNPCs[i].curiosity = 10;
+		activeNPCs[i].numSaved = 0;
+		activeNPCs[i].numPassed = 0;
 	}
 }
 
