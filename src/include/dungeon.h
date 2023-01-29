@@ -504,6 +504,7 @@ void enemyHandler(struct gameState * s)
 			{
 				updateStatus(HEAR_FIGHT);
 				activeEnemies[i].inCombat = 1;
+				activeNPCs[checkNPC].passBy = 0;
 				activeNPCs[checkNPC].inCombat = 1;
 				activeNPCs[checkNPC].enemyCombat = i;
 			}
@@ -525,18 +526,43 @@ void npcHandler(struct gameState * s)
 {
 	int i;
 	
+	if(debug)
+	{
+		setCursor(120,19);
+		printf("NPCS:");	
+	}
+	
 	// display/move npcs  
 	for(i = 0;i<numNPCs;i++)
 	{	
+		if(debug == 1)
+		{
+			setColor(WHITE);
+			printf("NPC #%d:",i);
+		}
+
 		if(activeNPCs[i].active && s->floor == activeNPCs[i].floor && (visible[s->floor][activeNPCs[i].y][activeNPCs[i].x] == 1))
 		{
 			setCursor(dungeonPrintCoordX+activeNPCs[i].x,dungeonPrintCoordX+activeNPCs[i].y);
-			if(activeNPCs[i].inCombat)
+			switch(activeNPCs[i].type)
+			{
+				case 0:
+				setColor(DARK_BABY_BLUE);
+				break;
+				case 1:
+				setColor(SILVER);
+				break;
+			}
+			
+			if(activeNPCs[i].inCombat) // shows a fight 
 				printf("X");
 			else
+			{
 				printf("%c",1);
+			}
 		}
 	}
+	setColor(WHITE);
 }
 
 // logic handling in dungeon section for moving player/npcs/etc
@@ -573,14 +599,14 @@ void dungeonLogic(void *data, struct gameState * s)
 		else if(conversation != BATTLE && s->input == ENTER) // free menu if selection made and push conversation in direction 
 		{
 			// handle response based on option selected
-			if(conversation == INTRO)
+			if(conversation == INTRO) // handle introduction response 
 				conversation = s->option;
-			else if(conversation == NO_DISCUSS)
+			else if(conversation == NO_DISCUSS) // handle no discussion response 
 			{
 				switch(s->option)
 				{
 					case 0:
-					conversation = QUESTION;
+					conversation = NPC_QUESTION;
 					break;
 					case 1:
 					conversation = PASS;
@@ -591,7 +617,10 @@ void dungeonLogic(void *data, struct gameState * s)
 					break;
 				}
 			}
+			else if(conversation == NPC_QUESTION) // handle npc question response 
+				conversation = PLAYER_RESPONSE;
 			
+			// clear menu 
 			clearMenu(s);
 			freeMenuProcess(s);
 		}

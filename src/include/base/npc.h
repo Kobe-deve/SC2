@@ -33,10 +33,12 @@ enum conversationPhase
 	GREETING = 0, // greeting option 
 	QUESTION = 1, // asking a question to the npc 
 	PASS = 2, // asking to pass 
-	NPC_RESPONSE = 3,
+	NPC_RESPONSE = 3, // npc response 
+	NPC_QUESTION = 4, // npc asking a question 
+	PLAYER_RESPONSE = 5, // player responding to a question 
 	BATTLE = 6, // starting fight with npc (will be followed by pressing enter) 
-	WAIT_RESPONSE = 7,
-	PASS_BY = 9,
+	WAIT_RESPONSE = 7, 
+	PASS_BY = 9, // player can pass by 
 	LEAVE = 8 // end of conversation 
 };
 
@@ -45,7 +47,7 @@ int conversation = NONE;
 int npcNearPlayer = 0; // the npc the player is talking to 
 int npcTalked = 0; // the npc the player is talking to 
 int talkOver = 0; // is the conversation over?
-int topicNum = 0; // what topic is being used? 
+int topicNum = 0; // what topic is being used? For NPC/Player questions  
  
 // npc information for dungeon 
 int numNPCs = 0;
@@ -91,8 +93,8 @@ void npcDialogueHandler(int spot, struct gameState * s)
 	
 	switch(conversation)
 	{
-		case NO_DISCUSS:
-		if(s->listeners[MENU_SELECTION] == NULL)
+		case NO_DISCUSS: // base loop of conversation 
+		if(s->listeners[MENU_SELECTION] == NULL) // generate list of commands 
 		{
 			registerEvent(MENU_SELECTION,menuSelection,s->listeners);
 			char ** array = malloc(3 * sizeof(char*));
@@ -104,28 +106,45 @@ void npcDialogueHandler(int spot, struct gameState * s)
 			free(array);		
 		}
 		break;
-		case GREETING:
+		case GREETING: // npc response to greeting 
 		conversation = NO_DISCUSS;
 		updateStatus("Person: \"Yeah hello.\"");	
 		updateStatus("Person: \"What do you want?\"");	
 		break;
-		case QUESTION:
+		case QUESTION: // npc response to question or generate list of questions 
 		//conversation = NPC_RESPONSE;
 		conversation = BATTLE;
 		updateStatus("Person: \"What? Sorry I don't care.\"");	
 		break;
-		case PASS:
+		case PASS: // npc response to passing by 
 		updateStatus("Person: \"Sure.\"");	
 		conversation = PASS_BY;
 		activeNPCs[spot].passBy = 1;
 		break;
-		case BATTLE:
+		case BATTLE: // npc fights player 
 		updateStatus("Person: \"Die :).\"");	
 		updateStatus("Press Enter.");	
 		talkOver = 1;
 		break;
-		
-		case NPC_RESPONSE:
+		case NPC_QUESTION: // NPC asks a question 
+		updateStatus("Person: \"Do you like pancakes?\"");	
+		if(s->listeners[MENU_SELECTION] == NULL) // generate list of responses 
+		{
+			registerEvent(MENU_SELECTION,menuSelection,s->listeners);
+			char ** array = malloc(2 * sizeof(char*));
+			array[0] = "Yes";
+			array[1] = "No";
+			initMenu(s,2,array,70,31);
+	
+			free(array);		
+		}
+		break;
+		case PLAYER_RESPONSE: // respond based on what the player responded with 
+		updateStatus("Person: \"Ah okay then, bye.\"");	
+		talkOver = 1;
+		conversation = LEAVE;
+		break;
+		case NPC_RESPONSE: // NPC responds
 		updateStatus("Person: \"I have nothing else to say to you leave me alone.\"");	
 		talkOver = 1;
 		conversation = LEAVE;

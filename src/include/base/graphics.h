@@ -12,6 +12,9 @@
 #include <conio.h>
 #include <windows.h>
 
+// will be used for toggling between ascii/sprite modes 
+int graphicsMode = 0;
+
 // calculates ticks per frame for timers
 int SCREEN_TICK_PER_FRAME = 8; 
 
