@@ -47,6 +47,8 @@ void destroyListener(gameEvents eventType, struct EventHandler *listeners[])
 	if(handlers != NULL)
 		free(handlers);
 	*handlers = NULL;
+	
+	listeners[eventType] = NULL;
 }
 
 // initialize listener

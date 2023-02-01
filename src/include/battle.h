@@ -142,7 +142,8 @@ void freeBattleData(void *data)
 	int i;
 	
 	// clear menu process if used 
-	freeMenuProcess(s);
+	if(s->options != NULL)
+		freeMenuProcess(s);
 			
 	// deallocate enemy data 
 	if(s->currentBattle.enemies != NULL)

@@ -26,6 +26,8 @@ struct npc
 	struct character stats; // stats of the npc 
 	int reception; // reception to player
 	int curiosity; // how curious the npc is of the player 
+	int trust; // how much the npc trusts the player 
+	int goal; // the goals of the npc 
 	
 	int numSaved; // number of times the player has stepped into a fight an npc had with a curse 
 	int numPassed; // number of times the player has passed by the npc 
@@ -116,9 +118,9 @@ void npcDialogueHandler(int spot, struct gameState * s)
 		}
 		break;
 		case GREETING: // npc response to greeting 
-		conversation = NO_DISCUSS;
 		updateStatus("Person: \"Yeah hello.\"");	
 		updateStatus("Person: \"What do you want?\"");	
+		conversation = NO_DISCUSS;
 		break;
 		case QUESTION: // npc response to question or generate list of questions 
 		//conversation = NPC_RESPONSE;
@@ -131,22 +133,24 @@ void npcDialogueHandler(int spot, struct gameState * s)
 		activeNPCs[spot].passBy = 1;
 		break;
 		case BATTLE: // npc fights player 
-		updateStatus("Person: \"Die :).\"");	
-		updateStatus("Press Enter.");	
+		updateStatus(NPCBAT);	
+		updateStatus(PRESS_ENTER);	
 		talkOver = 1;
 		break;
 		case NPC_QUESTION: // NPC asks a question 
-		updateStatus("Person: \"Do you like pancakes?\"");	
+		
+		topicNum = rand()%2+1;
+		
+		updateStatus(QUESTION1);	
 		if(s->listeners[MENU_SELECTION] == NULL) // generate list of responses 
 		{
 			registerEvent(MENU_SELECTION,menuSelection,s->listeners);
-			char ** array = malloc(2 * sizeof(char*));
-			array[0] = "Yes";
-			array[1] = "No";
+			char ** array = generateResponses(0);
 			initMenu(s,2,array,70,31);
 	
 			free(array);		
 		}
+		
 		break;
 		case PLAYER_RESPONSE: // respond based on what the player responded with 
 		updateStatus("Person: \"Ah okay then, bye.\"");	
@@ -154,7 +158,7 @@ void npcDialogueHandler(int spot, struct gameState * s)
 		conversation = LEAVE;
 		break;
 		case NPC_RESPONSE: // NPC responds
-		updateStatus("Person: \"I have nothing else to say to you leave me alone.\"");	
+		updateStatus(NPCRESP);	
 		talkOver = 1;
 		conversation = LEAVE;
 		break;

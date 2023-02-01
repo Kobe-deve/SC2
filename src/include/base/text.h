@@ -32,8 +32,12 @@
 	#define NPC2 "A cloaked figure stands before you, press enter to talk to them."
 
 // npc dialogue 
+	#define NPCRESP "I am responding"
+	#define NPCPASS_Yes "You can pass now"
+	#define NPCGREET_RESPONSE "Responding to greet"
+	#define NPCBAT "A battle is starting"
+	#define PRESS_ENTER "Press Enter"
 	
-
 // menu options 
 
 	// initial talking with npc in dungeon 
@@ -54,7 +58,26 @@
 	#define CT "Continue"
 
 // npc questions 
-
+	#define QUESTION1 "This is Q1"
+	#define QUESTION2 "This is Q2"
+	#define QUESTION3 "This is Q3"
+	#define QUESTION4 "This is Q4"
+	
+	// generate responses based on question type, used for talking to npcs/demons
+	char ** generateResponses(int questionType)
+	{
+		char ** array;
+		switch(questionType)
+		{
+			default:
+			case 0:
+			array = malloc(2 * sizeof(char*));
+			array[0] = "Yes";
+			array[1] = "No";
+			return array;
+			break;
+		}
+	}
 
 #endif
 
