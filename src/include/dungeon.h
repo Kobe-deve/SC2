@@ -62,6 +62,7 @@ struct enemies
 	int npcFighting; // what npc the enemy is fighting 
 	int speed; // what interval does the enemy move 
 	int startTicks;
+	int health; // overworld health of enemy 
 };
 
 // array of visible tiles in an area
@@ -483,11 +484,6 @@ void enemyHandler(struct gameState * s)
 			}
 		
 			// display enemy 
-			if(visible[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1)
-			{
-				setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
-				printf("+");
-			}
 			
 			// starting fight with npc 
 			int checkNPC = -1;
@@ -501,6 +497,7 @@ void enemyHandler(struct gameState * s)
 				}
 			}
 
+			// if npc found, start battle 
 			if(checkNPC != -1)
 			{
 				updateStatus(HEAR_FIGHT);
@@ -520,16 +517,18 @@ void enemyHandler(struct gameState * s)
 			updateStatus(NPCvsENEMY);	
 			
 			// change stats based on combat 
-			activeNPCs[activeEnemies[i].npcFighting].stats.health--;
-			/*switch(rand()%2)
+			switch(rand()%4)
 			{
-				case 0:
+				case 0: // npc takes damage
 				activeNPCs[activeEnemies[i].npcFighting].stats.health--;
 				break;
-				case 1:
-				
+				case 1: // curse takes some sort of damage 
+				case 2:
+				activeEnemies[i].health--;
 				break;
-			}*/
+				default: // nothing 
+				break;
+			}
 			
 			// check if NPC was defeated, if so deactivate NPC and get enemy moving again 
 			if(activeNPCs[activeEnemies[i].npcFighting].stats.health <= 0)
@@ -539,6 +538,13 @@ void enemyHandler(struct gameState * s)
 				activeNPCs[activeEnemies[i].npcFighting].active = 0;
 				activeNPCs[activeEnemies[i].npcFighting].inCombat = 0;
 				activeEnemies[i].inCombat = 0;
+				
+			}
+			else if(activeEnemies[i].health <= 0) // check if enemy was defeated 
+			{
+				activeNPCs[activeEnemies[i].npcFighting].inCombat = 0;
+				activeEnemies[i].inCombat = 0;
+				activeEnemies[i].active = 0;
 			}
 			
 			// reset start tick 
@@ -549,6 +555,13 @@ void enemyHandler(struct gameState * s)
 		{
 			setCursor(50,20+i);
 			printf("ENEMY #%d: (%d, %d) STATUS:%d MOVEMENT: %d",i,activeEnemies[i].x,activeEnemies[i].y,activeEnemies[i].active,((int)(SDL_GetTicks()))% activeEnemies[i].speed);
+		}
+		
+		// display enemy 
+		if(visible[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1 && activeEnemies[i].inCombat == 0 && activeEnemies[i].active == 1)
+		{
+			setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
+			printf("+");
 		}
 	}
 }
@@ -961,6 +974,7 @@ void generateEnemies(struct gameState * s)
 				activeEnemies[numGenerate-1].active = 1;
 				activeEnemies[numGenerate-1].type = rand()%3+1;
 				activeEnemies[numGenerate-1].npcFighting = -1;
+				activeEnemies[numGenerate-1].health = 5;
 				numGenerate--;
 			}
 		}
@@ -985,6 +999,7 @@ void generateEnemies(struct gameState * s)
 			activeEnemies[i].active = 1;
 			activeEnemies[i].npcFighting = -1;
 			activeEnemies[i].type = rand()%3+1;
+			activeEnemies[i].health = 5;
 		}
 	}
 }
