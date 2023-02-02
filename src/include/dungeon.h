@@ -100,7 +100,7 @@ int npcNearby(int x, int y, int f, int isPlayer)
 			return 1;
 		}
 	}
-			
+	
 	return 0;
 }
 
@@ -334,7 +334,7 @@ void displayRange(struct gameState * s)
 			{
 				for(i = 0;i<numEnemies;i++)
 				{
-					if(activeEnemies[i].active == 1 && activeEnemies[i].x == x && activeEnemies[i].y == y)
+					if(activeEnemies[i].inCombat == 0 && activeEnemies[i].active == 1 && activeEnemies[i].x == x && activeEnemies[i].y == y)
 					{
 						setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
 						printf("+");
@@ -512,6 +512,10 @@ void enemyHandler(struct gameState * s)
 			// reset start tick 
 			activeEnemies[i].startTicks = SDL_GetTicks();
 		}
+		else if(activeEnemies[i].inCombat == 1)
+		{
+			
+		}
 		
 		if(debug == 1)
 		{
@@ -528,6 +532,9 @@ void npcHandler(struct gameState * s)
 	
 	if(debug)
 	{
+		setCursor(120,15);
+		printf("NPC NEAR:%d",npcTalked);	
+		
 		setCursor(120,19);
 		printf("NPCS:");	
 	}
@@ -557,12 +564,10 @@ void npcHandler(struct gameState * s)
 				break;
 			}
 			
-			if(activeNPCs[i].inCombat) // shows a fight 
+			if(activeNPCs[i].inCombat == 1) // shows a fight 
 				printf("X");
 			else
-			{
 				printf("%c",1);
-			}
 		}
 	}
 	setColor(WHITE);
@@ -756,6 +761,8 @@ void dungeonLogic(void *data, struct gameState * s)
 			else if(activeNPCs[npcTalked].active == 1 && npcNearPlayer && activeNPCs[npcTalked].inCombat) // help npc in combat 
 			{
 				activeEnemies[activeNPCs[npcTalked].enemyCombat].active = 0;
+				activeEnemies[activeNPCs[npcTalked].enemyCombat].inCombat = 0;
+				
 				activeNPCs[npcTalked].inCombat = 0;
 				activeNPCs[npcTalked].numSaved++;
 				

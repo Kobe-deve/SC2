@@ -132,9 +132,11 @@ void npcDialogueHandler(int spot, struct gameState * s)
 		break;
 		case PASS: // npc response to passing by 
 		updateStatus("Person: \"Sure.\"");	
+		
 		conversation = PASS_BY;
 		activeNPCs[spot].passBy = 1;
-		activeNPCs[spot].numPassed++;
+		activeNPCs[spot].numPassed++; // if the player can pass by, increase number of times passed 
+		
 		break;
 		case BATTLE: // npc fights player 
 		updateStatus(NPCBAT);	
@@ -171,8 +173,7 @@ void npcDialogueHandler(int spot, struct gameState * s)
 		// initialize menu of responses 
 		initMenu(s,s->numOptions,array,70,31);
 		free(array);		
-			
-		
+	
 		break;
 		case PLAYER_RESPONSE: // respond based on what the player responded with 
 		updateStatus("Person: \"Ah okay then, bye.\"");	
