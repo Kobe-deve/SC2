@@ -587,8 +587,8 @@ void npcHandler(struct gameState * s)
 		{
 			setCursor(120,19+1+i);
 			setColor(WHITE);
-			printf("NPC #%d: RECPT:%d CURIOUS:%d NUMSAVED:%d NUMPASSED:%d PASSBY:%d GOAL:%d  ",
-				i,activeNPCs[i].reception, activeNPCs[i].curiosity,activeNPCs[i].numSaved,
+			printf("NPC #%d: HP:%d RECPT:%d CURIOUS:%d NUMSAVED:%d NUMPASSED:%d PASSBY:%d GOAL:%d  ",
+				i,activeNPCs[i].stats.health,activeNPCs[i].reception, activeNPCs[i].curiosity,activeNPCs[i].numSaved,
 				activeNPCs[i].numPassed,activeNPCs[i].passBy,activeNPCs[i].goal);
 		}
 

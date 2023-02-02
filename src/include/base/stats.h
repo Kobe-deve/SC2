@@ -120,6 +120,7 @@ struct character generateCharacter(int characterType)
 	{
 		case HUMAN:
 		strcpy(returnedChar.name,"Human");
+		returnedChar.health = 5;
 		break;
 		case STRANJER:
 		strcpy(returnedChar.name,"Stranjer");
