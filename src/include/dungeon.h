@@ -537,8 +537,11 @@ void npcHandler(struct gameState * s)
 	{	
 		if(debug == 1)
 		{
+			setCursor(120,19+1+i);
 			setColor(WHITE);
-			printf("NPC #%d:",i);
+			printf("NPC #%d: RECPT:%d CURIOUS:%d NUMSAVED:%d NUMPASSED:%d PASSBY:%d GOAL:%d  ",
+				i,activeNPCs[i].reception, activeNPCs[i].curiosity,activeNPCs[i].numSaved,
+				activeNPCs[i].numPassed,activeNPCs[i].passBy,activeNPCs[i].goal);
 		}
 
 		if(activeNPCs[i].active && s->floor == activeNPCs[i].floor && (visible[s->floor][activeNPCs[i].y][activeNPCs[i].x] == 1))
@@ -754,6 +757,7 @@ void dungeonLogic(void *data, struct gameState * s)
 			{
 				activeEnemies[activeNPCs[npcTalked].enemyCombat].active = 0;
 				activeNPCs[npcTalked].inCombat = 0;
+				activeNPCs[npcTalked].numSaved++;
 				
 				// start encounter 
 				startEncounter(activeNPCs[npcTalked].enemyCombat,data);

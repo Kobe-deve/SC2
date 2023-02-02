@@ -76,6 +76,13 @@
 			array[1] = "No";
 			return array;
 			break;
+			case 1:
+			array = malloc(3 * sizeof(char*));
+			array[0] = "That's cool";
+			array[1] = "I didn't know that";
+			array[2] = "Wow";
+			return array;
+			break;
 		}
 	}
 

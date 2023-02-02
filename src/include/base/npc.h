@@ -82,12 +82,15 @@ void generateNPCs(int dungeonType)
 		activeNPCs[i].speed = 2; // interval the npc moves at 
 		activeNPCs[i].startTicks = 0;
 		activeNPCs[i].enemyCombat = -1;
-		activeNPCs[i].passBy = 0;
 		
-		activeNPCs[i].reception = 0;
+		activeNPCs[i].reception = 0; // conversation variables 
 		activeNPCs[i].curiosity = 10;
 		activeNPCs[i].numSaved = 0;
 		activeNPCs[i].numPassed = 0;
+		activeNPCs[i].passBy = 0;
+		activeNPCs[i].goal = 0;
+		
+		activeNPCs[i].stats = generateCharacter(HUMAN); // set up stats 
 	}
 }
 
@@ -124,13 +127,14 @@ void npcDialogueHandler(int spot, struct gameState * s)
 		break;
 		case QUESTION: // npc response to question or generate list of questions 
 		//conversation = NPC_RESPONSE;
-		conversation = BATTLE;
+		conversation = NPC_QUESTION;
 		updateStatus("Person: \"What? Sorry I don't care.\"");	
 		break;
 		case PASS: // npc response to passing by 
 		updateStatus("Person: \"Sure.\"");	
 		conversation = PASS_BY;
 		activeNPCs[spot].passBy = 1;
+		activeNPCs[spot].numPassed++;
 		break;
 		case BATTLE: // npc fights player 
 		updateStatus(NPCBAT);	
@@ -139,23 +143,46 @@ void npcDialogueHandler(int spot, struct gameState * s)
 		break;
 		case NPC_QUESTION: // NPC asks a question 
 		
+		// pick question to ask the player 
 		topicNum = rand()%2+1;
 		
-		updateStatus(QUESTION1);	
-		if(s->listeners[MENU_SELECTION] == NULL) // generate list of responses 
+		// free menu if it isn't freed
+		if(s->listeners[MENU_SELECTION] != NULL)   
+			freeMenuProcess(s);	
+			
+		char ** array;
+				
+		// generate list of responses to give the player 
+		switch(topicNum)
 		{
+			case 1:
+			updateStatus(QUESTION1);	
+			s->numOptions = 2;
 			registerEvent(MENU_SELECTION,menuSelection,s->listeners);
-			char ** array = generateResponses(0);
-			initMenu(s,2,array,70,31);
-	
-			free(array);		
+			break;
+			case 2:
+			updateStatus(QUESTION2);	
+			s->numOptions = 3;	
+			registerEvent(MENU_SELECTION,menuSelection,s->listeners);
+			break;
 		}
+		array = generateResponses(topicNum-1);
+		
+		// initialize menu of responses 
+		initMenu(s,s->numOptions,array,70,31);
+		free(array);		
+			
 		
 		break;
 		case PLAYER_RESPONSE: // respond based on what the player responded with 
 		updateStatus("Person: \"Ah okay then, bye.\"");	
 		talkOver = 1;
 		conversation = LEAVE;
+		
+		// the more the player answers questions the NPC asks, the lower the NPC's curiosity 
+		if(activeNPCs[spot].curiosity > 0)
+			activeNPCs[spot].curiosity--;
+		
 		break;
 		case NPC_RESPONSE: // NPC responds
 		updateStatus(NPCRESP);	
