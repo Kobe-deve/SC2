@@ -59,6 +59,7 @@ struct enemies
 	int active; // is the enemy alive 
 	int type; // the type of enemy for the encounter 
 	int inCombat; // is the enemy fighting an npc 
+	int npcFighting; // what npc the enemy is fighting 
 	int speed; // what interval does the enemy move 
 	int startTicks;
 };
@@ -504,6 +505,7 @@ void enemyHandler(struct gameState * s)
 			{
 				updateStatus(HEAR_FIGHT);
 				activeEnemies[i].inCombat = 1;
+				activeEnemies[i].npcFighting = checkNPC;
 				activeNPCs[checkNPC].passBy = 0;
 				activeNPCs[checkNPC].inCombat = 1;
 				activeNPCs[checkNPC].enemyCombat = i;
@@ -512,9 +514,35 @@ void enemyHandler(struct gameState * s)
 			// reset start tick 
 			activeEnemies[i].startTicks = SDL_GetTicks();
 		}
-		else if(activeEnemies[i].inCombat == 1)
+		else if(activeEnemies[i].inCombat == 1 && ((int)(SDL_GetTicks() - activeEnemies[i].startTicks))/1000.f >= activeEnemies[i].speed) // handle fighting an npc over time 
 		{
+			// update status 
+			updateStatus(NPCvsENEMY);	
 			
+			// change stats based on combat 
+			activeNPCs[activeEnemies[i].npcFighting].stats.health--;
+			/*switch(rand()%2)
+			{
+				case 0:
+				activeNPCs[activeEnemies[i].npcFighting].stats.health--;
+				break;
+				case 1:
+				
+				break;
+			}*/
+			
+			// check if NPC was defeated, if so deactivate NPC and get enemy moving again 
+			if(activeNPCs[activeEnemies[i].npcFighting].stats.health <= 0)
+			{
+				updateStatus(NPCLOST);	
+				
+				activeNPCs[activeEnemies[i].npcFighting].active = 0;
+				activeNPCs[activeEnemies[i].npcFighting].inCombat = 0;
+				activeEnemies[i].inCombat = 0;
+			}
+			
+			// reset start tick 
+			activeEnemies[i].startTicks = SDL_GetTicks();
 		}
 		
 		if(debug == 1)
@@ -932,6 +960,7 @@ void generateEnemies(struct gameState * s)
 				
 				activeEnemies[numGenerate-1].active = 1;
 				activeEnemies[numGenerate-1].type = rand()%3+1;
+				activeEnemies[numGenerate-1].npcFighting = -1;
 				numGenerate--;
 			}
 		}
@@ -954,6 +983,7 @@ void generateEnemies(struct gameState * s)
 				activeEnemies[i].y = rand()%dungeonSize;	
 			}
 			activeEnemies[i].active = 1;
+			activeEnemies[i].npcFighting = -1;
 			activeEnemies[i].type = rand()%3+1;
 		}
 	}

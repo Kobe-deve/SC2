@@ -154,7 +154,7 @@ void npcDialogueHandler(int spot, struct gameState * s)
 			
 		char ** array;
 				
-		// generate list of responses to give the player 
+		// generate the question and list of responses to give the player 
 		switch(topicNum)
 		{
 			case 1:
