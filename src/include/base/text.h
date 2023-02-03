@@ -24,7 +24,7 @@
 	#define WALK_DOWN "You walk downstairs."
 	#define NPCvsENEMY "You hear fighting."
 	#define NPCLOST "You hear someone crying out in pain."
-	#define PASSOUT "You fall asleep..."
+	#define PASSOUT "You feel tired and can't move..."
 	#define WAKIGNUP "You wake up."
 
 #define FIRST_FLOOR_TEXT "You wake up in a strange stone room, dimly lit but still dark."

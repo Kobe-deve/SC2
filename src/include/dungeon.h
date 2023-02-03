@@ -39,7 +39,11 @@
 
 #ifndef TEXT_DEFINED
 #include "base/text.h"
-#endif 
+#endif
+ 
+#ifndef PMENU_HANDLED
+#include "menu.h"
+#endif
 
 int direction = 0;
 
@@ -281,7 +285,7 @@ void resetDungeon(void *data)
 	displayStatus();
 }
 
-// start encounter 
+// start encounter (setting up the stats for the enemy side)
 void startEncounter(int type, void *data)
 {
 	struct gameState * s = (struct gameState *)data;
@@ -909,6 +913,7 @@ void dungeonLogic(void *data, struct gameState * s)
 		// input handling with moving the player and other commands 
 		switch(s->input)
 		{
+			// movement 
 			case UP:
 			direction = 0;
 			if(s->playerY > 0 && d[s->floor][s->playerY-1][s->playerX] != 1 && !npcNearby(s->playerX,s->playerY-1,s->floor,0))
@@ -949,8 +954,12 @@ void dungeonLogic(void *data, struct gameState * s)
 				description(s);
 			}	
 			break;
-			case ENTER:
 			
+			case MENU: // toggle menu 
+			initPlayerMenu(s);
+			break;
+			
+			case ENTER: // interact with nearby objects
 			// handle interacting with items/objects 
 			if(d[s->floor][s->playerY][s->playerX] != 0 && d[s->floor][s->playerY][s->playerX] != E)
 			{

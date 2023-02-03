@@ -10,6 +10,7 @@ src: - main.c
 		-dungeon.h - handles dungeon system operations
 		-title.h - handles title screen operations
 		-shop.h - handles shop operations 
+		-menu.h - handles menu operations (accessed while in dungeon/overworld)
 		-> base
 			-event_handler.h - event handling operations
 			-filenames.h - holds filenames for assets used
