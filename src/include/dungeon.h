@@ -80,6 +80,10 @@ int maxStatus = 10; // max number of status lines visible
 char ** statusText = NULL;
 int numStatusLines = 0;
 
+// is the player going to sleep?
+int sleeping = 0;
+int tired = 0;
+
 // dungeon array pointer 
 int *** d = NULL;
 
@@ -307,6 +311,33 @@ void startEncounter(int type, void *data)
 	updateStatus(ENCOUNTERED);
 }
 
+// displaying a dream 
+void dreamDisplay(void *data)
+{
+	struct gameState * s = (struct gameState *)data;
+	
+	if(s->input == ENTER) // exit sleeping/dream back to dungeon 
+	{
+		system("cls");
+		updateStatus(WAKIGNUP);	
+		sleeping = 0;
+		tired = 0;
+		registerEvent(DISPLAY,resetDungeon,s->listeners);
+	}
+}
+
+// starting a dream 
+void startDream(struct gameState * s)
+{
+	system("cls");
+	printf("You are dreaming");
+	
+	destroyListener(MENU_SELECTION,s->listeners);
+	destroyListener(DISPLAY,s->listeners);
+	destroyListener(LOGIC_HANDLER,s->listeners);
+	registerEvent(DISPLAY,dreamDisplay,s->listeners);
+}
+
 // display range when moving  
 void displayRange(struct gameState * s)
 {
@@ -428,7 +459,7 @@ void enemyHandler(struct gameState * s)
 				setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
 				printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
 			}	
-			else if(conversation == NONE)
+			else if(!sleeping && conversation == NONE)
 				updateStatus(ENEMY_MOVEMENT);	
 			
 			// set up direction variables 
@@ -766,6 +797,15 @@ void dungeonLogic(void *data, struct gameState * s)
 		}
 	}
 	
+	if(tired == 1 && !sleeping) // showing move to sleep/dream 
+	{
+		switchTrack(DREAM_MUSIC,s);
+		
+		updateStatus(PASSOUT);	
+		updateStatus(PRESS_ENTER);	
+		sleeping = 1;
+	}
+	
 	// if talking, handle discussion logic 
 	if(conversation != NONE)
 	{
@@ -862,7 +902,9 @@ void dungeonLogic(void *data, struct gameState * s)
 			}
 		}
 	}
-	else // regular dungeon crawling controls 
+	else if(tired == 1 && s->input == ENTER) // moving to sleep 
+		startDream(s);
+	else if(!tired)// regular dungeon crawling controls 
 	{
 		// input handling with moving the player and other commands 
 		switch(s->input)
@@ -956,7 +998,8 @@ void dungeonLogic(void *data, struct gameState * s)
 			}
 			break;
 			case BACKSPACE:
-			debug = !debug;
+			tired = 1;
+			//debug = !debug;
 			break;
 			default:
 			break;
