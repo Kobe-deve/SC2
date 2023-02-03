@@ -35,6 +35,8 @@ void initNewGame(struct gameState * s)
 	system("cls");
 	
 	// set up initial dungeon crawling variables 
+	s->protag_stats = generateCharacter(HUMAN);
+	s->partySize = 0;
 	s->playerX = 0;
 	s->playerY = 0;
 	s->floor = 0;

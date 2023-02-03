@@ -89,7 +89,7 @@ void generateNPCs(int dungeonType)
 		activeNPCs[i].talking = 0; // is the npc talking to the player 
 		activeNPCs[i].direction = 0;
 		
-		activeNPCs[i].speed = rand()%3+1; // interval the npc moves at 
+		activeNPCs[i].speed = rand()%3+4; // interval the npc moves at 
 		activeNPCs[i].startTicks = 0;
 		activeNPCs[i].enemyCombat = -1;
 		

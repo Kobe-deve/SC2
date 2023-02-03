@@ -121,6 +121,9 @@ struct character generateCharacter(int characterType)
 		case HUMAN:
 		strcpy(returnedChar.name,"Human");
 		returnedChar.health = 5;
+		returnedChar.maxHealth = 5;
+		returnedChar.stamina = 20;
+		returnedChar.maxStamina = 20;
 		break;
 		case STRANJER:
 		strcpy(returnedChar.name,"Stranjer");

@@ -68,6 +68,9 @@
 	
 		struct character protag_stats; // stats of the main character 
 		
+		int partySize;
+		struct character * party; // the player's party 
+		
 		struct battle currentBattle; // the current battle the player is in 
 	};
 	

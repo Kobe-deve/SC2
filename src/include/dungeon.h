@@ -953,9 +953,30 @@ void dungeonLogic(void *data, struct gameState * s)
 // display movable elements in dungeon 
 void display(struct gameState * s)
 {
+	int i;
+	
 	// display player
 	setCursor(dungeonPrintCoordX+s->playerX,dungeonPrintCoordY+s->playerY);
 	printf("%c",1);	
+	
+	// display UI
+	if(debug == 0)
+	{
+		setCursor(125,0);
+		printf("Stats:");
+		
+		// print protag stats 
+		setCursor(125,1);
+		printf("LEADER - %s - HP:%d/%d STAMINA:%d/%d",s->protag_stats.name,s->protag_stats.health,s->protag_stats.maxHealth,s->protag_stats.stamina,s->protag_stats.maxStamina);
+	
+		// print party 
+		for(i=0;i<s->partySize;i++)
+		{
+			setCursor(125,i+1);
+			printf("        %s - HP:%d/%d STAMINA:%d/%d",s->party[i].name,s->party[i].health,s->party[i].maxHealth,s->party[i].stamina,s->party[i].maxStamina);
+		
+		}
+	}
 	
 	if(debug == 1)
 	{
