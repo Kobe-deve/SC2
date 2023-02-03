@@ -493,7 +493,7 @@ void enemyHandler(struct gameState * s)
 			
 			for(j=0;j<numNPCs;j++)
 			{
-				if(activeNPCs[j].floor == s->floor && (activeEnemies[i].y == activeNPCs[j].y && activeEnemies[i].x == activeNPCs[j].x))
+				if(activeNPCs[j].active == 1 && (activeNPCs[j].floor == s->floor && (activeEnemies[i].y == activeNPCs[j].y && activeEnemies[i].x == activeNPCs[j].x)))
 				{
 					checkNPC = j;
 					break;

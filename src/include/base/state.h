@@ -54,6 +54,7 @@
 	struct gameState
 	{
 		Mix_Music * music; // the music playing
+		char * track; // the song that is playing 
 		int input; // input integer
 		struct EventHandler *listeners[MAX_EVENTS]; // event listeners
 		
@@ -100,6 +101,7 @@
 		{
 			free(s->party);
 		}
+		free(s->track);
 	}
 	
 	// load state save data

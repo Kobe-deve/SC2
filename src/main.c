@@ -38,6 +38,7 @@ void initNewGame(struct gameState * s)
 	s->protag_stats = generateCharacter(HUMAN);
 	s->party = NULL;
 	s->partySize = 0;
+	s->track = "";
 	s->playerX = 0;
 	s->playerY = 0;
 	s->floor = 0;
