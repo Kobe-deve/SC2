@@ -83,6 +83,8 @@ int numStatusLines = 0;
 // dungeon array pointer 
 int *** d = NULL;
 
+int ** upStairCoords = NULL;
+
 void initDungeonFloor(void *data);
 void displayRange(struct gameState * s);
 void generateEnemies(struct gameState * s);
@@ -205,6 +207,7 @@ int quickConvert(int x)
 		break;
 		
 		default:
+		case 100:
 		return 178;
 		break;
 	}
@@ -569,7 +572,9 @@ void enemyHandler(struct gameState * s)
 // handling npcs on the floor 
 void npcHandler(struct gameState * s)
 {
-	int i;
+	int i,j;
+	int movement = 0;
+	int cx,cy;
 	
 	if(debug)
 	{
@@ -583,6 +588,7 @@ void npcHandler(struct gameState * s)
 	// display/move npcs  
 	for(i = 0;i<numNPCs;i++)
 	{	
+		movement = 0;
 		if(debug == 1)
 		{
 			setCursor(120,19+1+i);
@@ -592,23 +598,144 @@ void npcHandler(struct gameState * s)
 				activeNPCs[i].numPassed,activeNPCs[i].passBy,activeNPCs[i].goal);
 		}
 
-		if(activeNPCs[i].active && s->floor == activeNPCs[i].floor && (visible[s->floor][activeNPCs[i].y][activeNPCs[i].x] == 1))
+		if(activeNPCs[i].active)
 		{
-			setCursor(dungeonPrintCoordX+activeNPCs[i].x,dungeonPrintCoordX+activeNPCs[i].y);
-			switch(activeNPCs[i].type)
+			switch(activeNPCs[i].goal)
 			{
-				case 0:
-				setColor(DARK_BABY_BLUE);
-				break;
-				case 1:
-				setColor(SILVER);
+				case ESCAPE_DUNGEON:
+				movement = 1;
 				break;
 			}
 			
-			if(activeNPCs[i].inCombat == 1) // shows a fight 
-				printf("X");
-			else
-				printf("%c",1);
+			
+			// movement logic 
+			if(movement == 1 && activeNPCs[i].inCombat != 1 && activeNPCs[i].talking != 1 && ((int)(SDL_GetTicks() - activeNPCs[i].startTicks))/1000.f >= activeNPCs[i].speed)
+			{
+				// erase/update current spot when moving 
+				if(!activeNPCs[i].talking && !activeNPCs[i].inCombat && movement == 1 && s->floor == activeNPCs[i].floor && visible[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x] == 1)
+				{
+					setColor(WHITE);
+					setCursor(dungeonPrintCoordX+activeNPCs[i].x,dungeonPrintCoordX+activeNPCs[i].y);
+					printf("%c",quickConvert(d[s->floor][activeNPCs[i].y][activeNPCs[i].x]));	
+				}
+				
+				// movement strategy 
+				/* 
+					0 - up 
+					1 - right 
+					2 - down 
+					3 - left 
+				*/
+				
+				switch(activeNPCs[i].goal)
+				{
+					case ESCAPE_DUNGEON:
+					cx = activeNPCs[i].x;
+					cy = activeNPCs[i].y;
+					
+					if(upStairCoords[activeNPCs[i].floor][0] == activeNPCs[i].x)
+						activeNPCs[i].direction = -2;			
+					else if(upStairCoords[activeNPCs[i].floor][0] > activeNPCs[i].x && d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x+1] != 1 && activeNPCs[i].x < dungeonSize-1)
+						activeNPCs[i].direction = 1;
+					else if(upStairCoords[activeNPCs[i].floor][0] < activeNPCs[i].x &&  d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x-1] != 1 && activeNPCs[i].x > 0)
+						activeNPCs[i].direction = 3;
+					else
+						activeNPCs[i].direction = -1;
+						
+					switch(activeNPCs[i].direction)
+					{
+						case 1:
+						activeNPCs[i].x++;
+						break;
+						case 3:
+						activeNPCs[i].x--;
+						break;
+						case -2:
+						break;
+						case -1:
+						if(d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x-1] != 1)
+							activeNPCs[i].x--;
+						else if(d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x+1] != 1)
+							activeNPCs[i].x++;
+						break;
+					}
+					
+					if(upStairCoords[activeNPCs[i].floor][1] == activeNPCs[i].y)
+						activeNPCs[i].direction = -2;			
+					else if(upStairCoords[activeNPCs[i].floor][1] > activeNPCs[i].y && d[activeNPCs[i].floor][activeNPCs[i].y+1][activeNPCs[i].x] != 1 && activeNPCs[i].y < dungeonSize-1)
+						activeNPCs[i].direction = 2;
+					else if(upStairCoords[activeNPCs[i].floor][1] < activeNPCs[i].y && d[activeNPCs[i].floor][activeNPCs[i].y-1][activeNPCs[i].x] != 1 && activeNPCs[i].y > 0)
+						activeNPCs[i].direction = 0;
+					else
+						activeNPCs[i].direction = -1;
+					
+					switch(activeNPCs[i].direction)
+					{
+						case 0:
+						activeNPCs[i].y--;
+						break;
+						case 2:
+						activeNPCs[i].y++;
+						break;
+						case -2:
+						break;
+						default:
+						case -1:
+						if(d[activeNPCs[i].floor][activeNPCs[i].y-1][activeNPCs[i].x] != 1)
+							activeNPCs[i].y--;
+						else if(d[activeNPCs[i].floor][activeNPCs[i].y+1][activeNPCs[i].x] != 1)
+							activeNPCs[i].y++;
+						
+						break;
+					}
+					
+					// check if there isn't an overlap with another npc 
+					for(j=0;j<numNPCs;j++)
+					{
+						if(j!=i && (activeNPCs[i].x == activeNPCs[j].x) && (activeNPCs[i].y == activeNPCs[j].y))
+						{
+							activeNPCs[i].x = cx;
+							activeNPCs[i].y = cy;
+							break;
+						}
+					}
+					
+					// check if there isn't any overlap with the player 
+					if(activeNPCs[i].y == s->playerY && activeNPCs[i].x==  s->playerX)
+					{
+						activeNPCs[i].x = cx;
+						activeNPCs[i].y = cy;
+					}						
+				
+					break;
+				}
+				
+				// go upstairs if at stairs 
+				if(d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x] == 2)
+					activeNPCs[i].floor++;
+				
+				activeNPCs[i].startTicks = SDL_GetTicks();
+			}
+			
+			// display npc 
+			if(visible[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x] == 1 && s->floor == activeNPCs[i].floor)
+			{
+				setCursor(dungeonPrintCoordX+activeNPCs[i].x,dungeonPrintCoordX+activeNPCs[i].y);
+				switch(activeNPCs[i].type)
+				{
+					case 0:
+					setColor(DARK_BABY_BLUE);
+					break;
+					case 1:
+					setColor(SILVER);
+					break;
+				}
+			
+				if(activeNPCs[i].inCombat == 1) // shows a fight 
+					printf("X");
+				else
+					printf("%c",1);
+			}
 		}
 	}
 	setColor(WHITE);
@@ -712,6 +839,7 @@ void dungeonLogic(void *data, struct gameState * s)
 		// free menu if conversation over
 		if(conversation == NONE)
 		{
+			activeNPCs[npcTalked].talking = 0;
 			talkOver = 0;
 			if(s->listeners[MENU_SELECTION] != NULL)
 			{
@@ -786,6 +914,8 @@ void dungeonLogic(void *data, struct gameState * s)
 				// set up menu and variables for talking 
 				updateStatus(TALK_TO_NPC);
 				conversation = INTRO;
+				
+				activeNPCs[npcTalked].talking = 1;
 				
 				// set up initial dialogue process 
 				freeMenuProcess(s);
@@ -900,11 +1030,13 @@ void readDungeonFile(char * fileName)
 		
 		// skip line
 		fscanf(readFile,"%s",fileReader);
-		
+	
 		// allocate size 
 		d = malloc(dungeonSize * sizeof(int **));
+		upStairCoords = malloc(dungeonSize * sizeof(int *));
 		for(iz=0;iz<dungeonSize;iz++)
 		{
+			upStairCoords[iz] = malloc(sizeof(int[2])); // malloc stair coords 
 			d[iz] = malloc(dungeonSize * sizeof(int *));
 			for(iy=0;iy<dungeonSize;iy++)
 			{	
@@ -928,6 +1060,12 @@ void readDungeonFile(char * fileName)
 						d[iz][iy][ix] = 10+(fileReader[0]-65);		
 					else if(strcmp(fileReader," ") != 0)
 						d[iz][iy][ix] = atoi(fileReader);
+					
+					if(d[iz][iy][ix] == 2)
+					{
+						upStairCoords[iz][0] = ix;
+						upStairCoords[iz][1] = iy;
+					}
 				}
 			}	
 		}
@@ -1024,6 +1162,7 @@ void freeDungeonData(void *data)
 				free(d[iz][iy]);
 				free(visible[iz][iy]);
 			}
+			free(upStairCoords[iz]);
 			free(visible[iz]);
 			free(d[iz]);
 		}

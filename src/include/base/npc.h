@@ -28,6 +28,7 @@ struct npc
 	int curiosity; // how curious the npc is of the player 
 	int trust; // how much the npc trusts the player 
 	int goal; // the goals of the npc 
+	int direction;
 	
 	int numSaved; // number of times the player has stepped into a fight an npc had with a curse 
 	int numPassed; // number of times the player has passed by the npc 
@@ -49,6 +50,13 @@ enum conversationPhase
 	WAIT_RESPONSE = 7, 
 	PASS_BY = 9, // player can pass by 
 	LEAVE = 8 // end of conversation 
+};
+
+// specific NPC goals used for dialogue/movement 
+enum goals
+{
+	SURVIVE_DUNGEON,
+	ESCAPE_DUNGEON,
 };
 
 int conversation = NONE;
@@ -79,7 +87,9 @@ void generateNPCs(int dungeonType)
 		activeNPCs[i].type = i; // type of npc for dialogue/stats  
 		activeNPCs[i].inCombat = 0; // is the npc fighting an npc 
 		activeNPCs[i].talking = 0; // is the npc talking to the player 
-		activeNPCs[i].speed = 2; // interval the npc moves at 
+		activeNPCs[i].direction = 0;
+		
+		activeNPCs[i].speed = rand()%3+1; // interval the npc moves at 
 		activeNPCs[i].startTicks = 0;
 		activeNPCs[i].enemyCombat = -1;
 		
@@ -88,7 +98,7 @@ void generateNPCs(int dungeonType)
 		activeNPCs[i].numSaved = 0;
 		activeNPCs[i].numPassed = 0;
 		activeNPCs[i].passBy = 0;
-		activeNPCs[i].goal = 0;
+		activeNPCs[i].goal = ESCAPE_DUNGEON;
 		
 		activeNPCs[i].stats = generateCharacter(HUMAN); // set up stats 
 	}

@@ -1,18 +1,22 @@
 Map File:
 	-First Line: Dungeon Size (the x/y/floor size of the dungeon)
 	-Second Line: Number of enemies spawned per floor
+		-As the program scans through the file per floor,
+		 it will set specific enemies to spawn points but if the
+		 number of spawn points is less than the number of enemies spawned
+		 their spawn points will be randomized
 	-Space/Dash
 	-Repeat the following for all dungeon floors 
 		-Array Ex: 0 0 0 1 0 E 0 0 E 0 
-			   0 0 1 1 1 1 1 1 0 0 
-			   0 0 0 0 0 0 0 1 0 0 
-			   0 0 0 A 0 1 0 1 1 1 
-			   0 0 0 9 1 0 0 0 0 0 
-			   1 1 1 1 1 0 0 0 2 0 
-			   0 4 0 0 1 0 0 0 0 0 
-			   0 4 4 0 0 0 0 0 0 0 
-			   1 1 0 1 0 0 0 0 0 0 
-			   4 4 0 0 0 0 0 0 0 0 
+				   0 0 1 1 1 1 1 1 0 0 
+				   0 0 0 0 0 0 0 1 0 0 
+				   0 0 0 A 0 1 0 1 1 1 
+				   0 0 0 9 1 0 0 0 0 0 
+				   1 1 1 1 1 0 0 0 2 0 
+				   0 4 0 0 1 0 0 0 0 0 
+				   0 4 4 0 0 0 0 0 0 0 
+				   1 1 0 1 0 0 0 0 0 0 
+				   4 4 0 0 0 0 0 0 0 0 
 		-Space
 
 Characters:
