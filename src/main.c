@@ -19,7 +19,8 @@
 #include "include/dungeon.h"
 #include "include/title.h"
 
-// gcc main.c -lSDL2 -lSDL2_mixer -o main
+// windres main.rs -o main.o 
+// gcc main.c main.o -lSDL2 -lSDL2_mixer -o main
 
 // initialize new game 
 void initNewGame(struct gameState * s)

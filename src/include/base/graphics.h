@@ -76,6 +76,7 @@ void init()
 	LoadLibrary("./libwebp-7.dll");
 	LoadLibrary("./libwinpthread-1.dll");
 	LoadLibrary("./zlib1.dll");
+	
 }
 
 // set color based on a given color value 
