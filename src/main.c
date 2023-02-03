@@ -36,6 +36,7 @@ void initNewGame(struct gameState * s)
 	
 	// set up initial dungeon crawling variables 
 	s->protag_stats = generateCharacter(HUMAN);
+	s->party = NULL;
 	s->partySize = 0;
 	s->playerX = 0;
 	s->playerY = 0;
@@ -83,6 +84,8 @@ int main()
 				handlers->mainFunction(&state);
 		}
 	}
+	
+	clearState(&state);
 	
 	// free data
 	if(state.listeners[MENU_SELECTION] != NULL)

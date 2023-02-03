@@ -49,6 +49,7 @@ enum conversationPhase
 	BATTLE = 6, // starting fight with npc (will be followed by pressing enter) 
 	WAIT_RESPONSE = 7, 
 	PASS_BY = 9, // player can pass by 
+	JOIN_PARTY = 10, // npc joins the player's party 
 	LEAVE = 8 // end of conversation 
 };
 
@@ -133,7 +134,7 @@ void npcDialogueHandler(int spot, struct gameState * s)
 		case GREETING: // npc response to greeting 
 		updateStatus("Person: \"Yeah hello.\"");	
 		updateStatus("Person: \"What do you want?\"");	
-		conversation = NO_DISCUSS;
+		conversation = JOIN_PARTY;
 		break;
 		case QUESTION: // npc response to question or generate list of questions 
 		//conversation = NPC_RESPONSE;
@@ -185,6 +186,13 @@ void npcDialogueHandler(int spot, struct gameState * s)
 		free(array);		
 	
 		break;
+		
+		case JOIN_PARTY: // npc joins the party 
+		updateStatus(NPCJOINED);	
+		updateStatus(PRESS_ENTER);	
+		talkOver = 1;
+		break;
+		
 		case PLAYER_RESPONSE: // respond based on what the player responded with 
 		updateStatus("Person: \"Ah okay then, bye.\"");	
 		talkOver = 1;

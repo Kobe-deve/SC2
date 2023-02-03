@@ -17,6 +17,10 @@
 #include "filenames.h"
 #endif
 
+#ifndef STATE_HANDLED
+#include "stats.h"
+#endif
+
 // state struct
 #ifndef STATE_HANDLED
 #define STATE_HANDLED
@@ -73,6 +77,30 @@
 		
 		struct battle currentBattle; // the current battle the player is in 
 	};
+	
+	// adding a party member to the party 
+	void addPartyMember(struct character stats, struct gameState * s)
+	{
+		if(s->party == NULL)
+		{
+			s->party = malloc(4 * sizeof(struct character));
+			s->party[0] = stats;
+			s->partySize++;
+		}
+		else if(s->partySize < 4)
+		{
+			s->party[s->partySize] = stats;
+			s->partySize++;
+		}
+	}
+	
+	void clearState(struct gameState * s)
+	{
+		if(s->party != NULL)
+		{
+			free(s->party);
+		}
+	}
 	
 	// load state save data
 	void loadState(char * fileName)

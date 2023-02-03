@@ -38,6 +38,7 @@
 	#define NPCPASS_Yes "You can pass now"
 	#define NPCGREET_RESPONSE "Responding to greet"
 	#define NPCBAT "A battle is starting"
+	#define NPCJOINED "NPC Joined your party"
 	#define PRESS_ENTER "Press Enter"
 	
 // menu options 

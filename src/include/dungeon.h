@@ -772,7 +772,7 @@ void dungeonLogic(void *data, struct gameState * s)
 		// checks if a menu is being used for responding 
 		if(!talkOver && s->listeners[MENU_SELECTION] == NULL)
 			npcDialogueHandler(npcTalked,s);
-		else if(conversation != BATTLE && s->input == ENTER) // free menu if selection made and push conversation in direction 
+		else if(conversation != BATTLE && conversation != JOIN_PARTY && s->input == ENTER) // free menu if selection made and push conversation in direction 
 		{
 			// handle response based on option selected
 			if(conversation == INTRO) // handle introduction response 
@@ -802,7 +802,7 @@ void dungeonLogic(void *data, struct gameState * s)
 		}
 		
 		// if conversation over, press enter to leave 
-		if(conversation != BATTLE && talkOver == 1 && s->input == ENTER )
+		if(conversation != BATTLE && conversation != JOIN_PARTY && talkOver == 1 && s->input == ENTER )
 			conversation = LEAVE;
 	
 		// walking away from conversation 
@@ -815,7 +815,7 @@ void dungeonLogic(void *data, struct gameState * s)
 			
 			conversation = NONE;
 		}
-		else if(conversation != BATTLE && s->input == BACKSPACE) // walking away
+		else if(conversation != BATTLE && conversation != JOIN_PARTY && s->input == BACKSPACE) // walking away
 		{
 			conversation = NONE;
 			
@@ -834,6 +834,20 @@ void dungeonLogic(void *data, struct gameState * s)
 			}
 			
 			startEncounter(activeNPCs[npcTalked].enemyCombat,data);
+		}
+		else if(talkOver == 1 && conversation == JOIN_PARTY && s->input == ENTER) // if an npc joins the party 
+		{
+			// add to party 
+			addPartyMember(activeNPCs[npcTalked].stats,s);
+			
+			// clear from map 
+			setCursor(dungeonPrintCoordX+activeNPCs[npcTalked].x,dungeonPrintCoordX+activeNPCs[npcTalked].y);
+			printf("%c",quickConvert(d[s->floor][activeNPCs[npcTalked].y][activeNPCs[npcTalked].x]));	
+				
+			// set conversation variables back 
+			activeNPCs[npcTalked].active = 0;
+			talkOver = 0;
+			conversation = NONE;
 		}
 		
 		// free menu if conversation over
@@ -967,13 +981,13 @@ void display(struct gameState * s)
 		
 		// print protag stats 
 		setCursor(125,1);
-		printf("LEADER - %s - HP:%d/%d STAMINA:%d/%d",s->protag_stats.name,s->protag_stats.health,s->protag_stats.maxHealth,s->protag_stats.stamina,s->protag_stats.maxStamina);
+		printf("%s - HP:%d/%d STAMINA:%d/%d",s->protag_stats.name,s->protag_stats.health,s->protag_stats.maxHealth,s->protag_stats.stamina,s->protag_stats.maxStamina);
 	
 		// print party 
 		for(i=0;i<s->partySize;i++)
 		{
-			setCursor(125,i+1);
-			printf("        %s - HP:%d/%d STAMINA:%d/%d",s->party[i].name,s->party[i].health,s->party[i].maxHealth,s->party[i].stamina,s->party[i].maxStamina);
+			setCursor(125,i+2);
+			printf("%s - HP:%d/%d STAMINA:%d/%d",s->party[i].name,s->party[i].health,s->party[i].maxHealth,s->party[i].stamina,s->party[i].maxStamina);
 		
 		}
 	}
