@@ -20,7 +20,7 @@
 #include "include/title.h"
 
 // windres main.rs -o main.o 
-// gcc main.c main.o -lSDL2 -lSDL2_mixer -o main
+// gcc main.c main.o -lSDL2 -lSDL2_mixer -o "Stone Crawler 2"
 
 // initialize new game 
 void initNewGame(struct gameState * s)
@@ -67,6 +67,7 @@ int main()
 	
 	struct EventHandler *handlers = state.listeners[DISPLAY];
 	
+	// for loop variable 
 	int i = 0;
 	
 	// main loop
@@ -87,6 +88,7 @@ int main()
 		}
 	}
 	
+	// clear data being used 
 	clearState(&state);
 	
 	// free data

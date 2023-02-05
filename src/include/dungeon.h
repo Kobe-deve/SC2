@@ -922,6 +922,7 @@ void dungeonLogic(void *data, struct gameState * s)
 				s->playerY--;
 				direction = 0;
 				description(s);
+				displayRange(s);
 			}
 			break;
 			case DOWN:
@@ -932,6 +933,7 @@ void dungeonLogic(void *data, struct gameState * s)
 				s->playerY++;
 				direction = 2;
 				description(s);
+				displayRange(s);
 			}
 			break;
 			case LEFT:
@@ -942,6 +944,7 @@ void dungeonLogic(void *data, struct gameState * s)
 				s->playerX--;
 				direction = 3;
 				description(s);
+				displayRange(s);
 			}
 			break;
 			case RIGHT:
@@ -952,6 +955,7 @@ void dungeonLogic(void *data, struct gameState * s)
 				s->playerX++;
 				direction = 1;
 				description(s);
+				displayRange(s);
 			}	
 			break;
 			
