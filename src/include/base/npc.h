@@ -56,8 +56,8 @@ enum conversationPhase
 // specific NPC goals used for dialogue/movement 
 enum goals
 {
-	SURVIVE_DUNGEON,
-	ESCAPE_DUNGEON,
+	SURVIVE_DUNGEON = 1,
+	ESCAPE_DUNGEON = 2,
 };
 
 int conversation = NONE;
@@ -74,34 +74,87 @@ struct npc * activeNPCs = NULL;
 // preemptively declare update status used in dungeon crawling 
 void updateStatus(char * text);
 
-// generate blank npcs in the dungeon 
+// load npcs from a file based on the dungeon type 
 void generateNPCs(int dungeonType)
 {
+	FILE *readFile;
+	char * fileReader = malloc(128 * sizeof(char)); 
+	
 	int i;
 	
-	for(i=0;i<numNPCs;i++)
+	switch(dungeonType)
 	{
-		activeNPCs[i].x = i*2+1; // coordinates 
-		activeNPCs[i].y = i*2+1;
-		activeNPCs[i].floor = 0; // what floor the npc is on 
-		activeNPCs[i].active = 1; // is the npc alive 
-		activeNPCs[i].type = i; // type of npc for dialogue/stats  
-		activeNPCs[i].inCombat = 0; // is the npc fighting an npc 
-		activeNPCs[i].talking = 0; // is the npc talking to the player 
-		activeNPCs[i].direction = 0;
+		default:
+		case 0:
+		readFile = fopen(ORIGINAL_DUNGEON_NPC,"r");
+		break;
+	}
+	
+	if(!readFile)
+	{
+		printf("ERROR:DUNGEON NPC FILE COULD NOT BE READ");
+		getchar();
+		exit(0);
+	}
+	else
+	{
+		// read number of npcs
+		fscanf(readFile,"%s",fileReader);
+		numNPCs = atoi(fileReader);
 		
-		activeNPCs[i].speed = rand()%3+4; // interval the npc moves at 
-		activeNPCs[i].startTicks = 0;
-		activeNPCs[i].enemyCombat = -1;
+		activeNPCs = malloc(numNPCs * sizeof(struct npc));
+	
+		fscanf(readFile,"%s",fileReader);
+		for(i=0;i<numNPCs;i++)
+		{
+			// define variables from file 
+			fscanf(readFile,"%s",fileReader);
+			activeNPCs[i].x = atoi(fileReader);
 		
-		activeNPCs[i].reception = 0; // conversation variables 
-		activeNPCs[i].curiosity = 10;
-		activeNPCs[i].numSaved = 0;
-		activeNPCs[i].numPassed = 0;
-		activeNPCs[i].passBy = 0;
-		activeNPCs[i].goal = ESCAPE_DUNGEON;
-		
-		activeNPCs[i].stats = generateCharacter(HUMAN); // set up stats 
+			fscanf(readFile,"%s",fileReader);
+			activeNPCs[i].y = atoi(fileReader);
+			
+			fscanf(readFile,"%s",fileReader);
+			activeNPCs[i].floor = atoi(fileReader);
+			
+			fscanf(readFile,"%s",fileReader);
+			activeNPCs[i].type = atoi(fileReader);
+			
+			fscanf(readFile,"%s",fileReader);
+			activeNPCs[i].speed = atoi(fileReader);
+			
+			fscanf(readFile,"%s",fileReader);
+			activeNPCs[i].reception = atoi(fileReader);
+			
+			fscanf(readFile,"%s",fileReader);
+			activeNPCs[i].curiosity = atoi(fileReader);
+			
+			fscanf(readFile,"%s",fileReader);
+			activeNPCs[i].goal = (enum goals)atoi(fileReader);
+			
+			fscanf(readFile,"%s",fileReader);
+			switch(atoi(fileReader))
+			{
+				default:
+				activeNPCs[i].stats = generateCharacter(HUMAN); // set up stats 
+				break;
+			}
+			
+			// set default for conditions
+			activeNPCs[i].inCombat = 0;  
+			activeNPCs[i].talking = 0;  
+			activeNPCs[i].direction = 0;
+			activeNPCs[i].active = 1; 
+			activeNPCs[i].startTicks = 0;
+			activeNPCs[i].enemyCombat = -1;
+			activeNPCs[i].passBy = 0;
+			
+			activeNPCs[i].numSaved = 0;
+			activeNPCs[i].numPassed = 0;
+			
+			// skip last line 
+			fscanf(readFile,"%s",fileReader);
+		}
 	}
 }
 

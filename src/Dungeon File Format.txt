@@ -19,11 +19,26 @@ Map File:
 				   4 4 0 0 0 0 0 0 0 0 
 		-Space
 
-Characters:
-	1 - Wall
-	2 - Stairs(up)
-	3 - Stairs(down)
-	4 - chest
-	9 - shop
-	B - Dungeon boss spawn point 
-	E - Enemy spawn point 
+	Characters:
+		1 - Wall
+		2 - Stairs(up)
+		3 - Stairs(down)
+		4 - chest
+		9 - shop
+		B - Dungeon boss spawn point 
+		E - Enemy spawn point 
+		
+NPC File:
+	-First Line: Number of NPCS
+	-Space/Dash
+	-Repeat the following for all NPCs
+		-x coord
+		-y coord
+		-floor coord
+		-type 
+		-speed
+		-reception
+		-curiosity
+		-goal
+		-stats
+		-Space

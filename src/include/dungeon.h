@@ -616,7 +616,7 @@ void npcHandler(struct gameState * s)
 		setCursor(120,15);
 		printf("NPC NEAR:%d",npcTalked);	
 		
-		setCursor(120,19);
+		setCursor(110,19);
 		printf("NPCS:");	
 	}
 	
@@ -626,10 +626,10 @@ void npcHandler(struct gameState * s)
 		movement = 0;
 		if(debug == 1)
 		{
-			setCursor(120,19+1+i);
+			setCursor(110,19+1+i);
 			setColor(WHITE);
-			printf("NPC #%d: HP:%d RECPT:%d CURIOUS:%d NUMSAVED:%d NUMPASSED:%d PASSBY:%d GOAL:%d  ",
-				i,activeNPCs[i].stats.health,activeNPCs[i].reception, activeNPCs[i].curiosity,activeNPCs[i].numSaved,
+			printf("NPC #%d: (%d, %d, %d) HP:%d RECPT:%d CURIOUS:%d NUMSAVED:%d NUMPASSED:%d PASSBY:%d GOAL:%d  ",
+				i,activeNPCs[i].x,activeNPCs[i].y,activeNPCs[i].floor,activeNPCs[i].stats.health,activeNPCs[i].reception, activeNPCs[i].curiosity,activeNPCs[i].numSaved,
 				activeNPCs[i].numPassed,activeNPCs[i].passBy,activeNPCs[i].goal);
 		}
 
@@ -1011,8 +1011,8 @@ void dungeonLogic(void *data, struct gameState * s)
 			}
 			break;
 			case BACKSPACE:
-			tired = 1;
-			//debug = !debug;
+			//tired = 1;
+			debug = !debug;
 			break;
 			default:
 			break;
@@ -1372,10 +1372,6 @@ void initDungeonFloor(void *data)
 	}		
 	setColor(WHITE);
 	
-	// generate npc array 
-	numNPCs = 2;
-	activeNPCs = malloc(maxStatus * sizeof(struct npc));
-
 	// generate npcs
 	generateNPCs(s->building);
 

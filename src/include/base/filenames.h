@@ -8,6 +8,7 @@
 #define DUNGEON_MUSIC "music/39 Arms vs 2.wav"
 #define DREAM_MUSIC "music/Way Before.wav"
 
-#define ORIGINAL_DUNGEON "maps/original_dungeon.txt"
+#define ORIGINAL_DUNGEON "maps/original_dungeon.txt" // first dungeon 
+#define ORIGINAL_DUNGEON_NPC "maps/npc_data/origin.txt" // first dungeon npc file 
 
 #endif
