@@ -32,13 +32,13 @@ NPC File:
 	-First Line: Number of NPCS
 	-Space/Dash
 	-Repeat the following for all NPCs
-		-x coord
-		-y coord
-		-floor coord
-		-type 
-		-speed
-		-reception
-		-curiosity
-		-goal
-		-stats
+		-x coord  			 -Physical dungeon coordinates
+		-y coord			|
+		-floor coord		|
+		-type 	   			 -The type of NPC  
+		-speed	   			 -Movement speed (1 - stupidly fast -> 6 - pretty slow)
+		-reception 			 -Conversation stats
+		-curiosity		    |
+		-goal	  			 -Starting goal 			
+		-stats	  			 -Character build 
 		-Space
