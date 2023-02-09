@@ -8,5 +8,6 @@ Stone Crawler 2 Doc.docx
 *.tmp
 *.zip
 *.zip
+test/
 Release_Files/
 *.ico

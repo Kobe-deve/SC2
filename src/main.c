@@ -46,7 +46,7 @@ void initNewGame(struct gameState * s)
 	s->building = 0;
 };
 
-int main()
+int main(int argc, char *argv[])
 {
 	srand((unsigned)time(NULL));
 	
@@ -73,11 +73,16 @@ int main()
 	// main loop
 	while(state.input != 27)
 	{
-		// input handling
-		if ( _kbhit() )
-			state.input = getch();
-		else
-			state.input = 0;
+		// input handling based on mode 
+		switch(graphicsMode)
+		{
+			case 0:
+			if ( _kbhit() )
+				state.input = getch();
+			else
+				state.input = 0;
+			break;
+		}
 		
 		// go through events 
 		for(i=0;i<MAX_EVENTS;i++)

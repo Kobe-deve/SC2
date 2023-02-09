@@ -2,6 +2,10 @@
 #include "state.h"
 #endif
 
+#ifndef GRAPHICS
+#include "graphics.h"
+#endif 
+
 #ifndef MUSIC_HANDLED
 #define MUSIC_HANDLED
 
@@ -20,7 +24,7 @@ void switchTrack(char * songName, struct gameState * s)
 // initialize music handling
 void initMusic(struct gameState * input)
 {
-	if(SDL_Init(SDL_INIT_AUDIO) >= 0)
+	if(graphicsMode == 0 && SDL_Init(SDL_INIT_AUDIO) >= 0)
 	{
 		//Initialize music handling 
 		if( Mix_OpenAudio( MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024*2 ) < 0 )

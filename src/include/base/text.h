@@ -4,7 +4,7 @@
 #define TEXT_DEFINED
 
 // title screen text 
-	#define TITLE_DESC1 "Version 2.0: Idle on the Grindstone" 
+	#define TITLE_DESC1 "Version 2.0" 
 	#define TITLE_DESC2 "Finality Games - Developed by Demi"
 
 // dungeon status text 

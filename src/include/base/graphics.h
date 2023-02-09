@@ -13,6 +13,8 @@
 #include <windows.h>
 
 // will be used for toggling between ascii/sprite modes 
+// 0 - ascii
+// 1 - sprites 
 int graphicsMode = 0;
 
 // calculates ticks per frame for timers
@@ -42,28 +44,40 @@ void init()
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	HWND consoleWindow = GetConsoleWindow();
 	
-	// disable minimizing and maximizing screen
-	SetWindowLong(consoleWindow, GWL_STYLE, GetWindowLong(consoleWindow, GWL_STYLE) & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX);
+	if(graphicsMode == 0) // initialize ascii mode
+	{
+		#define ASCII_FUNCT
+		
+		// disable minimizing and maximizing screen
+		SetWindowLong(consoleWindow, GWL_STYLE, GetWindowLong(consoleWindow, GWL_STYLE) & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX);
 	
-	// set window size 
-	RECT rect = {100, 100, WINDOW_WIDTH, WINDOW_HEIGHT};
-	MoveWindow(consoleWindow, rect.left, rect.top, rect.right-rect.left, rect.bottom-rect.top,TRUE);
+		// set window size 
+		RECT rect = {100, 100, WINDOW_WIDTH, WINDOW_HEIGHT};
+		MoveWindow(consoleWindow, rect.left, rect.top, rect.right-rect.left, rect.bottom-rect.top,TRUE);
 	
-	// disable scroll wheel by setting screen buffer size	
-    CONSOLE_SCREEN_BUFFER_INFO SBInfo;
-    COORD new_screen_buffer_size;
-	GetConsoleScreenBufferInfo(hConsole, &SBInfo);
+		// disable scroll wheel by setting screen buffer size	
+		CONSOLE_SCREEN_BUFFER_INFO SBInfo;
+		COORD new_screen_buffer_size;
+		GetConsoleScreenBufferInfo(hConsole, &SBInfo);
 	
-	new_screen_buffer_size.X = SBInfo.srWindow.Right - SBInfo.srWindow.Left + 1;
-	new_screen_buffer_size.Y = SBInfo.srWindow.Bottom - SBInfo.srWindow.Top + 1;
+		new_screen_buffer_size.X = SBInfo.srWindow.Right - SBInfo.srWindow.Left + 1;
+		new_screen_buffer_size.Y = SBInfo.srWindow.Bottom - SBInfo.srWindow.Top + 1;
 	
-	SetConsoleScreenBufferSize(hConsole, new_screen_buffer_size);
-	
-	//hide cursor 
-	CONSOLE_CURSOR_INFO info;
-	info.dwSize = 1;
-	info.bVisible = FALSE;
-	SetConsoleCursorInfo(hConsole, &info);
+		SetConsoleScreenBufferSize(hConsole, new_screen_buffer_size);
+		
+		//hide cursor 
+		CONSOLE_CURSOR_INFO info;
+		info.dwSize = 1;
+		info.bVisible = FALSE;
+		SetConsoleCursorInfo(hConsole, &info);
+	}
+	else if(graphicsMode == 1) // initialize sprite mode 
+	{
+		#define SPRITE_FUNCT
+		
+		// hide console window 
+		ShowWindow(myWindow, consoleWindow);
+	}
 	
 	// load libraries 
 	LoadLibrary("./libfreetype-6.dll");
@@ -78,6 +92,10 @@ void init()
 	LoadLibrary("./zlib1.dll");
 	
 }
+
+// ascii graphics handling functions 
+
+#ifdef ASCII_FUNCT
 
 // set color based on a given color value 
 void setColor(int ForgC)
@@ -269,5 +287,14 @@ void borders()
 		printf("|");
 	}
 }
+
+#endif 
+
+// sprite graphics handling functions 
+#ifdef SPRITE_FUNCT
+
+
+
+#endif 
 
 #endif
