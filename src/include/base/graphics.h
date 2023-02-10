@@ -2,6 +2,11 @@
 #include "state.h"
 #endif
 
+#ifndef TEXT_DEFINED
+#include "text.h"
+#endif
+
+
 #ifndef GRAPHICS
 #define GRAPHICS
 
@@ -15,7 +20,17 @@
 // will be used for toggling between ascii/sprite modes 
 // 0 - ascii
 // 1 - sprites 
-int graphicsMode = 0;
+int graphicsMode = 1;
+
+#ifndef MUSIC_HANDLED
+#include "music.h"
+#endif
+
+// handles pngs with SDL2
+#include <SDL2/SDL_image.h>
+
+// handles music with SDL2
+#include <SDL2/SDL_mixer.h>
 
 // calculates ticks per frame for timers
 int SCREEN_TICK_PER_FRAME = 8; 
@@ -39,7 +54,7 @@ typedef int colors; // for printing images
 #define WINDOW_HEIGHT 800
 
 // initialize graphics handling 
-void init()
+void init(struct gameState * s)
 {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	HWND consoleWindow = GetConsoleWindow();
@@ -75,8 +90,44 @@ void init()
 	{
 		#define SPRITE_FUNCT
 		
+		//Screen dimension constants
+		int SCREEN_WIDTH = 960;
+		int SCREEN_HEIGHT = 720;
+
 		// hide console window 
 		ShowWindow(consoleWindow, SW_HIDE);
+		
+		// initialize window and SDL handling
+		if(SDL_Init( IMG_INIT_JPG | IMG_INIT_PNG | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO) >= 0)
+		{
+			//set texture filtering to linear
+			//sets render quality to where images aren't blurry when resized
+			SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+				
+			// create window 
+			s->window = SDL_CreateWindow( GAME_WINDOW_NAME, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+			if(s->window != NULL)
+			{
+				// creates renderer
+				s->renderer = SDL_CreateRenderer(s->window, -1, SDL_RENDERER_ACCELERATED); 
+					
+				//Initialize renderer color
+				SDL_SetRenderDrawColor(s->renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+						
+				//Initialize PNG loading
+				int imgFlags = IMG_INIT_PNG;
+				if( !( IMG_Init( imgFlags ) & imgFlags ))
+				{
+					printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
+				}
+						
+					//Initialize music handling 
+				if( Mix_OpenAudio( MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024*2 ) < 0 )
+				{
+					printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+				}
+			}
+		}
 	}
 	
 	// load libraries 

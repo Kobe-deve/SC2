@@ -4,6 +4,8 @@
 #define TEXT_DEFINED
 
 // title screen text 
+	#define GAME_WINDOW_NAME "Stone Crawler 2.0"
+
 	#define TITLE_DESC1 "Version 2.0" 
 	#define TITLE_DESC2 "Finality Games - Developed by Demi"
 

@@ -20,7 +20,7 @@
 #include "include/title.h"
 
 // windres main.rs -o main.o 
-// gcc main.c main.o -lSDL2 -lSDL2_mixer -o "Stone Crawler 2"
+// gcc main.c main.o -lSDL2 -lSDL2_mixer -lSDL2_image -o "Stone Crawler 2"
 
 // initialize new game 
 void initNewGame(struct gameState * s)
@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 	struct gameState state;
 	
 	// initialize the window 
-	init();
+	init(&state);
 	// initialize music handling
 	initMusic(&state);
 	
@@ -70,6 +70,18 @@ int main(int argc, char *argv[])
 	// for loop variable 
 	int i = 0;
 	
+	#ifdef SPRITE_FUNCT
+	// used for window handling 
+	SDL_Event * e;
+	const Uint8* keyStates;
+	
+	
+	// set up SDL input handling if graphics mode enabled 
+	if(graphicsMode == 1)
+		e = malloc(sizeof(SDL_Event));
+	
+	#endif 
+	
 	// main loop
 	while(state.input != 27)
 	{
@@ -81,6 +93,101 @@ int main(int argc, char *argv[])
 				state.input = getch();
 			else
 				state.input = 0;
+			break;
+
+			case 1:
+			keyStates = SDL_GetKeyboardState(NULL);
+			
+			while(SDL_PollEvent(e)) 
+			{
+				switch(e->type)
+				{
+					case SDL_WINDOWEVENT_MINIMIZED:
+						while (SDL_WaitEvent(e))
+						{
+							if (e->window.event == SDL_WINDOWEVENT_RESTORED)
+							{
+								break;
+							}
+						}
+					break;
+					
+					case SDL_JOYBUTTONDOWN: // for controller input
+					
+						switch(e->jbutton.button)
+						{
+							case SDL_CONTROLLER_BUTTON_DPAD_UP:
+								state.input=72;
+							break;
+							case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+								state.input=80;
+							break;
+							case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+								state.input=75;
+							break;
+							case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+								state.input=77;
+							break;
+							case SDL_CONTROLLER_BUTTON_A:
+								state.input=13;
+							break;
+							case SDL_CONTROLLER_BUTTON_B:
+								state.input=8;
+							break;
+						}
+					
+					break;
+					
+					case SDL_KEYDOWN: // for keyboard input
+						switch(e->key.keysym.sym)
+						{
+							case SDLK_RETURN:
+								state.input = 13;
+							break;
+							case SDLK_BACKSPACE:
+								state.input = 8;
+							break;
+						
+							case SDLK_d:
+							case SDLK_RIGHT:
+								state.input = 77;
+							break;
+						
+							case SDLK_a:
+							case SDLK_LEFT:
+								state.input = 75;
+							break;
+						
+							case SDLK_w:
+							case SDLK_UP:
+								state.input = 72;
+							break;
+						
+							case SDLK_m:
+								state.input = 109;
+							break;
+							
+							case SDLK_s:
+							case SDLK_DOWN:
+								state.input = 80;
+							break;
+							
+							case SDLK_ESCAPE:
+								state.input = 27;
+							break;
+						}
+					break;
+	
+					case SDL_WINDOWEVENT_CLOSE:
+					case SDL_QUIT: // clicking the x window button
+						state.input = 27;
+					break;
+					
+					default:
+					break;
+				}
+			
+			}				
 			break;
 		}
 		

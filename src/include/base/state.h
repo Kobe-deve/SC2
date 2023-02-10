@@ -77,6 +77,10 @@
 		struct character * party; // the player's party 
 		
 		struct battle currentBattle; // the current battle the player is in 
+	
+		// for rendering in sprite mode 
+		SDL_Window* window; // window 
+		SDL_Renderer* renderer; // window renderer
 	};
 	
 	// adding a party member to the party 
