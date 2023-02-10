@@ -76,7 +76,7 @@ void init()
 		#define SPRITE_FUNCT
 		
 		// hide console window 
-		ShowWindow(myWindow, consoleWindow);
+		ShowWindow(consoleWindow, SW_HIDE);
 	}
 	
 	// load libraries 
