@@ -47,10 +47,12 @@ void initFont(struct text * t, SDL_Renderer * r)
 	// set renderer to given renderer		
 	t->renderer = r;
 	
+	// individual letter sizes for text spacing 
+	t->width = FONT_SIZE/2+1;
+	t->height = FONT_SIZE;
+	
 	if(font == NULL)
-	{
-		printf("Failed to load font");
-	}		
+		throwError("Failed to load font");
 			
 	t->textColor.r = 200;
 	t->textColor.g = 10;
@@ -72,20 +74,15 @@ void initFont(struct text * t, SDL_Renderer * r)
 		SDL_Surface* textSurface = TTF_RenderUTF8_Blended(font, letter, t->textColor);
 		
 		if(textSurface == NULL)
-			printf( "Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError() );
+			throwError("Unable to render text surface! SDL_ttf");
 		else
 		{
 			//Create texture from surface pixels
 			t->letters[i] = SDL_CreateTextureFromSurface(t->renderer, textSurface);
 			
 			if(t->letters[i] == NULL )
-				printf( "Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError() );
-			else// get size for spacing 
-			{
-				t->width = FONT_SIZE/2+1;
-				t->height = FONT_SIZE;
-			}
-					
+				throwError("Unable to create texture from rendered text!");
+				
 			//Get rid of old surface
 			SDL_FreeSurface( textSurface );
 		}		

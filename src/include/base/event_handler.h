@@ -2,6 +2,7 @@
 #define EVENT_HANDLING
 #include <conio.h>
 #include <stdlib.h>
+#include <windows.h>
 
 // https://www.gamedev.net/forums/topic/646358-event-handlers-in-c/
 
@@ -72,6 +73,19 @@ void destroyListeners(struct EventHandler *handlers[], int size)
 			free(deleteMe);
 		handlers[i] = NULL;
 	}
+}
+
+// displaying error 
+void throwError(char * errorText)
+{		
+	HWND consoleWindow = GetConsoleWindow();
+	
+	// make sure command prompt is shown 
+	ShowWindow(consoleWindow, SW_NORMAL);
+	
+	printf("%s",errorText);
+	getchar();
+	exit(0);
 }
 
 #endif

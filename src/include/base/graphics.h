@@ -116,7 +116,7 @@ void init(struct gameState * s)
 		SCREEN_TICK_PER_FRAME = 25;  // 1000 / SCREEN_FPS
 
 		// hide console window 
-		//ShowWindow(consoleWindow, SW_HIDE);
+		ShowWindow(consoleWindow, SW_HIDE);
 		
 		// initialize window and SDL handling
 		if(SDL_Init( IMG_INIT_JPG | IMG_INIT_PNG | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO) >= 0)
@@ -138,21 +138,16 @@ void init(struct gameState * s)
 				//Initialize PNG loading
 				int imgFlags = IMG_INIT_PNG;
 				if( !( IMG_Init( imgFlags ) & imgFlags ))
-				{
-					printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
-				}
+					throwError("SDL_image could not initialize! SDL_image");
 				
 				//Initialize text handling 
 				if( TTF_Init() == -1 )
-				{
-					printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
-				}
+					throwError("SDL_ttf could not initialize!");
 				
 				//Initialize music handling 
 				if( Mix_OpenAudio( MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024*2 ) < 0 )
-				{
-					printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
-				}
+					throwError("SDL_mixer could not initialize!");
+				
 			}
 		}
 	}
@@ -172,8 +167,6 @@ void init(struct gameState * s)
 }
 
 // ascii graphics handling functions 
-
-#ifdef ASCII_FUNCT
 
 // set color based on a given color value 
 void setColor(int ForgC)
@@ -366,13 +359,7 @@ void borders()
 	}
 }
 
-#endif 
 
 // sprite graphics handling functions 
-#ifdef SPRITE_FUNCT
-
-
-
-#endif 
 
 #endif
