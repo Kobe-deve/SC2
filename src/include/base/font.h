@@ -25,7 +25,7 @@
 #endif
 
 // font size
-#define FONT_SIZE 25
+#define FONT_SIZE 20
 
 // used for handling font in sprite mode 
 struct text
@@ -42,14 +42,14 @@ struct text
 // initialize font handling 
 void initFont(struct text * t, SDL_Renderer * r)
 {
-	TTF_Font * font = TTF_OpenFont(USED_FONT_FILE,25);
+	TTF_Font * font = TTF_OpenFont(USED_FONT_FILE,FONT_SIZE);
 	
 	// set renderer to given renderer		
 	t->renderer = r;
 	
 	// individual letter sizes for text spacing 
-	t->width = 13;
-	t->height = 25;
+	t->width = FONT_SIZE/2+1;
+	t->height = FONT_SIZE;
 	
 	if(font == NULL)
 		throwError("Failed to load font");
