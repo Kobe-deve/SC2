@@ -1,0 +1,137 @@
+#include <string.h>
+
+#ifndef FONT_HANDLED
+#define FONT_HANDLED
+
+#ifndef SDL_MAIN_HANDLED
+#define SDL_MAIN_HANDLED
+
+// main SDL2 handler
+#include <SDL2/SDL.h>
+
+// handles pngs with SDL2
+#include <SDL2/SDL_image.h>
+
+// handles music with SDL2
+#include <SDL2/SDL_mixer.h>
+
+// font handling with SDL2 
+#include <SDL2/SDL_ttf.h>
+
+#endif
+
+#ifndef GRAPHICS
+#include "graphics.h"
+#endif
+
+// font size
+#define FONT_SIZE 25
+
+// used for handling font in sprite mode 
+struct text
+{
+	SDL_Renderer * renderer; // the renderer to display to 
+	SDL_Texture ** letters; // stored letters for rendering
+
+	SDL_Color textColor; // text color 
+	
+	int height; // height and width of individual letters 
+	int width;
+};
+
+// initialize font handling 
+void initFont(struct text * t, SDL_Renderer * r)
+{
+	TTF_Font * font = TTF_OpenFont(USED_FONT_FILE,25);
+	
+	// set renderer to given renderer		
+	t->renderer = r;
+	
+	if(font == NULL)
+	{
+		printf("Failed to load font");
+	}		
+			
+	t->textColor.r = 200;
+	t->textColor.g = 10;
+	t->textColor.b = 10;
+	t->textColor.a = 255;
+	
+	t->letters = malloc(127 * sizeof(SDL_Texture *));
+	int i = 0;
+	
+	char * letter = malloc(sizeof(char[1]));
+	
+	t->height = 0;
+	t->width = 0;
+	
+	// load letters 
+	for(i=29;i<126;i++)
+	{
+		letter[0] = (char)i;
+		SDL_Surface* textSurface = TTF_RenderUTF8_Blended(font, letter, t->textColor);
+		
+		if(textSurface == NULL)
+			printf( "Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError() );
+		else
+		{
+			//Create texture from surface pixels
+			t->letters[i] = SDL_CreateTextureFromSurface(t->renderer, textSurface);
+			
+			if(t->letters[i] == NULL )
+				printf( "Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError() );
+			else// get size for spacing 
+			{
+				t->width = FONT_SIZE/2+1;
+				t->height = FONT_SIZE;
+			}
+					
+			//Get rid of old surface
+			SDL_FreeSurface( textSurface );
+		}		
+	}
+	free(letter);
+	
+	TTF_CloseFont( font );
+};
+
+// display text to string 
+void printText(char * outputString, int x, int y, struct text * t)
+{
+	int size = 25;
+	
+	SDL_Rect renderQuad;
+	int i;
+	
+	// char used for getting parts of the t string 
+	char chara = ' ';
+		
+	for(i=0;i<strlen(outputString);i++)
+	{
+		// render the text, changing the size if it's different from the default 
+		renderQuad = (SDL_Rect){x+(i*t->width*abs(size-(FONT_SIZE-1))), y, t->width*abs(size-(FONT_SIZE-1)), t->height*abs(size-(FONT_SIZE-1))};
+			
+		// set current character to a part of the string 
+		chara = outputString[i];
+		
+		// set text color 
+		SDL_SetTextureColorMod(t->letters[(int)chara], t->textColor.r, t->textColor.g, t->textColor.b);
+				
+		// present alpha and texture piece 
+		SDL_SetTextureAlphaMod(t->letters[(int)chara], t->textColor.a);
+		SDL_RenderCopyEx(t->renderer, t->letters[(int)chara], NULL, &renderQuad, 0,NULL,SDL_FLIP_NONE);
+	}		
+	
+	//getchar();
+};
+
+// deallocate font handling 
+void deallocateFont(struct text * t)
+{
+	for(int i = 29;i<126;i++)
+		SDL_DestroyTexture(t->letters[i]);
+	
+	t->renderer = NULL;
+};
+
+#endif

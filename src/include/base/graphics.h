@@ -1,14 +1,9 @@
-#ifndef STATE_HANDLED
-#include "state.h"
-#endif
+#ifndef GRAPHICS
+#define GRAPHICS
 
 #ifndef TEXT_DEFINED
 #include "text.h"
 #endif
-
-
-#ifndef GRAPHICS
-#define GRAPHICS
 
 #ifndef SPRITE_DATA
 #include "sprite_data.h"
@@ -22,9 +17,11 @@
 // 1 - sprites 
 int graphicsMode = 1;
 
-#ifndef MUSIC_HANDLED
-#include "music.h"
-#endif
+#ifndef SDL_MAIN_HANDLED
+#define SDL_MAIN_HANDLED
+
+// main SDL2 handler
+#include <SDL2/SDL.h>
 
 // handles pngs with SDL2
 #include <SDL2/SDL_image.h>
@@ -32,9 +29,27 @@ int graphicsMode = 1;
 // handles music with SDL2
 #include <SDL2/SDL_mixer.h>
 
-// calculates ticks per frame for timers
-int SCREEN_TICK_PER_FRAME = 8; 
+// font handling with SDL2 
+#include <SDL2/SDL_ttf.h>
 
+#endif
+
+#ifndef MUSIC_HANDLED
+#include "music.h"
+#endif
+
+#ifndef FONT_HANDLED
+#include "font.h"
+#endif
+
+// frame handling variables
+
+// max FPS constant 
+int SCREEN_FPS = 40; 
+// calculates ticks per frame for timers
+int SCREEN_TICK_PER_FRAME = 25;  // 1000 / SCREEN_FPS
+
+// ascii color handling 
 typedef int colors; // for printing images
 #define YELLOW 14
 #define SILVER 8
@@ -53,6 +68,8 @@ typedef int colors; // for printing images
 #define WINDOW_WIDTH 1500
 #define WINDOW_HEIGHT 800
 
+void initFont(struct text * t, SDL_Renderer * r);
+				
 // initialize graphics handling 
 void init(struct gameState * s)
 {
@@ -94,8 +111,12 @@ void init(struct gameState * s)
 		int SCREEN_WIDTH = 960;
 		int SCREEN_HEIGHT = 720;
 
+		// set frame handling variables
+		SCREEN_FPS = 40; 
+		SCREEN_TICK_PER_FRAME = 25;  // 1000 / SCREEN_FPS
+
 		// hide console window 
-		ShowWindow(consoleWindow, SW_HIDE);
+		//ShowWindow(consoleWindow, SW_HIDE);
 		
 		// initialize window and SDL handling
 		if(SDL_Init( IMG_INIT_JPG | IMG_INIT_PNG | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO) >= 0)
@@ -109,9 +130,9 @@ void init(struct gameState * s)
 			if(s->window != NULL)
 			{
 				// creates renderer
-				s->renderer = SDL_CreateRenderer(s->window, -1, SDL_RENDERER_ACCELERATED); 
+				s->renderer = SDL_CreateRenderer(s->window, -1, SDL_RENDERER_ACCELERATED); 	
 					
-				//Initialize renderer color
+				//Initialize renderer draw color
 				SDL_SetRenderDrawColor(s->renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 						
 				//Initialize PNG loading
@@ -120,8 +141,14 @@ void init(struct gameState * s)
 				{
 					printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
 				}
-						
-					//Initialize music handling 
+				
+				//Initialize text handling 
+				if( TTF_Init() == -1 )
+				{
+					printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
+				}
+				
+				//Initialize music handling 
 				if( Mix_OpenAudio( MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024*2 ) < 0 )
 				{
 					printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );

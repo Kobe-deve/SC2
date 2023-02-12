@@ -10,4 +10,6 @@ Stone Crawler 2 Doc.docx
 *.zip
 test/
 Release_Files/
+src/.vscode/
 *.ico
+*.ttf

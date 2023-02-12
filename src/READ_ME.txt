@@ -22,14 +22,19 @@ src: - main.c
 			-stats.h - character stat operations
 			-npc.h - npc operations in dungeon crawling 
 			-text.h - all text/dialogue in the game is stored here
+			-font.h - handling font in window/sprite mode
+			-image.h - handling images in window/sprite mode 
      -> maps - contains map files read by the game 
-     -> music - contains music/sound assets
+     -> resources - contains asset data 
+     	 -> music - contains music/sound assets
+	 -> sprites - contains sprite data
+		-> background - contains assets used for the background
      -> dlls - contains dlls used for compiling 
 	 -> data - save data files 
 	 
 	 
 Compiling command:
-gcc main.c -lSDL2 -lSDL2_mixer -o main
+gcc main.c main.o -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf -o "Stone Crawler 2"
 
 Controls:
 	Arrow Keys - Movement/Selecting

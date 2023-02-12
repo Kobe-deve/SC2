@@ -9,7 +9,9 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
+#include <stdlib.h>
 
+#include "include/base/font.h"
 #include "include/base/state.h"
 #include "include/base/music.h"
 #include "include/base/event_handler.h"
@@ -20,7 +22,7 @@
 #include "include/title.h"
 
 // windres main.rs -o main.o 
-// gcc main.c main.o -lSDL2 -lSDL2_mixer -lSDL2_image -o "Stone Crawler 2"
+// gcc main.c main.o -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -o "Stone Crawler 2"
 
 // initialize new game 
 void initNewGame(struct gameState * s)
@@ -70,21 +72,39 @@ int main(int argc, char *argv[])
 	// for loop variable 
 	int i = 0;
 	
-	#ifdef SPRITE_FUNCT
 	// used for window handling 
 	SDL_Event * e;
 	const Uint8* keyStates;
-	
+	int frameRateTracker;
+	int colors[4];
 	
 	// set up SDL input handling if graphics mode enabled 
 	if(graphicsMode == 1)
+	{
+		// initialize event handler for SDL2 events and renderer color 
 		e = malloc(sizeof(SDL_Event));
-	
-	#endif 
+		colors[0] = 255;
+		colors[1] = 255;
+		colors[2] = 255;
+		colors[3] = 0;
+		
+		state.fontHandler = malloc(sizeof(struct text));
+		
+		// initialize text handler
+		initFont(state.fontHandler, state.renderer);
+	}
 	
 	// main loop
 	while(state.input != 27)
 	{
+		// if sprite mode enabled, clear screen 
+		if(graphicsMode == 1)
+		{
+			SDL_SetRenderDrawColor(state.renderer, colors[0], colors[1], colors[2], colors[3]);
+			SDL_RenderClear(state.renderer);
+			frameRateTracker = SDL_GetTicks();
+		}
+		
 		// input handling based on mode 
 		switch(graphicsMode)
 		{
@@ -198,7 +218,30 @@ int main(int argc, char *argv[])
 			if(handlers != NULL)
 				handlers->mainFunction(&state);
 		}
+		
+		// if sprite mode enabled, render screen and keep the frame rate 
+		if(graphicsMode == 1)
+		{
+			printText("STONE CRAWLER 2 - FUCKING FINALLY", 100, 100, state.fontHandler);
+			
+			SDL_RenderPresent(state.renderer);
+			++(frames); // adds to frame tally
+		
+			int framet = SDL_GetTicks() - frameRateTracker; // for capping frame rate
+			if( framet < SCREEN_TICK_PER_FRAME)
+				SDL_Delay( SCREEN_TICK_PER_FRAME - framet );
+		}
 	}
+	
+	// deallocate data used for sprite mode 
+	if(graphicsMode == 1)
+	{
+		deallocateFont(state.fontHandler);
+		
+		SDL_DestroyRenderer(state.renderer);
+		SDL_DestroyWindow(state.window);
+	}
+	
 	
 	// clear data being used 
 	clearState(&state);

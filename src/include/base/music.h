@@ -1,13 +1,32 @@
-#ifndef STATE_HANDLED
-#include "state.h"
+
+
+#ifndef SDL_MAIN_HANDLED
+#define SDL_MAIN_HANDLED
+
+// main SDL2 handler
+#include <SDL2/SDL.h>
+
+// handles pngs with SDL2
+#include <SDL2/SDL_image.h>
+
+// handles music with SDL2
+#include <SDL2/SDL_mixer.h>
+
+// font handling with SDL2 
+#include <SDL2/SDL_ttf.h>
+
 #endif
+
+#ifndef MUSIC_HANDLED
+#define MUSIC_HANDLED
 
 #ifndef GRAPHICS
 #include "graphics.h"
 #endif 
 
-#ifndef MUSIC_HANDLED
-#define MUSIC_HANDLED
+#ifndef STATE_HANDLED
+#include "state.h"
+#endif
 
 // switch music to specific track
 void switchTrack(char * songName, struct gameState * s)

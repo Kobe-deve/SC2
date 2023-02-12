@@ -1,5 +1,9 @@
 // file for all dialogue/text 
 
+#include <stdio.h>
+#include <time.h>
+#include <string.h>
+
 #ifndef TEXT_DEFINED
 #define TEXT_DEFINED
 

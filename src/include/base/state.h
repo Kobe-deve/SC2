@@ -1,4 +1,3 @@
-#include "event_handler.h"
 
 // handles the state of the game itself 
 
@@ -9,8 +8,19 @@
 // main SDL2 handler
 #include <SDL2/SDL.h>
 
+// handles pngs with SDL2
+#include <SDL2/SDL_image.h>
+
 // handles music with SDL2
 #include <SDL2/SDL_mixer.h>
+
+// font handling with SDL2 
+#include <SDL2/SDL_ttf.h>
+
+#endif
+
+#ifndef EVENT_HANDLING
+#include "event_handler.h"
 #endif
 
 #ifndef FILENAMES
@@ -21,13 +31,14 @@
 #include "stats.h"
 #endif
 
+#ifndef FONT_HANDLED
+#include "font.h"
+#endif
+
 // state struct
 #ifndef STATE_HANDLED
 #define STATE_HANDLED
-
-	#ifndef CHARACTER_HANDLED
-	#include "stats.h"
-	#endif
+	typedef struct text text;
 
 	// pauses for he number of seconds
 	int pause(int he) 
@@ -81,6 +92,8 @@
 		// for rendering in sprite mode 
 		SDL_Window* window; // window 
 		SDL_Renderer* renderer; // window renderer
+	
+		struct text * fontHandler; // handles text display
 	};
 	
 	// adding a party member to the party 
