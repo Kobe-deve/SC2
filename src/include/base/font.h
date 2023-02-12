@@ -64,9 +64,6 @@ void initFont(struct text * t, SDL_Renderer * r)
 	
 	char * letter = malloc(sizeof(char[1]));
 	
-	t->height = 0;
-	t->width = 0;
-	
 	// load letters 
 	for(i=29;i<126;i++)
 	{
@@ -118,8 +115,6 @@ void printText(char * outputString, int x, int y, struct text * t)
 		SDL_SetTextureAlphaMod(t->letters[(int)chara], t->textColor.a);
 		SDL_RenderCopyEx(t->renderer, t->letters[(int)chara], NULL, &renderQuad, 0,NULL,SDL_FLIP_NONE);
 	}		
-	
-	//getchar();
 };
 
 // deallocate font handling 
