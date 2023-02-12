@@ -48,26 +48,38 @@ void initFont(struct text * t, SDL_Renderer * r)
 	t->renderer = r;
 	
 	// individual letter sizes for text spacing 
-	t->width = FONT_SIZE/2+1;
-	t->height = FONT_SIZE;
+	t->width = 13;
+	t->height = 25;
 	
 	if(font == NULL)
 		throwError("Failed to load font");
 			
-	t->textColor.r = 0;
-	t->textColor.g = 0;
-	t->textColor.b = 0;
+	t->textColor.r = 255;
+	t->textColor.g = 255;
+	t->textColor.b = 255;
 	t->textColor.a = 255;
 	
 	t->letters = malloc(127 * sizeof(SDL_Texture *));
 	int i = 0;
 	
-	char * letter = malloc(sizeof(char[1]));
+	char * letter = malloc(sizeof(char));
 	
 	// load letters 
 	for(i=29;i<126;i++)
 	{
 		letter[0] = (char)i;
+		
+		// fix error with letter pointer being longer than 1 character 
+		if(strlen(letter) > 1)
+		{
+			while(strlen(letter) > 1)
+			{
+				free(letter);
+				letter = malloc(sizeof(char));
+				letter[0] = (char)i;
+			}
+		}
+		
 		SDL_Surface* textSurface = TTF_RenderUTF8_Blended(font, letter, t->textColor);
 		
 		if(textSurface == NULL)
@@ -79,12 +91,18 @@ void initFont(struct text * t, SDL_Renderer * r)
 			
 			if(t->letters[i] == NULL )
 				throwError("Unable to create texture from rendered text!");
-				
+			else
+			{
+				t->width = textSurface->w;
+				t->height = textSurface->h;
+				printf("\n\n%s",letter);
+				printf("\n%d %d", textSurface->w, textSurface->h);
+			}
+			
 			//Get rid of old surface
 			SDL_FreeSurface( textSurface );
 		}		
 	}
-	free(letter);
 	
 	TTF_CloseFont( font );
 };
@@ -103,7 +121,7 @@ void printText(char * outputString, int x, int y, struct text * t)
 	for(i=0;i<strlen(outputString);i++)
 	{
 		// render the text, changing the size if it's different from the default 
-		renderQuad = (SDL_Rect){x+(i*t->width*abs(size-(FONT_SIZE-1))), y, t->width*abs(size-(FONT_SIZE-1)), t->height*abs(size-(FONT_SIZE-1))};
+		renderQuad = (SDL_Rect){x+(i*t->width), y, t->width, t->height};
 			
 		// set current character to a part of the string 
 		chara = outputString[i];
@@ -114,7 +132,8 @@ void printText(char * outputString, int x, int y, struct text * t)
 		// present alpha and texture piece 
 		SDL_SetTextureAlphaMod(t->letters[(int)chara], t->textColor.a);
 		SDL_RenderCopyEx(t->renderer, t->letters[(int)chara], NULL, &renderQuad, 0,NULL,SDL_FLIP_NONE);
-	}		
+	
+	}	
 };
 
 // deallocate font handling 

@@ -75,37 +75,64 @@ void menuSelection(void *data)
 	{
 		for(int i=0;i<s->numOptions;i++)
 		{
-			setCursor(s->menuX,s->menuY+i);
-			printf("%s",s->options[i]);
+			switch(graphicsMode)
+			{
+				case 0:
+				setCursor(s->menuX,s->menuY+i);
+				printf("%s",s->options[i]);
+				break;
+				case 1:
+				printText(s->options[i], s->menuX, s->menuY+i*FONT_SIZE, s->fontHandler);
+				break;
+			}
 		}
 	
-		switch(s->input)
+		if(graphicsMode == 0)
 		{
-			case UP:
-			if(s->option > 0)
+			switch(s->input)
 			{
-				setCursor(s->menuX-1,s->menuY+s->option);
-				printf(" ");
+				case UP:
+				if(s->option > 0)
+				{
+					setCursor(s->menuX-1,s->menuY+s->option);
+					printf(" ");
 			
-				s->option--;
+					s->option--;
+				}
+				break;
+				case DOWN:
+				if(s->option < s->numOptions-1)
+				{
+					setCursor(s->menuX-1,s->menuY+s->option);
+					printf(" ");
+		
+					s->option++;
+				}	
+				break;
 			}
-			break;
-			case DOWN:
-			if(s->option < s->numOptions-1)
+		
+		
+			if(s->input == UP || s->input == DOWN)
 			{
 				setCursor(s->menuX-1,s->menuY+s->option);
-				printf(" ");
-		
-				s->option++;
+				printf(">");
 			}
-			break;
 		}
-		
-		if(s->input == UP || s->input == DOWN)
+		else
 		{
-			setCursor(s->menuX-1,s->menuY+s->option);
-			printf(">");
-		}
+			switch(s->input)
+			{
+				case UP:
+				if(s->option > 0)
+					s->option--;
+				break;
+				case DOWN:
+				if(s->option < s->numOptions-1)
+					s->option++;
+				break;
+			}				
+			printText(">", s->menuX-FONT_SIZE,s->menuY+s->option*FONT_SIZE, s->fontHandler);
+		}		
 	}
 }
 
@@ -122,8 +149,6 @@ void initMenu(struct gameState * s, int numOpts, char ** options, int x, int y)
 	}
 	
 	s->numOptions = numOpts;		
-	s->menuX = x;
-	s->menuY = y;
 	
 	if(s->option >= numOpts)
 		s->option = 0;
@@ -132,10 +157,16 @@ void initMenu(struct gameState * s, int numOpts, char ** options, int x, int y)
 	switch(graphicsMode)
 	{
 		case 0:
+		s->menuX = x;
+		s->menuY = y;
+	
 		setCursor(s->menuX-1,s->menuY+s->option);
 		printf(">");
 		break;
 		case 1:
+		s->menuX = x*12;
+		s->menuY = y*12;
+	
 		break;
 	}
 	

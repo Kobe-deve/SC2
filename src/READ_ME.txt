@@ -36,6 +36,14 @@ src: - main.c
 Compiling command:
 gcc main.c main.o -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf -o "Stone Crawler 2"
 
+Graphic Modes:
+	With Stone Crawler Rebuild there are two graphical modes: ASCII and sprite 
+	
+	To toggle a specific mode with a build, a global graphicsMode is set to a 
+	specific value with these being the specific modes
+	0 - ascii
+	1 - sprites
+
 Controls:
 	Arrow Keys - Movement/Selecting
 	Enter - Confirm

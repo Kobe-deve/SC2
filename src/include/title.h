@@ -29,6 +29,7 @@ void titleScreenDisplay(void *data)
 	// initialize options 
 	if(s->options == NULL)
 	{
+		// initialize menu 
 		char ** array = malloc(2 * sizeof(char*));
 		array[0] = NG;
 		array[1] = CT;
@@ -59,14 +60,15 @@ void titleScreenDisplay(void *data)
 			s->numImages = 1;
 			
 			addImage(s,LOGO_IMAGE);
-			s->images[0].x = 45*12;
+			s->images[0].x = 20*12;
 			s->images[0].y = 10*12;
 			break;
 		}
 	}
 	else if(graphicsMode == 1)
 	{
-		printf("%d %d %d %d",s->images[0].x,s->images[0].y,s->images[0].width,s->images[0].height);
+		printText(TITLE_DESC1, 250, 350, s->fontHandler);
+		printText(TITLE_DESC2, 250, 375, s->fontHandler);
 		renderImage(&s->images[0], s->renderer);
 	}
 }
@@ -81,11 +83,14 @@ void titleScreenLogic(void *data)
 		switch(s->option)
 		{
 			case 0:
-			freeMenuProcess(s);
-			
 			// clear images if used 
 			if(graphicsMode == 1)
+			{
+				destroyListener(DISPLAY,s->listeners);
 				clearImages(s);
+			}
+			
+			freeMenuProcess(s);
 			
 			initNewGame(s);
 			break;

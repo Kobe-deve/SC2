@@ -83,9 +83,9 @@ int main(int argc, char *argv[])
 	{
 		// initialize event handler for SDL2 events and renderer color 
 		e = malloc(sizeof(SDL_Event));
-		colors[0] = 255;
-		colors[1] = 255;
-		colors[2] = 255;
+		colors[0] = 0;
+		colors[1] = 0;
+		colors[2] = 0;
 		colors[3] = 0;
 		
 		state.fontHandler = malloc(sizeof(struct text));
@@ -136,10 +136,10 @@ int main(int argc, char *argv[])
 						switch(e->jbutton.button)
 						{
 							case SDL_CONTROLLER_BUTTON_DPAD_UP:
-								state.input=72;
+								state.input=UP;
 							break;
 							case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-								state.input=80;
+								state.input=DOWN;
 							break;
 							case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
 								state.input=75;
@@ -229,8 +229,6 @@ int main(int argc, char *argv[])
 		// if sprite mode enabled, render screen and keep the frame rate 
 		if(graphicsMode == 1)
 		{
-			//printText("STONE CRAWLER 2 - FUCKING FINALLY", 100, 100, state.fontHandler);
-			
 			SDL_RenderPresent(state.renderer);
 			++(frames); // adds to frame tally
 		
