@@ -54,9 +54,9 @@ void initFont(struct text * t, SDL_Renderer * r)
 	if(font == NULL)
 		throwError("Failed to load font");
 			
-	t->textColor.r = 200;
-	t->textColor.g = 10;
-	t->textColor.b = 10;
+	t->textColor.r = 0;
+	t->textColor.g = 0;
+	t->textColor.b = 0;
 	t->textColor.a = 255;
 	
 	t->letters = malloc(127 * sizeof(SDL_Texture *));

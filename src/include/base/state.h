@@ -35,6 +35,10 @@
 #include "font.h"
 #endif
 
+#ifndef IMAGE_HANDLED
+#include "image.h"
+#endif
+
 // state struct
 #ifndef STATE_HANDLED
 #define STATE_HANDLED
@@ -94,7 +98,36 @@
 		SDL_Renderer* renderer; // window renderer
 	
 		struct text * fontHandler; // handles text display
+		
+		struct image * images; // displayed images used in sprite mode
+		int imageStackSize; // number of images in array 
+		int numImages; // max size of array 
 	};
+	
+	
+	// add to images used in current state 
+	void addImage(struct gameState * s,char * filePath)
+	{
+		if(s->imageStackSize < s->numImages)
+		{
+			s->images[s->imageStackSize] = initImage(filePath, s->renderer);
+			s->imageStackSize++;
+		}
+	}
+	
+	// clear image array 
+	void clearImages(struct gameState * s)
+	{
+		int i;
+		
+		for(i=0;i<s->numImages;i++)
+			deallocateImage(&s->images[i]);
+		
+		s->images = NULL;
+		
+		s->imageStackSize = 0;
+		s->numImages = 0;
+	}
 	
 	// adding a party member to the party 
 	void addPartyMember(struct character stats, struct gameState * s)
@@ -112,6 +145,7 @@
 		}
 	}
 	
+	// deallocating state 
 	void clearState(struct gameState * s)
 	{
 		if(s->party != NULL)
@@ -138,7 +172,7 @@
 	};
 	
 	// debug mode toggle
-	int debug = 0;
+	int debug = 1;
 	
 	// initialize a new game 
 	void initNewGame(struct gameState * s);

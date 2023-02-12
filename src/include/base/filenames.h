@@ -17,6 +17,6 @@
 #define DUNGEON_SPRITE "resources/sprites/dungeon_sheet.png"
 #define BACKGROUND_ASSET "resources/sprites/background/background_asset.png"
 
-#define USED_FONT_FILE "resources/font/Dotty.ttf"
+#define USED_FONT_FILE "resources/font/chiaro.ttf"
 
 #endif

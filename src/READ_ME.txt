@@ -42,6 +42,7 @@ Controls:
 	Esc - Exit the game
 	Backspace - exit conversation with npc
 	M - (in dungeon) menu 
+	H - (in debug mode for sprite version) open command prompt
 
 Event Handling:
 	Events are registered through the registerEvent function specifically with 

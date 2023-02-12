@@ -42,6 +42,10 @@ int graphicsMode = 1;
 #include "font.h"
 #endif
 
+#ifndef IMAGE_HANDLED
+#include "image.h"
+#endif
+
 // frame handling variables
 
 // max FPS constant 
@@ -106,10 +110,6 @@ void init(struct gameState * s)
 	else if(graphicsMode == 1) // initialize sprite mode 
 	{
 		#define SPRITE_FUNCT
-		
-		//Screen dimension constants
-		int SCREEN_WIDTH = 960;
-		int SCREEN_HEIGHT = 720;
 
 		// set frame handling variables
 		SCREEN_FPS = 40; 
@@ -126,7 +126,7 @@ void init(struct gameState * s)
 			SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 				
 			// create window 
-			s->window = SDL_CreateWindow( GAME_WINDOW_NAME, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+			s->window = SDL_CreateWindow( GAME_WINDOW_NAME, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH-100, WINDOW_HEIGHT-100, SDL_WINDOW_SHOWN);
 			if(s->window != NULL)
 			{
 				// creates renderer
@@ -150,6 +150,11 @@ void init(struct gameState * s)
 				
 			}
 		}
+		
+		// initialize array of displayed images 
+		s->images = NULL;
+		s->imageStackSize = 0;
+		s->numImages = 0;
 	}
 	
 	// load libraries 

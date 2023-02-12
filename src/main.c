@@ -97,8 +97,7 @@ int main(int argc, char *argv[])
 	// main loop
 	while(state.input != 27)
 	{
-		// if sprite mode enabled, clear screen 
-		if(graphicsMode == 1)
+		if(graphicsMode == 1) // if sprite mode enabled, clear screen 
 		{
 			SDL_SetRenderDrawColor(state.renderer, colors[0], colors[1], colors[2], colors[3]);
 			SDL_RenderClear(state.renderer);
@@ -187,6 +186,14 @@ int main(int argc, char *argv[])
 								state.input = 109;
 							break;
 							
+							case SDLK_h:
+							if(debug == 1)
+							{
+								HWND consoleWindow = GetConsoleWindow();
+								ShowWindow(consoleWindow, SW_NORMAL);
+							}
+							break;
+							
 							case SDLK_s:
 							case SDLK_DOWN:
 								state.input = 80;
@@ -211,7 +218,7 @@ int main(int argc, char *argv[])
 			break;
 		}
 		
-		// go through events 
+		// go through and execute events 
 		for(i=0;i<MAX_EVENTS;i++)
 		{
 			handlers = state.listeners[i];
@@ -222,7 +229,7 @@ int main(int argc, char *argv[])
 		// if sprite mode enabled, render screen and keep the frame rate 
 		if(graphicsMode == 1)
 		{
-			printText("STONE CRAWLER 2 - FUCKING FINALLY", 100, 100, state.fontHandler);
+			//printText("STONE CRAWLER 2 - FUCKING FINALLY", 100, 100, state.fontHandler);
 			
 			SDL_RenderPresent(state.renderer);
 			++(frames); // adds to frame tally
@@ -236,12 +243,16 @@ int main(int argc, char *argv[])
 	// deallocate data used for sprite mode 
 	if(graphicsMode == 1)
 	{
+		// deallocate images
+		clearImages(&state);
+		
+		// deallocate font 
 		deallocateFont(state.fontHandler);
 		
+		// deallocate renderer and window 
 		SDL_DestroyRenderer(state.renderer);
 		SDL_DestroyWindow(state.window);
 	}
-	
 	
 	// clear data being used 
 	clearState(&state);

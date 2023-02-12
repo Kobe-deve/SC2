@@ -1,7 +1,19 @@
+
+#ifndef STATE_HANDLED
 #include "state.h"
+#endif 
+
+#ifndef MUSIC_HANDLED
 #include "music.h"
+#endif
+
+#ifndef EVENT_HANDLING
 #include "event_handler.h"
+#endif
+
+#ifndef GRAPHICS
 #include "graphics.h"
+#endif
 
 #ifndef MENU_HANDLED
 #define MENU_HANDLED
@@ -117,8 +129,16 @@ void initMenu(struct gameState * s, int numOpts, char ** options, int x, int y)
 		s->option = 0;
 	
 	// set initial display
-	setCursor(s->menuX-1,s->menuY+s->option);
-	printf(">");
+	switch(graphicsMode)
+	{
+		case 0:
+		setCursor(s->menuX-1,s->menuY+s->option);
+		printf(">");
+		break;
+		case 1:
+		break;
+	}
+	
 }
 
 #endif
