@@ -665,7 +665,7 @@ void npcHandler(struct gameState * s)
 			if(movement == 1 && activeNPCs[i].inCombat != 1 && activeNPCs[i].talking != 1 && ((int)(SDL_GetTicks() - activeNPCs[i].startTicks))/1000.f >= activeNPCs[i].speed)
 			{
 				// erase/update current spot when moving 
-				if(!activeNPCs[i].talking && !activeNPCs[i].inCombat && movement == 1 && s->floor == activeNPCs[i].floor && visible[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x] == 1)
+				if(graphicsMode == 0 && !activeNPCs[i].talking && !activeNPCs[i].inCombat && movement == 1 && s->floor == activeNPCs[i].floor && visible[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x] == 1)
 				{
 					setColor(WHITE);
 					setCursor(dungeonPrintCoordX+activeNPCs[i].x,dungeonPrintCoordX+activeNPCs[i].y);
@@ -773,21 +773,29 @@ void npcHandler(struct gameState * s)
 			// display npc 
 			if(visible[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x] == 1 && s->floor == activeNPCs[i].floor)
 			{
-				setCursor(dungeonPrintCoordX+activeNPCs[i].x,dungeonPrintCoordX+activeNPCs[i].y);
-				switch(activeNPCs[i].type)
+				switch(graphicsMode)
 				{
 					case 0:
-					setColor(DARK_BABY_BLUE);
+					setCursor(dungeonPrintCoordX+activeNPCs[i].x,dungeonPrintCoordX+activeNPCs[i].y);
+					switch(activeNPCs[i].type)
+					{
+						case 0:
+						setColor(DARK_BABY_BLUE);
+						break;
+						case 1:
+						setColor(SILVER);
+						break;
+					}
+				
+					if(activeNPCs[i].inCombat == 1) // shows a fight 
+						printf("X");
+					else
+						printf("%c",1);
 					break;
 					case 1:
-					setColor(SILVER);
+					
 					break;
 				}
-			
-				if(activeNPCs[i].inCombat == 1) // shows a fight 
-					printf("X");
-				else
-					printf("%c",1);
 			}
 		}
 	}
@@ -1072,7 +1080,6 @@ void display(struct gameState * s)
 		break;
 		case 1:
 		// display dungeon 
-		
 		for(iy=0;iy<dungeonSize;iy++)
 		{
 			for(ix=0;ix<dungeonSize;ix++)
@@ -1111,10 +1118,24 @@ void display(struct gameState * s)
 			}
 		}
 		
+		// display npc 
+		for(i = 0;i<numNPCs;i++)
+		{		
+			if(activeNPCs[i].active && visible[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x] == 1 && s->floor == activeNPCs[i].floor)
+			{
+				spriteClip.x = 0;
+				spriteClip.y = 0;
+						
+				s->images[0].x = activeNPCs[i].x*SPRITE_SQUARE_SIZE*s->images[0].scale;
+				s->images[0].y = activeNPCs[i].y*SPRITE_SQUARE_SIZE*s->images[0].scale;
+				renderImage(&s->images[0], s->renderer,&spriteClip);
+			}
+		}
+		
+		// display player 
 		spriteClip.x = 0;
 		spriteClip.y = 0;
 						
-		// display player 
 		s->images[0].x = s->playerX*SPRITE_SQUARE_SIZE*s->images[0].scale;
 		s->images[0].y = s->playerY*SPRITE_SQUARE_SIZE*s->images[0].scale;
 		renderImage(&s->images[0], s->renderer,&spriteClip);
