@@ -1076,7 +1076,10 @@ void display(struct gameState * s)
 		for(iy=0;iy<dungeonSize;iy++)
 		{
 			for(ix=0;ix<dungeonSize;ix++)
-			{		
+			{	
+				if(visible[s->floor][iy][ix])
+				{
+					
 				switch(d[s->floor][iy][ix])
 				{
 					case 1: // wall
@@ -1104,6 +1107,7 @@ void display(struct gameState * s)
 				s->images[0].x = ix*SPRITE_SQUARE_SIZE*s->images[0].scale;
 				s->images[0].y = iy*SPRITE_SQUARE_SIZE*s->images[0].scale;
 				renderImage(&s->images[0], s->renderer,&spriteClip);
+				}
 			}
 		}
 		
