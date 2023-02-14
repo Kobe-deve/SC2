@@ -75,8 +75,9 @@ int main(int argc, char *argv[])
 	// used for window handling 
 	SDL_Event * e;
 	const Uint8* keyStates;
-	int frameRateTracker;
-	int colors[4];
+	int frameRateTracker; // used for frame rate 
+	int inputTimer = 0; // used for keeping input timing consistent with ASCII version 
+	int colors[4]; // renderer color 
 	
 	// set up SDL input handling if graphics mode enabled 
 	if(graphicsMode == 1)
@@ -215,6 +216,12 @@ int main(int argc, char *argv[])
 				}
 			
 			}				
+			
+			if(inputTimer != 0 && (inputTimer - SDL_GetTicks()) >= INPUT_DELAY)
+			{
+				inputTimer = 0;
+				inputTimer = SDL_GetTicks();
+			}
 			break;
 		}
 		

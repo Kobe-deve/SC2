@@ -18,6 +18,9 @@
 #ifndef MENU_HANDLED
 #define MENU_HANDLED
 
+// input delay for sprite version to keep it consistent with ASCII
+#define INPUT_DELAY 1
+
 // input handling enumerations 
 enum input
 {

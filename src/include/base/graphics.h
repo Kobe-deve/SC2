@@ -51,7 +51,7 @@ int graphicsMode = 1;
 // max FPS constant 
 int SCREEN_FPS = 40; 
 // calculates ticks per frame for timers
-int SCREEN_TICK_PER_FRAME = 25;  // 1000 / SCREEN_FPS
+int SCREEN_TICK_PER_FRAME;  // 1000 / SCREEN_FPS
 
 // ascii color handling 
 typedef int colors; // for printing images
@@ -77,6 +77,8 @@ void initFont(struct text * t, SDL_Renderer * r);
 // initialize graphics handling 
 void init(struct gameState * s)
 {
+	SCREEN_TICK_PER_FRAME = 1000 / SCREEN_FPS;
+	
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	HWND consoleWindow = GetConsoleWindow();
 	

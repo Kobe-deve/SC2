@@ -72,7 +72,7 @@ int numNPCs = 0;
 struct npc * activeNPCs = NULL;
 
 // preemptively declare update status used in dungeon crawling 
-void updateStatus(char * text);
+void updateStatus(char * text,struct gameState * s);
 
 // load npcs from a file based on the dungeon type 
 void generateNPCs(int dungeonType)
@@ -185,17 +185,17 @@ void npcDialogueHandler(int spot, struct gameState * s)
 		}
 		break;
 		case GREETING: // npc response to greeting 
-		updateStatus("Person: \"Yeah hello.\"");	
-		updateStatus("Person: \"What do you want?\"");	
+		updateStatus("Person: \"Yeah hello.\"",s);	
+		updateStatus("Person: \"What do you want?\"",s);	
 		conversation = JOIN_PARTY;
 		break;
 		case QUESTION: // npc response to question or generate list of questions 
 		//conversation = NPC_RESPONSE;
 		conversation = NPC_QUESTION;
-		updateStatus("Person: \"What? Sorry I don't care.\"");	
+		updateStatus("Person: \"What? Sorry I don't care.\"",s);	
 		break;
 		case PASS: // npc response to passing by 
-		updateStatus("Person: \"Sure.\"");	
+		updateStatus("Person: \"Sure.\"",s);	
 		
 		conversation = PASS_BY;
 		activeNPCs[spot].passBy = 1;
@@ -203,8 +203,8 @@ void npcDialogueHandler(int spot, struct gameState * s)
 		
 		break;
 		case BATTLE: // npc fights player 
-		updateStatus(NPCBAT);	
-		updateStatus(PRESS_ENTER);	
+		updateStatus(NPCBAT,s);	
+		updateStatus(PRESS_ENTER,s);	
 		talkOver = 1;
 		break;
 		case NPC_QUESTION: // NPC asks a question 
@@ -222,12 +222,12 @@ void npcDialogueHandler(int spot, struct gameState * s)
 		switch(topicNum)
 		{
 			case 1:
-			updateStatus(QUESTION1);	
+			updateStatus(QUESTION1,s);	
 			s->numOptions = 2;
 			registerEvent(MENU_SELECTION,menuSelection,s->listeners);
 			break;
 			case 2:
-			updateStatus(QUESTION2);	
+			updateStatus(QUESTION2,s);	
 			s->numOptions = 3;	
 			registerEvent(MENU_SELECTION,menuSelection,s->listeners);
 			break;
@@ -241,13 +241,13 @@ void npcDialogueHandler(int spot, struct gameState * s)
 		break;
 		
 		case JOIN_PARTY: // npc joins the party 
-		updateStatus(NPCJOINED);	
-		updateStatus(PRESS_ENTER);	
+		updateStatus(NPCJOINED,s);	
+		updateStatus(PRESS_ENTER,s);	
 		talkOver = 1;
 		break;
 		
 		case PLAYER_RESPONSE: // respond based on what the player responded with 
-		updateStatus("Person: \"Ah okay then, bye.\"");	
+		updateStatus("Person: \"Ah okay then, bye.\"",s);	
 		talkOver = 1;
 		conversation = LEAVE;
 		
@@ -257,7 +257,7 @@ void npcDialogueHandler(int spot, struct gameState * s)
 		
 		break;
 		case NPC_RESPONSE: // NPC responds
-		updateStatus(NPCRESP);	
+		updateStatus(NPCRESP,s);	
 		talkOver = 1;
 		conversation = LEAVE;
 		break;

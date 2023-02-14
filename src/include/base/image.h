@@ -60,11 +60,20 @@ struct image initImage(char * filename, SDL_Renderer*  renderer)
 	return returnedImage;
 };
 
-void renderImage(struct image * usedImage, SDL_Renderer*  renderer)
+void renderImage(struct image * usedImage, SDL_Renderer*  renderer, SDL_Rect * clip)
 {
-	usedImage->renderQuad = (SDL_Rect){ usedImage->x, usedImage->y, usedImage->width*usedImage->scale, usedImage->height*usedImage->scale };
+	usedImage->renderQuad.x = usedImage->x;
+	usedImage->renderQuad.y = usedImage->y;
+	usedImage->renderQuad.w = usedImage->width*usedImage->scale; 
+	usedImage->renderQuad.h = usedImage->height*usedImage->scale;
 	
-	SDL_RenderCopyEx(renderer, usedImage->texture, NULL, &usedImage->renderQuad, 0, NULL, SDL_FLIP_NONE);		
+	if(clip != NULL)
+	{
+		usedImage->renderQuad.w = clip->w*usedImage->scale;
+		usedImage->renderQuad.h = clip->h*usedImage->scale;
+	}
+	
+	SDL_RenderCopyEx(renderer, usedImage->texture, clip, &usedImage->renderQuad, 0, NULL, SDL_FLIP_NONE);		
 }
 
 void deallocateImage(struct image * usedImage)

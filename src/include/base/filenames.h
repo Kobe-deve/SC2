@@ -12,11 +12,13 @@
 #define ORIGINAL_DUNGEON "maps/original_dungeon.txt" // first dungeon 
 #define ORIGINAL_DUNGEON_NPC "maps/npc_data/origin.txt" // first dungeon npc file 
 
-// image files 
+// image files and specific width/height
 #define LOGO_IMAGE "resources/sprites/logo.png"
 #define DUNGEON_SPRITE "resources/sprites/dungeon_sheet.png"
+#define SPRITE_SQUARE_SIZE 10 // width/height of dungeon tiles
+
 #define BACKGROUND_ASSET "resources/sprites/background/background_asset.png"
 
-#define USED_FONT_FILE "resources/font/Dotty.ttf"
+#define USED_FONT_FILE "resources/font/chiaro.ttf"
 
 #endif

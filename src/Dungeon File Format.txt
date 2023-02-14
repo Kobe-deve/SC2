@@ -24,6 +24,7 @@ Map File:
 		2 - Stairs(up)
 		3 - Stairs(down)
 		4 - chest
+		5 - opened chest 
 		9 - shop
 		B - Dungeon boss spawn point 
 		E - Enemy spawn point 

@@ -91,7 +91,11 @@ int tired = 0;
 // dungeon array pointer 
 int *** d = NULL;
 
+// coordinates of stairs going up for AI 
 int ** upStairCoords = NULL;
+
+// for sprite rendering a section of the spirte sheet 
+SDL_Rect spriteClip = {0,0,SPRITE_SQUARE_SIZE,SPRITE_SQUARE_SIZE};
 
 void initDungeonFloor(void *data);
 void displayRange(struct gameState * s);
@@ -117,25 +121,37 @@ int npcNearby(int x, int y, int f, int isPlayer)
 }
 
 // display status in dungeon 
-void displayStatus()
+void displayStatus(struct gameState * s)
 {
 	int i;
 	
-	setCursor(1,30);
-	printf("STATUS:");
-	
-	// reset displayed order 
-	for(i=0;i<numStatusLines;i++)
+	switch(graphicsMode)
 	{
-		setCursor(1,31+i);
-		printf("\33[2K");
-		setCursor(1,31+i);
-		printf("%s",statusText[i]);
+		case 0:
+		setCursor(1,30);
+		printf("STATUS:");
+	
+		// reset displayed order 
+		for(i=0;i<numStatusLines;i++)
+		{
+			setCursor(1,31+i);
+			printf("\33[2K");
+			setCursor(1,31+i);
+			printf("%s",statusText[i]);
+		}
+		break;
+		case 1:
+		
+		printText("STATUS:", 10, 400, s->fontHandler);
+		
+		for(i=0;i<numStatusLines;i++)
+			printText(statusText[i], 10, 400+FONT_SIZE+i*FONT_SIZE, s->fontHandler);
+		break;
 	}
 }
 
 // update status text and display it 
-void updateStatus(char * text)
+void updateStatus(char * text,struct gameState * s)
 {
 	int i;
 
@@ -147,7 +163,7 @@ void updateStatus(char * text)
 	}
 	else // move recent to bottom if max is filled 
 	{
-		if(strlen(statusText[0]) > strlen(text))
+		if(graphicsMode == 0 && strlen(statusText[0]) > strlen(text))
 		{
 			setColor(BLACK);
 			for(i=0;i<strlen(statusText[0])+1;i++)
@@ -160,12 +176,13 @@ void updateStatus(char * text)
 	
 		free(statusText[0]);
 		for(i=0;i<numStatusLines-1;i++)
-		{
 			statusText[i] = statusText[i+1];
-		}
+		
 		statusText[numStatusLines-1] = text;
 	}
-	displayStatus();
+	
+	if(graphicsMode == 0)
+		displayStatus(s);
 }
 
 // briefly using this function to convert old dungeon 
@@ -282,7 +299,8 @@ void resetDungeon(void *data)
 	// register back to main dungeon loop 
 	registerEvent(DISPLAY,walkAround,s->listeners);
 	
-	displayStatus();
+	if(graphicsMode == 0)
+		displayStatus(s);
 }
 
 // start encounter (setting up the stats for the enemy side)
@@ -312,7 +330,7 @@ void startEncounter(int type, void *data)
 	destroyListener(LOGIC_HANDLER,s->listeners);
 	registerEvent(LOGIC_HANDLER,initBattle,s->listeners);
 	
-	updateStatus(ENCOUNTERED);
+	updateStatus(ENCOUNTERED,s);
 }
 
 // displaying a dream 
@@ -323,7 +341,7 @@ void dreamDisplay(void *data)
 	if(s->input == ENTER) // exit sleeping/dream back to dungeon 
 	{
 		system("cls");
-		updateStatus(WAKIGNUP);	
+		updateStatus(WAKIGNUP,s);	
 		sleeping = 0;
 		tired = 0;
 		registerEvent(DISPLAY,resetDungeon,s->listeners);
@@ -395,13 +413,13 @@ void description(struct gameState * s)
 	switch(d[s->floor][s->playerY][s->playerX])
 	{
 		case 5:
-		updateStatus(EMPTY_CHEST);
+		updateStatus(EMPTY_CHEST,s);
 		break;
 		case 4:
-		updateStatus(CLOSED_CHEST);
+		updateStatus(CLOSED_CHEST,s);
 		break;
 		case 9:
-		updateStatus(SHOP_ENTRANCE);
+		updateStatus(SHOP_ENTRANCE,s);
 		break;
 		default:
 		// if an npc is nearby, update status 
@@ -410,15 +428,15 @@ void description(struct gameState * s)
 			switch(activeNPCs[npcTalked].type)
 			{
 				case 0:
-				updateStatus(NPC1);	
+				updateStatus(NPC1,s);	
 				break;
 				case 1:
-				updateStatus(NPC2);	
+				updateStatus(NPC2,s);	
 				break;
 			}
 		}
 		else if(npcNearPlayer && activeNPCs[npcTalked].inCombat )
-			updateStatus(NPC_FIGHT);	
+			updateStatus(NPC_FIGHT,s);	
 				
 		break;
 	}
@@ -464,7 +482,7 @@ void enemyHandler(struct gameState * s)
 				printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
 			}	
 			else if(!sleeping && conversation == NONE)
-				updateStatus(ENEMY_MOVEMENT);	
+				updateStatus(ENEMY_MOVEMENT,s);	
 			
 			// set up direction variables 
 			if(s->playerX > activeEnemies[i].x)
@@ -538,7 +556,7 @@ void enemyHandler(struct gameState * s)
 			// if npc found, start battle 
 			if(checkNPC != -1)
 			{
-				updateStatus(HEAR_FIGHT);
+				updateStatus(HEAR_FIGHT,s);
 				activeEnemies[i].inCombat = 1;
 				activeEnemies[i].npcFighting = checkNPC;
 				activeNPCs[checkNPC].passBy = 0;
@@ -552,7 +570,7 @@ void enemyHandler(struct gameState * s)
 		else if(activeEnemies[i].inCombat == 1 && ((int)(SDL_GetTicks() - activeEnemies[i].startTicks))/1000.f >= activeEnemies[i].speed) // handle fighting an npc over time 
 		{
 			// update status 
-			updateStatus(NPCvsENEMY);	
+			updateStatus(NPCvsENEMY,s);	
 			
 			// change stats based on combat 
 			switch(rand()%4)
@@ -571,7 +589,7 @@ void enemyHandler(struct gameState * s)
 			// check if NPC was defeated, if so deactivate NPC and get enemy moving again 
 			if(activeNPCs[activeEnemies[i].npcFighting].stats.health <= 0)
 			{
-				updateStatus(NPCLOST);	
+				updateStatus(NPCLOST,s);	
 				
 				activeNPCs[activeEnemies[i].npcFighting].active = 0;
 				activeNPCs[activeEnemies[i].npcFighting].inCombat = 0;
@@ -805,8 +823,8 @@ void dungeonLogic(void *data, struct gameState * s)
 	{
 		switchTrack(DREAM_MUSIC,s);
 		
-		updateStatus(PASSOUT);	
-		updateStatus(PRESS_ENTER);	
+		updateStatus(PASSOUT,s);	
+		updateStatus(PRESS_ENTER,s);	
 		sleeping = 1;
 	}
 	
@@ -853,9 +871,9 @@ void dungeonLogic(void *data, struct gameState * s)
 		if(conversation == LEAVE || conversation == PASS_BY)  // being done with conversation 
 		{
 			if(conversation == PASS_BY)
-				updateStatus(PASS_NPC);	
+				updateStatus(PASS_NPC,s);	
 			else
-				updateStatus(NPC_DONE_TALK);	
+				updateStatus(NPC_DONE_TALK,s);	
 			
 			conversation = NONE;
 		}
@@ -863,7 +881,7 @@ void dungeonLogic(void *data, struct gameState * s)
 		{
 			conversation = NONE;
 			
-			updateStatus(NPC_RUN_AWAY);	
+			updateStatus(NPC_RUN_AWAY,s);	
 		}
 		else if(talkOver == 1 && conversation == BATTLE && s->input == ENTER) // battling npc 
 		{
@@ -974,14 +992,14 @@ void dungeonLogic(void *data, struct gameState * s)
 					break;
 					case 4: // chest
 					d[s->floor][s->playerY][s->playerX] = 5;
-					updateStatus(OPENED_CHEST);
+					updateStatus(OPENED_CHEST,s);
 					break;
 				}
 			}	
 			else if(activeNPCs[npcTalked].active == 1 && npcNearPlayer && !activeNPCs[npcTalked].inCombat) // interact with npc
 			{
 				// set up menu and variables for talking 
-				updateStatus(TALK_TO_NPC);
+				updateStatus(TALK_TO_NPC,s);
 				conversation = INTRO;
 				
 				activeNPCs[npcTalked].talking = 1;
@@ -1023,29 +1041,85 @@ void dungeonLogic(void *data, struct gameState * s)
 // display movable elements in dungeon 
 void display(struct gameState * s)
 {
-	int i;
-	
-	// display player
-	setCursor(dungeonPrintCoordX+s->playerX,dungeonPrintCoordY+s->playerY);
-	printf("%c",1);	
-	
-	// display UI
-	if(debug == 0)
+	int i,ix,iy;
+	char * output = "";
+		
+	switch(graphicsMode)
 	{
-		setCursor(125,0);
-		printf("Stats:");
-		
-		// print protag stats 
-		setCursor(125,1);
-		printf("%s - HP:%d/%d STAMINA:%d/%d",s->protag_stats.name,s->protag_stats.health,s->protag_stats.maxHealth,s->protag_stats.stamina,s->protag_stats.maxStamina);
+		case 0:
+		// display player
+		setCursor(dungeonPrintCoordX+s->playerX,dungeonPrintCoordY+s->playerY);
+		printf("%c",1);	
 	
-		// print party 
-		for(i=0;i<s->partySize;i++)
+		// display UI
+		if(debug == 0)
 		{
-			setCursor(125,i+2);
-			printf("%s - HP:%d/%d STAMINA:%d/%d",s->party[i].name,s->party[i].health,s->party[i].maxHealth,s->party[i].stamina,s->party[i].maxStamina);
+			setCursor(125,0);
+			printf("Stats:");
 		
+			// print protag stats 
+			setCursor(125,1);
+			printf("%s - HP:%d/%d STAMINA:%d/%d",s->protag_stats.name,s->protag_stats.health,s->protag_stats.maxHealth,s->protag_stats.stamina,s->protag_stats.maxStamina);
+	
+			// print party 
+			for(i=0;i<s->partySize;i++)
+			{
+				setCursor(125,i+2);
+				printf("%s - HP:%d/%d STAMINA:%d/%d",s->party[i].name,s->party[i].health,s->party[i].maxHealth,s->party[i].stamina,s->party[i].maxStamina);
+		
+			}
 		}
+		break;
+		case 1:
+		// display dungeon 
+		
+		for(iy=0;iy<dungeonSize;iy++)
+		{
+			for(ix=0;ix<dungeonSize;ix++)
+			{		
+				switch(d[s->floor][iy][ix])
+				{
+					case 1: // wall
+					spriteClip.x = SPRITE_SQUARE_SIZE*2;
+					spriteClip.y = 0;
+					break;
+					case 2: // stairs 
+					spriteClip.x = SPRITE_SQUARE_SIZE*3;
+					spriteClip.y = 0;
+					break;
+					case 4: // chest 
+					spriteClip.x = SPRITE_SQUARE_SIZE*4;
+					spriteClip.y = 0;
+					break;
+					case 5: // chest 
+					spriteClip.x = SPRITE_SQUARE_SIZE*5;
+					spriteClip.y = 0;
+					break;
+					default: // floor 
+					spriteClip.x = SPRITE_SQUARE_SIZE;
+					spriteClip.y = 0;
+					break;
+				}
+				
+				s->images[0].x = ix*SPRITE_SQUARE_SIZE*s->images[0].scale;
+				s->images[0].y = iy*SPRITE_SQUARE_SIZE*s->images[0].scale;
+				renderImage(&s->images[0], s->renderer,&spriteClip);
+			}
+		}
+		
+		spriteClip.x = 0;
+		spriteClip.y = 0;
+						
+		// display player 
+		s->images[0].x = s->playerX*SPRITE_SQUARE_SIZE*s->images[0].scale;
+		s->images[0].y = s->playerY*SPRITE_SQUARE_SIZE*s->images[0].scale;
+		renderImage(&s->images[0], s->renderer,&spriteClip);
+		
+		// display UI
+		printText("Stats:", 1000, 10, s->fontHandler);
+		
+		displayStatus(s);
+		break;
 	}
 	
 	if(debug == 1)
@@ -1055,6 +1129,7 @@ void display(struct gameState * s)
 		setCursor(60,15);
 		printf("VALUE: %d  ",d[s->floor][s->playerY][s->playerX]);
 	}
+	
 }
 
 // main dungeon crawling function 
@@ -1064,7 +1139,9 @@ void walkAround(void *data)
 	
 	capTicks = 0;
 	
-	clearDisplay(s);
+	if(graphicsMode == 0)
+		clearDisplay(s);
+	
 	dungeonLogic(data,s);
 	
 	// move floors and update display 
@@ -1075,11 +1152,11 @@ void walkAround(void *data)
 		switch(d[s->floor][s->playerY][s->playerX])
 		{
 			case 2:
-			updateStatus(WALK_UP);
+			updateStatus(WALK_UP,s);
 			s->floor = s->floor+1;
 			break;
 			case 3:
-			updateStatus(WALK_DOWN);
+			updateStatus(WALK_DOWN,s);
 			s->floor = s->floor-1;
 			break;
 		}	
@@ -1104,11 +1181,7 @@ void readDungeonFile(char * fileName)
 	
 	// check if file is opened
 	if(!readFile)
-	{
-		printf("ERROR:DUNGEON FILE COULD NOT BE READ");
-		getchar();
-		exit(0);
-	}
+		throwError("ERROR:DUNGEON FILE COULD NOT BE READ");
 	else
 	{
 		// read size of dungeon 
@@ -1313,11 +1386,7 @@ void initDungeonFloor(void *data)
 	
 	// check if dungeon array is filled with data 
 	if(d == NULL)
-	{
-		printf("ERROR:DUNGEON FILE NOT COMPATIBLE");
-		getchar();
-		exit(0);
-	}
+		throwError("ERROR:DUNGEON FILE NOT COMPATIBLE");
 	
 	// allocate visible array 
 	if(visible == NULL)
@@ -1352,25 +1421,40 @@ void initDungeonFloor(void *data)
 	// initial display range 
 	displayRange(s);
 	
-	// display dungeon walls 
-	for(iy = -1;iy < dungeonSize+1;iy++)
+	if(graphicsMode == 0)
 	{
-		for(ix = -1;ix < dungeonSize+1;ix++)
+		// display dungeon walls 
+		for(iy = -1;iy < dungeonSize+1;iy++)
 		{
-			setCursor(dungeonPrintCoordX+ix,dungeonPrintCoordY+iy);
-			if((ix == -1 || ix == dungeonSize || iy == -1 || iy == dungeonSize))
-			{	
-				setColor(BLUE);
-				printf("%c",219);
-			}
-			else if(visible[s->floor][iy][ix] == 1)
+			for(ix = -1;ix < dungeonSize+1;ix++)
 			{
-				setColor(WHITE);
-				printf("%c",quickConvert(d[s->floor][iy][ix]));
+				setCursor(dungeonPrintCoordX+ix,dungeonPrintCoordY+iy);
+				if((ix == -1 || ix == dungeonSize || iy == -1 || iy == dungeonSize))
+				{	
+					setColor(BLUE);
+					printf("%c",219);
+				}
+				else if(visible[s->floor][iy][ix] == 1)
+				{
+					setColor(WHITE);
+					printf("%c",quickConvert(d[s->floor][iy][ix]));
+				}
 			}
-		}
-	}		
-	setColor(WHITE);
+		}		
+		setColor(WHITE);
+	}
+	else
+	{
+		// initialize images used in dungeon crawling
+		s->images = malloc(sizeof(struct image));
+		s->numImages = 1;
+			
+		addImage(s,DUNGEON_SPRITE);
+		s->images[0].x = SPRITE_SQUARE_SIZE;
+		s->images[0].y = SPRITE_SQUARE_SIZE;
+		s->images[0].scale = 2;
+		
+	}
 	
 	// generate npcs
 	generateNPCs(s->building);
@@ -1382,7 +1466,7 @@ void initDungeonFloor(void *data)
 		statusText[iy] = NULL;
 	
 	// set initial status 
-	updateStatus(FIRST_FLOOR_TEXT);
+	updateStatus(FIRST_FLOOR_TEXT,s);
 
 	// free used filename for loading data 
 	free(fileName);

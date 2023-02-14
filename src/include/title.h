@@ -69,7 +69,7 @@ void titleScreenDisplay(void *data)
 	{
 		printText(TITLE_DESC1, 250, 350, s->fontHandler);
 		printText(TITLE_DESC2, 250, 375, s->fontHandler);
-		renderImage(&s->images[0], s->renderer);
+		renderImage(&s->images[0], s->renderer, NULL);
 	}
 }
 
