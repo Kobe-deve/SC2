@@ -118,6 +118,8 @@ int main(int argc, char *argv[])
 			case 1:
 			keyStates = SDL_GetKeyboardState(NULL);
 			
+			state.input = 0;
+			
 			while(SDL_PollEvent(e)) 
 			{
 				switch(e->type)
@@ -217,11 +219,6 @@ int main(int argc, char *argv[])
 			
 			}				
 			
-			if(inputTimer != 0 && (inputTimer - SDL_GetTicks()) >= INPUT_DELAY)
-			{
-				inputTimer = 0;
-				inputTimer = SDL_GetTicks();
-			}
 			break;
 		}
 		
