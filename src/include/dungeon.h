@@ -252,6 +252,18 @@ void resetDungeon(void *data)
 	// clear all event functions
 	destroyListeners(s->listeners,MAX_EVENTS);
 	
+	// allocate sprites back if they're gone 
+	if(s->images == NULL)
+	{
+		s->images = malloc(sizeof(struct image));
+		s->numImages = 1;
+			
+		addImage(s,DUNGEON_SPRITE);
+		s->images[0].x = SPRITE_SQUARE_SIZE;
+		s->images[0].y = SPRITE_SQUARE_SIZE;
+		s->images[0].scale = 2;
+	}
+	
 	// if variables used in battle aren't null, free them
 	if(s->currentBattle.enemies != NULL)
 		free(s->currentBattle.enemies);
@@ -278,20 +290,21 @@ void resetDungeon(void *data)
 	displayRange(s);
 	
 	// display visible enemies 
-	for(i = 0;i<numEnemies;i++)
+	if(graphicsMode == 0)
 	{
-		if(visible[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1 && activeEnemies[i].active == 1)
+		for(i = 0;i<numEnemies;i++)
 		{
-			setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
-			printf("+");
+			if(visible[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1 && activeEnemies[i].active == 1)
+			{
+				setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
+				printf("+");
+			}
 		}
 	}
 	
 	// reset passBy variable for npcs 
 	for(i=0;i<numNPCs;i++)
-	{
 		activeNPCs[i].passBy = 0;
-	}
 	
 	// switch back to dungeon track 
 	switchTrack(DUNGEON_MUSIC,s);
@@ -323,6 +336,10 @@ void startEncounter(int type, void *data)
 		case 3:
 		break;
 	}
+	
+	// clear dungeon images 
+	if(graphicsMode == 1)
+		clearImages(s);
 	
 	// set events to start battle processing
 	destroyListener(MENU_SELECTION,s->listeners);
@@ -1119,6 +1136,16 @@ void display(struct gameState * s)
 						break;
 						case 5: // opened chest 
 						spriteClip.x = SPRITE_SQUARE_SIZE*5;
+						spriteClip.y = 0;
+						break;
+						case 9: // shop
+						spriteClip.x = SPRITE_SQUARE_SIZE;
+						spriteClip.y = 0;
+						s->images[0].x = ix*SPRITE_SQUARE_SIZE*s->images[0].scale;
+						s->images[0].y = iy*SPRITE_SQUARE_SIZE*s->images[0].scale;
+						renderImage(&s->images[0], s->renderer,&spriteClip);
+					
+						spriteClip.x = SPRITE_SQUARE_SIZE*9;
 						spriteClip.y = 0;
 						break;
 						default: // floor 

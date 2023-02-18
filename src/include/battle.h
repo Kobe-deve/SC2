@@ -66,8 +66,9 @@ void generateCommands(struct gameState * s)
 }
 
 // displaying during battle
-void battleDisplay()
+void battleDisplay(void *data)
 {
+	struct gameState * s = (struct gameState *)data;
 	int i = 0;
 	int x,y;
 	
@@ -97,6 +98,7 @@ void battleDisplay()
 		}
 		break;
 		case 1:
+		renderImage(&s->images[0], s->renderer,NULL);				
 		break;
 	}
 }
@@ -134,7 +136,11 @@ void battleLoop(void *data)
 			case 3:
 			break;
 			case 4:
+			if(graphicsMode == 1)
+				clearImages(s);
+			
 			freeBattleData(s);
+			destroyListener(DISPLAY,s->listeners);
 			registerEvent(DISPLAY,resetDungeon,s->listeners);
 			break;
 		}
@@ -184,19 +190,35 @@ void initBattle(void *data)
 
 	// set specific event handlers 
 	destroyListener(LOGIC_HANDLER,s->listeners);
-	registerEvent(DISPLAY,battleLoop,s->listeners);
+	registerEvent(LOGIC_HANDLER,battleLoop,s->listeners);
 	
 	// start battle music 
 	switchTrack(BATTLE_MUSIC,s);
 	
-	// initialize battle display 
-	system("cls");
+	// display handling 
+	switch(graphicsMode)
+	{
+		case 0:
+		// initialize battle display 
+		system("cls");
 
-	// display outlines 
-	borders();
+		// display outlines 
+		borders();
+		
+		// display sprites 
+		battleDisplay(data);
+		break;
+		case 1:
+		s->images = malloc(sizeof(struct image));
+		s->numImages = 1;
+			
+		addImage(s,TEST_ENEMY_SPRITE);
+		s->images[0].x = 20*12;
+		s->images[0].y = 10*12;
+		registerEvent(DISPLAY,battleDisplay,s->listeners);
 	
-	// display sprites
-	battleDisplay();
+		break;
+	}
 	
 	generateCommands(s);
 }
