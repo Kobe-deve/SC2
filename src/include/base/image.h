@@ -26,6 +26,7 @@ struct image
 	
 	int width;
 	int height;
+	int angle;
 	
 	int x;
 	int y;
@@ -52,6 +53,7 @@ struct image initImage(char * filename, SDL_Renderer*  renderer)
 	returnedImage.width = loadedSurface->w;
 	returnedImage.height = loadedSurface->h;
 	returnedImage.scale = 1;
+	returnedImage.angle = 0;
 	returnedImage.renderQuad = (SDL_Rect){ 0, 0, returnedImage.width*returnedImage.scale, returnedImage.height*returnedImage.scale };
 	
 	// free surface 
@@ -73,7 +75,7 @@ void renderImage(struct image * usedImage, SDL_Renderer*  renderer, SDL_Rect * c
 		usedImage->renderQuad.h = clip->h*usedImage->scale;
 	}
 	
-	SDL_RenderCopyEx(renderer, usedImage->texture, clip, &usedImage->renderQuad, 0, NULL, SDL_FLIP_NONE);		
+	SDL_RenderCopyEx(renderer, usedImage->texture, clip, &usedImage->renderQuad, usedImage->angle, NULL, SDL_FLIP_NONE);		
 }
 
 void deallocateImage(struct image * usedImage)

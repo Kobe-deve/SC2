@@ -78,6 +78,7 @@ int main(int argc, char *argv[])
 	int frameRateTracker; // used for frame rate 
 	int inputTimer = 0; // used for keeping input timing consistent with ASCII version 
 	int colors[4]; // renderer color 
+	struct image backgroundAsset;
 	
 	// set up SDL input handling if graphics mode enabled 
 	if(graphicsMode == 1)
@@ -86,10 +87,14 @@ int main(int argc, char *argv[])
 		e = malloc(sizeof(SDL_Event));
 		colors[0] = 0;
 		colors[1] = 0;
-		colors[2] = 0;
+		colors[2] = 100;
 		colors[3] = 0;
 		
 		state.fontHandler = malloc(sizeof(struct text));
+		
+		// initialize background assets
+		backgroundAsset = initImage(BACKGROUND_ASSET,state.renderer);
+		backgroundAsset.scale = 4;
 		
 		// initialize text handler
 		initFont(state.fontHandler, state.renderer);
@@ -103,7 +108,19 @@ int main(int argc, char *argv[])
 			SDL_SetRenderDrawColor(state.renderer, colors[0], colors[1], colors[2], colors[3]);
 			SDL_RenderClear(state.renderer);
 			frameRateTracker = SDL_GetTicks();
+		
+			// if in sprite mode, render background 
+			backgroundAsset.angle++;
+			backgroundAsset.angle%=360;
+			backgroundAsset.y = 500;
+			for(i=0;i<6;i++)
+			{
+				backgroundAsset.x = i*200;
+				renderImage(&backgroundAsset,state.renderer,NULL);
+			}
 		}
+		
+		
 		
 		// input handling based on mode 
 		switch(graphicsMode)
@@ -247,6 +264,8 @@ int main(int argc, char *argv[])
 	{
 		// deallocate images
 		clearImages(&state);
+		// deallocate background image
+		deallocateImage(&backgroundAsset);
 		
 		// deallocate font 
 		deallocateFont(state.fontHandler);
