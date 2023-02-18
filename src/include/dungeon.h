@@ -392,7 +392,7 @@ void displayRange(struct gameState * s)
 			{
 				for(i = 0;i<numEnemies;i++)
 				{
-					if(activeEnemies[i].inCombat == 0 && activeEnemies[i].active == 1 && activeEnemies[i].x == x && activeEnemies[i].y == y)
+					if(graphicsMode == 0 && activeEnemies[i].inCombat == 0 && activeEnemies[i].active == 1 && activeEnemies[i].x == x && activeEnemies[i].y == y)
 					{
 						setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
 						printf("+");
@@ -475,7 +475,7 @@ void enemyHandler(struct gameState * s)
 		if(activeEnemies[i].inCombat == 0 && activeEnemies[i].active == 1 && ((int)(SDL_GetTicks() - activeEnemies[i].startTicks))/1000.f >= activeEnemies[i].speed)
 		{
 			// erase/update current spot when moving 
-			if(visible[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1)
+			if(graphicsMode == 0 && visible[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1)
 			{
 				// make sure there isn't another enemy on this spot if updating 
 				setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
@@ -614,7 +614,7 @@ void enemyHandler(struct gameState * s)
 		}
 		
 		// display enemy 
-		if(visible[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1 && activeEnemies[i].inCombat == 0 && activeEnemies[i].active == 1)
+		if(graphicsMode == 0 && visible[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1 && activeEnemies[i].inCombat == 0 && activeEnemies[i].active == 1)
 		{
 			setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
 			printf("+");
@@ -1087,33 +1087,49 @@ void display(struct gameState * s)
 				if(visible[s->floor][iy][ix])
 				{
 					
-				switch(d[s->floor][iy][ix])
-				{
-					case 1: // wall
-					spriteClip.x = SPRITE_SQUARE_SIZE*2;
-					spriteClip.y = 0;
-					break;
-					case 2: // stairs 
-					spriteClip.x = SPRITE_SQUARE_SIZE*3;
-					spriteClip.y = 0;
-					break;
-					case 4: // chest 
-					spriteClip.x = SPRITE_SQUARE_SIZE*4;
-					spriteClip.y = 0;
-					break;
-					case 5: // chest 
-					spriteClip.x = SPRITE_SQUARE_SIZE*5;
-					spriteClip.y = 0;
-					break;
-					default: // floor 
-					spriteClip.x = SPRITE_SQUARE_SIZE;
-					spriteClip.y = 0;
-					break;
-				}
+					switch(d[s->floor][iy][ix])
+					{
+						case 1: // wall
+						spriteClip.x = SPRITE_SQUARE_SIZE*2;
+						spriteClip.y = 0;
+						break;
+						case 2: // up stairs 
+						spriteClip.x = SPRITE_SQUARE_SIZE;
+						spriteClip.y = 0;
+						s->images[0].x = ix*SPRITE_SQUARE_SIZE*s->images[0].scale;
+						s->images[0].y = iy*SPRITE_SQUARE_SIZE*s->images[0].scale;
+						renderImage(&s->images[0], s->renderer,&spriteClip);
+						
+						spriteClip.x = SPRITE_SQUARE_SIZE*3;
+						spriteClip.y = 0;
+						break;
+						case 3: // down stairs
+						spriteClip.x = SPRITE_SQUARE_SIZE;
+						spriteClip.y = 0;
+						s->images[0].x = ix*SPRITE_SQUARE_SIZE*s->images[0].scale;
+						s->images[0].y = iy*SPRITE_SQUARE_SIZE*s->images[0].scale;
+						renderImage(&s->images[0], s->renderer,&spriteClip);
+					
+						spriteClip.x = SPRITE_SQUARE_SIZE*6;
+						spriteClip.y = 0;
+						break;
+						case 4: // chest 
+						spriteClip.x = SPRITE_SQUARE_SIZE*4;
+						spriteClip.y = 0;
+						break;
+						case 5: // opened chest 
+						spriteClip.x = SPRITE_SQUARE_SIZE*5;
+						spriteClip.y = 0;
+						break;
+						default: // floor 
+						spriteClip.x = SPRITE_SQUARE_SIZE;
+						spriteClip.y = 0;
+						break;
+					}
 				
-				s->images[0].x = ix*SPRITE_SQUARE_SIZE*s->images[0].scale;
-				s->images[0].y = iy*SPRITE_SQUARE_SIZE*s->images[0].scale;
-				renderImage(&s->images[0], s->renderer,&spriteClip);
+					s->images[0].x = ix*SPRITE_SQUARE_SIZE*s->images[0].scale;
+					s->images[0].y = iy*SPRITE_SQUARE_SIZE*s->images[0].scale;
+					renderImage(&s->images[0], s->renderer,&spriteClip);
 				}
 			}
 		}
@@ -1139,6 +1155,19 @@ void display(struct gameState * s)
 		s->images[0].x = s->playerX*SPRITE_SQUARE_SIZE*s->images[0].scale;
 		s->images[0].y = s->playerY*SPRITE_SQUARE_SIZE*s->images[0].scale;
 		renderImage(&s->images[0], s->renderer,&spriteClip);
+		
+		// display enemies 
+		for(i = 0;i<numEnemies;i++)
+		{		
+			if(visible[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 1 && activeEnemies[i].inCombat == 0 && activeEnemies[i].active == 1)
+			{				
+				spriteClip.x = SPRITE_SQUARE_SIZE*8;
+				spriteClip.y = 0;
+				s->images[0].x = activeEnemies[i].x*SPRITE_SQUARE_SIZE*s->images[0].scale;
+				s->images[0].y = activeEnemies[i].y*SPRITE_SQUARE_SIZE*s->images[0].scale;
+				renderImage(&s->images[0], s->renderer,&spriteClip);			
+			}
+		}	
 		
 		// display UI
 		printText("Stats:", 1000, 10, s->fontHandler);

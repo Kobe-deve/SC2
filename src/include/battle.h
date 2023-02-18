@@ -71,26 +71,33 @@ void battleDisplay()
 	int i = 0;
 	int x,y;
 	
-	// print background pattern
-	for(y=0;y<21;y++)
+	switch(graphicsMode)
 	{
-		for(x=0;x<110;x++)
+		case 0:
+		// print background pattern
+		for(y=0;y<21;y++)
 		{
-			if(x%2 == 1)
-				setColor(1);
-			else 
-				setColor(4);
-			setCursor(x,y);
-			printf("%c",219);
+			for(x=0;x<110;x++)
+			{
+				if(x%2 == 1)
+					setColor(1);
+				else 
+					setColor(4);
+				setCursor(x,y);
+				printf("%c",219);
+			}
+		}	
+	
+		int numEnemies = 3;
+	
+		// display enemies 
+		for(i =0;i<numEnemies;i++)
+		{
+			printPattern(M12,i*25+5,0,20,20);
 		}
-	}	
-	
-	int numEnemies = 3;
-	
-	// display enemies 
-	for(i =0;i<numEnemies;i++)
-	{
-		printPattern(M12,i*25+5,0,20,20);
+		break;
+		case 1:
+		break;
 	}
 }
 
