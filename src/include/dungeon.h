@@ -1166,7 +1166,11 @@ void display(struct gameState * s)
 		{		
 			if(activeNPCs[i].active && visible[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x] == 1 && s->floor == activeNPCs[i].floor)
 			{
-				spriteClip.x = 0;
+				if(activeNPCs[i].inCombat == 1)
+					spriteClip.x = SPRITE_SQUARE_SIZE*10;
+				else	
+					spriteClip.x = SPRITE_SQUARE_SIZE*11;
+				
 				spriteClip.y = 0;
 						
 				s->images[0].x = activeNPCs[i].x*SPRITE_SQUARE_SIZE*s->images[0].scale;
