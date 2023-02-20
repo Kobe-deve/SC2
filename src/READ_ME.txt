@@ -3,6 +3,13 @@ Stone Crawler Rebuild
 A rebuild of Stone Crawler from the ground up using 
 C and the SDL2 (along with SDL2_Mixer) library
 
+Compiling command:
+run setup_sc2.bat with a C++ compiler installed with the following libraries:
+	SDL2
+	SDL2_image
+	SDL2_ttf
+	SDL2_mixer
+
 File Organization:
 src: - main.c
      -> include
@@ -33,8 +40,6 @@ src: - main.c
 	 -> data - save data files 
 	 
 	 
-Compiling command:
-gcc main.c main.o -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf -o "Stone Crawler 2"
 
 Graphic Modes:
 	With Stone Crawler Rebuild there are two graphical modes: ASCII and sprite 
@@ -43,6 +48,12 @@ Graphic Modes:
 	specific value with these being the specific modes
 	0 - ascii
 	1 - sprites
+
+Debug Mode
+	Debug mode is a toggled variable in state.h
+	
+	0 - off
+	1 - on
 
 Controls:
 	Arrow Keys - Movement/Selecting

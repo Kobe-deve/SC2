@@ -49,7 +49,7 @@ int graphicsMode = 1;
 // frame handling variables
 
 // max FPS constant 
-int SCREEN_FPS = 40; 
+int SCREEN_FPS = 30; 
 // calculates ticks per frame for timers
 int SCREEN_TICK_PER_FRAME;  // 1000 / SCREEN_FPS
 
