@@ -12,7 +12,7 @@ run setup_sc2.bat with a C++ compiler installed with the following libraries:
 
 File Organization:
 src: - main.c
-     -> include
+     -> include - header files used
 		-battle.h - handles battle system operations 
 		-dungeon.h - handles dungeon system operations
 		-title.h - handles title screen operations
@@ -31,11 +31,14 @@ src: - main.c
 			-text.h - all text/dialogue in the game is stored here
 			-font.h - handling font in window/sprite mode
 			-image.h - handling images in window/sprite mode 
+     -> data - folder for holding save data
      -> maps - contains map files read by the game 
      -> resources - contains asset data 
-     	 -> music - contains music/sound assets
+     	 -> font - contains font assets
+	 -> music - contains music/sound assets
 	 -> sprites - contains sprite data
 		-> background - contains assets used for the background
+		-> curses - enemy sprites during combat
      -> dlls - contains dlls used for compiling 
 	 -> data - save data files 
 	 
