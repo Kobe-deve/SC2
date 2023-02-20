@@ -615,6 +615,8 @@ void enemyHandler(struct gameState * s)
 			}
 			else if(activeEnemies[i].health <= 0) // check if enemy was defeated 
 			{
+				updateStatus(NPCWON,s);
+	
 				activeNPCs[activeEnemies[i].npcFighting].inCombat = 0;
 				activeEnemies[i].inCombat = 0;
 				activeEnemies[i].active = 0;
@@ -1166,6 +1168,7 @@ void display(struct gameState * s)
 		{		
 			if(activeNPCs[i].active && visible[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x] == 1 && s->floor == activeNPCs[i].floor)
 			{
+				// change sprite based on situation the npc is in 
 				if(activeNPCs[i].inCombat == 1)
 					spriteClip.x = SPRITE_SQUARE_SIZE*10;
 				else	

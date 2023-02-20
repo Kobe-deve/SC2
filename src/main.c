@@ -26,7 +26,7 @@
 
 // initialize new game 
 void initNewGame(struct gameState * s)
-{
+{	
 	// destroy title screen logic and menu handlers 
 	destroyListener(MENU_SELECTION,s->listeners);
 	destroyListener(LOGIC_HANDLER,s->listeners);
