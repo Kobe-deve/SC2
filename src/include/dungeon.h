@@ -210,7 +210,7 @@ int quickConvert(int x)
 		case 6:
 		case A:
 		case B:
-		case C:
+		case 12:
 		case D:
 		case F:
 		case G:
@@ -1556,9 +1556,6 @@ void initDungeonFloor(void *data)
 	// set initial status 
 	updateStatus(FIRST_FLOOR_TEXT,s);
 
-	// free used filename for loading data 
-	free(fileName);
-	
 	// set to main loop of dungeon in event listener 
 	destroyListener(DISPLAY,s->listeners);
 	registerEvent(DISPLAY,walkAround,s->listeners);
