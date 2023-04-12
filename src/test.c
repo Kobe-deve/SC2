@@ -305,4 +305,7 @@ int main(int argc, char *argv[])
 	title_test(&state);
 	
 	setColor(15);
+	
+	printf("\nPress Enter");
+	getchar();
 }
