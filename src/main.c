@@ -20,33 +20,10 @@
 #include "include/battle.h"
 #include "include/dungeon.h"
 #include "include/title.h"
+#include "include/file_selection.h"
 
 // windres main.rs -o main.o 
 // gcc main.c main.o -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -o "Stone Crawler 2"
-
-// initialize new game 
-void initNewGame(struct gameState * s)
-{	
-	// destroy title screen logic and menu handlers 
-	destroyListener(MENU_SELECTION,s->listeners);
-	destroyListener(LOGIC_HANDLER,s->listeners);
-	
-	// start initializing dungeon process 
-	registerEvent(DISPLAY,initDungeonFloor,s->listeners);
-	
-	// clear screen 
-	system("cls");
-	
-	// set up initial dungeon crawling variables 
-	s->protag_stats = generateCharacter(HUMAN);
-	s->party = NULL;
-	s->partySize = 0;
-	s->track = "";
-	s->playerX = 0;
-	s->playerY = 0;
-	s->floor = 0;
-	s->building = 0;
-};
 
 int main(int argc, char *argv[])
 {
@@ -279,8 +256,7 @@ int main(int argc, char *argv[])
 	clearState(&state);
 	
 	// free data
-	if(state.listeners[MENU_SELECTION] != NULL)
-		freeMenuProcess(&state);
+	freeMenuProcess(&state);
 		
 	freeDungeonData(&state);
 	freeBattleData(&state);
