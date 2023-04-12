@@ -15,7 +15,7 @@
 // will be used for toggling between ascii/sprite modes 
 // 0 - ascii
 // 1 - sprites 
-int graphicsMode = 0;
+int graphicsMode = 1;
 
 #ifndef SDL_MAIN_HANDLED
 #define SDL_MAIN_HANDLED
@@ -118,7 +118,8 @@ void init(struct gameState * s)
 		SCREEN_TICK_PER_FRAME = 25;  // 1000 / SCREEN_FPS
 
 		// hide console window 
-		ShowWindow(consoleWindow, SW_HIDE);
+		if(testMode == 0)
+			ShowWindow(consoleWindow, SW_HIDE);
 		
 		// initialize window and SDL handling
 		if(SDL_Init( IMG_INIT_JPG | IMG_INIT_PNG | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO) >= 0)

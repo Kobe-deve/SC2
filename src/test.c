@@ -112,8 +112,6 @@ void mainLoopTest(struct gameState * state)
 			}
 		}
 		
-		
-		
 		// input handling based on mode 
 		switch(graphicsMode)
 		{
@@ -296,6 +294,9 @@ void title_test(struct gameState * state)
 
 int main(int argc, char *argv[])
 {
+	// set test mode 
+	testMode = 1;
+
 	srand((unsigned)time(NULL));
 	
 	struct gameState state;

@@ -44,6 +44,9 @@
 #define STATE_HANDLED
 	typedef struct text text;
 
+	// global variable to show when testing mode is active
+	int testMode = 0;
+
 	// pauses for he number of seconds
 	int pause(int he) 
 	{
