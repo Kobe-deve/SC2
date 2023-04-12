@@ -22,8 +22,49 @@
 #include "include/title.h"
 #include "include/file_selection.h"
 
+// initialize before running a test 
+void initTest(struct gameState * state)
+{
+	// initialize the window 
+	init(state);
+
+	// initialize music handling
+	initMusic(state);
+}
+
+// close all procedures
+void endTest(struct gameState * state)
+{
+	// clear data being used 
+	clearState(state);
+	
+	// free data
+	freeMenuProcess(state);
+		
+	freeDungeonData(state);
+	freeBattleData(state);
+}
+
+
+// check if init and end tests work 
+void init_test(struct gameState * state)
+{
+	setColor(15);
+	printf("INIT TEST ");
+	
+	initTest(state);
+	endTest(state);
+	
+	setColor(10);
+	printf("%c",251);
+}
 
 int main(int argc, char *argv[])
 {
 	srand((unsigned)time(NULL));
+	
+	struct gameState state;
+	
+	init_test(&state);
+	setColor(15);
 }
