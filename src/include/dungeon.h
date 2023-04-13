@@ -1399,6 +1399,7 @@ void freeDungeonData(void *data)
 {
 	int iy, iz, ix;
 
+	
 	if(d != NULL && visible != NULL)
 	{
 		// free dungeon and visibility array 
@@ -1406,11 +1407,6 @@ void freeDungeonData(void *data)
 		{
 			for(iy=0;iy<dungeonSize;iy++)
 			{		
-				for(ix=0;ix<dungeonSize;ix++)
-				{
-					free(&d[iz][iy][ix]);
-					free(&visible[iz][iy][ix]);
-				}
 				free(d[iz][iy]);
 				free(visible[iz][iy]);
 			}
@@ -1420,6 +1416,8 @@ void freeDungeonData(void *data)
 		}
 	}
 	
+	
+	printf("SEE");
 	// free enemies/NPCs
 	if(activeEnemies != NULL)
 		free(activeEnemies);
@@ -1443,6 +1441,7 @@ void freeDungeonData(void *data)
 	visible = NULL;
 	activeNPCs = NULL;
 	activeEnemies = NULL;
+	printf("SEE");
 }
 
 // display the dungeon floor and set up used varaiables initially

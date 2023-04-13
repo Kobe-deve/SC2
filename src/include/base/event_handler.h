@@ -84,7 +84,6 @@ void throwError(char * errorText)
 	ShowWindow(consoleWindow, SW_NORMAL);
 	
 	printf("%s",errorText);
-	getchar();
 	exit(0);
 }
 

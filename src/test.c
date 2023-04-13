@@ -226,8 +226,8 @@ int main(int argc, char *argv[])
 	
 	struct gameState state;
 	
-	init_test(&state);
-	title_test(&state);
+//	init_test(&state);
+//	title_test(&state);
 	dungeon_test(&state);
 
 	setColor(10);
