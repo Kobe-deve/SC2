@@ -57,11 +57,12 @@ void endTest(struct gameState * state)
 }
 
 // main event loop in testing 
-void mainLoopTest(struct gameState * state)
+void mainLoopTest(struct gameState * state, int * inputCommands, int maxInput)
 {
 	// for loop variable 
 	int i = 0;
-	
+	int j = 0;
+
 	struct EventHandler *handlers = state->listeners[DISPLAY];
 	
 	// used for window handling 
@@ -92,9 +93,11 @@ void mainLoopTest(struct gameState * state)
 		initFont(state->fontHandler, state->renderer);
 	}
 	
-	// main loop
+	// loop through given commands
 	while(state->input != 27)
 	{
+		state->input = inputCommands[j];
+	
 		if(graphicsMode == 1) // if sprite mode enabled, clear screen 
 		{
 			SDL_SetRenderDrawColor(state->renderer, colors[0], colors[1], colors[2], colors[3]);
@@ -110,123 +113,6 @@ void mainLoopTest(struct gameState * state)
 				backgroundAsset.x = i*200;
 				renderImage(&backgroundAsset,state->renderer,NULL);
 			}
-		}
-		
-		// input handling based on mode 
-		switch(graphicsMode)
-		{
-			case 0:
-			if ( _kbhit() )
-				state->input = getch();
-			else
-				state->input = 0;
-			break;
-
-			case 1:
-			keyStates = SDL_GetKeyboardState(NULL);
-			
-			state->input = 0;
-			
-			while(SDL_PollEvent(e)) 
-			{
-				switch(e->type)
-				{
-					case SDL_WINDOWEVENT_MINIMIZED:
-						while (SDL_WaitEvent(e))
-						{
-							if (e->window.event == SDL_WINDOWEVENT_RESTORED)
-							{
-								break;
-							}
-						}
-					break;
-					
-					case SDL_JOYBUTTONDOWN: // for controller input
-					
-						switch(e->jbutton.button)
-						{
-							case SDL_CONTROLLER_BUTTON_DPAD_UP:
-								state->input=UP;
-							break;
-							case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-								state->input=DOWN;
-							break;
-							case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-								state->input=75;
-							break;
-							case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-								state->input=77;
-							break;
-							case SDL_CONTROLLER_BUTTON_A:
-								state->input=13;
-							break;
-							case SDL_CONTROLLER_BUTTON_B:
-								state->input=8;
-							break;
-						}
-					
-					break;
-					
-					case SDL_KEYDOWN: // for keyboard input
-						switch(e->key.keysym.sym)
-						{
-							case SDLK_RETURN:
-								state->input = 13;
-							break;
-							case SDLK_BACKSPACE:
-								state->input = 8;
-							break;
-						
-							case SDLK_d:
-							case SDLK_RIGHT:
-								state->input = 77;
-							break;
-						
-							case SDLK_a:
-							case SDLK_LEFT:
-								state->input = 75;
-							break;
-						
-							case SDLK_w:
-							case SDLK_UP:
-								state->input = 72;
-							break;
-						
-							case SDLK_m:
-								state->input = 109;
-							break;
-							
-							case SDLK_h:
-							if(debug == 1)
-							{
-								HWND consoleWindow = GetConsoleWindow();
-								ShowWindow(consoleWindow, SW_NORMAL);
-							}
-							break;
-							
-							case SDLK_s:
-							case SDLK_DOWN:
-								state->input = 80;
-							break;
-							
-							case SDLK_ESCAPE:
-								state->input = 27;
-							break;
-						}
-					break;
-	
-					case SDL_WINDOWEVENT_CLOSE:
-					case SDL_QUIT: // clicking the x window button
-						state->input = 27;
-					break;
-					
-					default:
-					break;
-				}
-			
-			}				
-			
-			break;
 		}
 		
 		// go through and execute events 
@@ -247,6 +133,8 @@ void mainLoopTest(struct gameState * state)
 			if( framet < SCREEN_TICK_PER_FRAME)
 				SDL_Delay( SCREEN_TICK_PER_FRAME - framet );
 		}
+		
+		j++;
 	}
 	
 	// deallocate data used for sprite mode 
@@ -282,11 +170,14 @@ void init_test(struct gameState * state)
 // test loading to title screen 
 void title_test(struct gameState * state)
 {
+	int commands[10] = {0,0,0,0,0,0,0,0,27};
+	
 	initTest(state);
-	initNewGame(state);
+	mainLoopTest(state,commands,10);
 	endTest(state);
 	
 	setColor(15);
+	system("cls");
 	printf("\nTITLE SCREEN TEST ");
 	setColor(10);
 	printf("%c",251);
@@ -296,6 +187,7 @@ int main(int argc, char *argv[])
 {
 	// set test mode 
 	testMode = 1;
+	graphicsMode = 0;
 
 	srand((unsigned)time(NULL));
 	
@@ -305,7 +197,4 @@ int main(int argc, char *argv[])
 	title_test(&state);
 	
 	setColor(15);
-	
-	printf("\nPress Enter");
-	getchar();
 }
