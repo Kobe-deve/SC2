@@ -229,6 +229,8 @@ int main(int argc, char *argv[])
 	init_test(&state);
 	title_test(&state);
 	dungeon_test(&state);
-	
+
+	setColor(10);
+	printf("\nDONE");
 	setColor(15);
 }
