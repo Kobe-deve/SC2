@@ -161,8 +161,13 @@ void mainLoopTest(struct gameState * state, int * inputCommands, int maxInput)
 // check if init and end tests work 
 void init_test(struct gameState * state)
 {	
-	initTest(state);
-	endTest(state);
+	int i;
+	for(i=0;i<1000;i++)
+	{
+		initTest(state);
+		endTest(state);
+	}
+	
 	
 	setColor(15);
 	printf("\nINIT TEST ");	
@@ -173,11 +178,15 @@ void init_test(struct gameState * state)
 // test loading to title screen 
 void title_test(struct gameState * state)
 {
-	int commands[10] = {27,0,0,0,0,0,0,0,0};
+	int i;
+	for(i=0;i<1000;i++)
+	{
+		int commands[10] = {0,0,0,0,0,0,0,0,27};
 	
-	initTest(state);
-	mainLoopTest(state,commands,10);
-	endTest(state);
+		initTest(state);
+		mainLoopTest(state,commands,10);
+		endTest(state);
+	}
 	
 	setColor(15);
 	system("cls");
@@ -185,6 +194,27 @@ void title_test(struct gameState * state)
 	setColor(10);
 	printf("%c",251);
 }
+
+// test loading to title screen 
+void dungeon_test(struct gameState * state)
+{
+	int i;
+	for(i=0;i<1000;i++)
+	{
+		int commands[10] = {13,0,0,0,0,0,0,0,27};
+	
+		initTest(state);
+		mainLoopTest(state,commands,10);
+		endTest(state);
+	}
+	
+	setColor(15);
+	system("cls");
+	printf("\nENTRY DUNGEON TEST ");
+	setColor(10);
+	printf("%c",251);
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -198,6 +228,7 @@ int main(int argc, char *argv[])
 	
 	init_test(&state);
 	title_test(&state);
+	dungeon_test(&state);
 	
 	setColor(15);
 }
