@@ -1266,9 +1266,10 @@ void readDungeonFile(char * fileName)
 	readFile = fopen(fileName,"r");
 	
 	int iy, iz, ix;
+	int check;
 	
 	// check if file is opened
-	if(!readFile)
+	if(readFile == NULL)
 		throwError("ERROR:DUNGEON FILE COULD NOT BE READ");
 	else
 	{
@@ -1321,9 +1322,9 @@ void readDungeonFile(char * fileName)
 				}
 			}	
 		}
+		fclose(readFile);
 	}
 		
-	fclose(readFile);
 	free(fileReader);
 }
 
@@ -1416,8 +1417,6 @@ void freeDungeonData(void *data)
 		}
 	}
 	
-	
-	printf("SEE");
 	// free enemies/NPCs
 	if(activeEnemies != NULL)
 		free(activeEnemies);
@@ -1441,7 +1440,6 @@ void freeDungeonData(void *data)
 	visible = NULL;
 	activeNPCs = NULL;
 	activeEnemies = NULL;
-	printf("SEE");
 }
 
 // display the dungeon floor and set up used varaiables initially
@@ -1473,7 +1471,7 @@ void initDungeonFloor(void *data)
 	
 	// check if dungeon array is filled with data 
 	if(d == NULL)
-		throwError("ERROR:DUNGEON FILE NOT COMPATIBLE");
+		throwError("ERROR:DUNGEON DATA NOT LOADED");
 	
 	// allocate visible array 
 	if(visible == NULL)

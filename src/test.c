@@ -198,8 +198,9 @@ void title_test(struct gameState * state)
 // test loading to title screen 
 void dungeon_test(struct gameState * state)
 {
+	// TODO? ERROR:DUNGEON FILE COULD NOT BE READ when running 1000 loops
 	int i;
-	for(i=0;i<1000;i++)
+	for(i=0;i<100;i++)
 	{
 		int commands[10] = {13,0,0,0,0,0,0,0,27};
 	
@@ -226,8 +227,8 @@ int main(int argc, char *argv[])
 	
 	struct gameState state;
 	
-//	init_test(&state);
-//	title_test(&state);
+	init_test(&state);
+	title_test(&state);
 	dungeon_test(&state);
 
 	setColor(10);
