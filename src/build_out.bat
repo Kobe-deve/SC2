@@ -1,2 +1,1 @@
-setup_sc2
-setup_sc2_test
+setup_sc2_test & setup_sc2

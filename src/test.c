@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
 {
 	// set test mode 
 	testMode = 1;
-	graphicsMode = 0;
+	graphicsMode = 1;
 
 	srand((unsigned)time(NULL));
 	
