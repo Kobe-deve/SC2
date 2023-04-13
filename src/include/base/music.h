@@ -43,16 +43,12 @@ void switchTrack(char * songName, struct gameState * s)
 // initialize music handling
 void initMusic(struct gameState * input)
 {
-	#ifdef ASCII_FUNCT
-		
-		//Initialize music handling 
-		if( Mix_OpenAudio( MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024*2 ) < 0 )
-		{
-			printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
-			return;
-		}
-	
-	#endif
+	//Initialize music handling 
+	if( Mix_OpenAudio( MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024*2 ) < 0 )
+	{
+		printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+		return;
+	}
 	
 	// set sound effect volume to 1/3 max 
 	Mix_Volume(0,MIX_MAX_VOLUME/2);
