@@ -54,6 +54,9 @@ void endTest(struct gameState * state)
 	
 	// destroy all listeners when game is done
 	destroyListeners(state->listeners,MAX_EVENTS);
+	
+	free(state);
+	state = NULL;
 }
 
 // main event loop in testing 
@@ -170,7 +173,7 @@ void init_test(struct gameState * state)
 // test loading to title screen 
 void title_test(struct gameState * state)
 {
-	int commands[10] = {0,0,0,0,0,0,0,0,27};
+	int commands[10] = {27,0,0,0,0,0,0,0,0};
 	
 	initTest(state);
 	mainLoopTest(state,commands,10);
@@ -187,7 +190,7 @@ int main(int argc, char *argv[])
 {
 	// set test mode 
 	testMode = 1;
-	graphicsMode = 1;
+	graphicsMode = 0;
 
 	srand((unsigned)time(NULL));
 	

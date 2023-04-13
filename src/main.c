@@ -96,9 +96,7 @@ int main(int argc, char *argv[])
 				renderImage(&backgroundAsset,state.renderer,NULL);
 			}
 		}
-		
-		
-		
+			
 		// input handling based on mode 
 		switch(graphicsMode)
 		{
