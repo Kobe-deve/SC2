@@ -124,7 +124,9 @@
 		int i;
 		
 		for(i=0;i<s->numImages;i++)
+		{
 			deallocateImage(&s->images[i]);
+		}
 		
 		s->images = NULL;
 		

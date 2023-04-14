@@ -43,6 +43,16 @@ void initTest(struct gameState * state)
 // close all procedures
 void endTest(struct gameState * state)
 {
+	if(graphicsMode == 1)
+	{
+		// deallocate renderer and window 
+		SDL_DestroyRenderer(state->renderer);
+		SDL_DestroyWindow(state->window);
+		
+		// quit sdl
+		SDL_Quit();
+	}
+	
 	// clear data being used 
 	clearState(state);
 	
@@ -145,15 +155,13 @@ void mainLoopTest(struct gameState * state, int * inputCommands, int maxInput)
 	{
 		// deallocate images
 		clearImages(state);
-		// deallocate background image
-		deallocateImage(&backgroundAsset);
-		
 		// deallocate font 
 		deallocateFont(state->fontHandler);
 		
-		// deallocate renderer and window 
-		SDL_DestroyRenderer(state->renderer);
-		SDL_DestroyWindow(state->window);
+		// deallocate background image
+		deallocateImage(&backgroundAsset);
+		
+		
 	}
 	
 }
@@ -173,6 +181,7 @@ void init_test(struct gameState * state)
 	printf("\nINIT TEST ");	
 	setColor(10);
 	printf("%c",251);
+	setColor(15);
 }
 
 // test loading to title screen 
@@ -193,9 +202,10 @@ void title_test(struct gameState * state)
 	printf("\nTITLE SCREEN TEST ");
 	setColor(10);
 	printf("%c",251);
+	setColor(15);
 }
 
-// test loading to title screen 
+// test loading to start of dungeon  
 void dungeon_test(struct gameState * state)
 {
 	// TODO? ERROR:DUNGEON FILE COULD NOT BE READ when running 1000 loops
@@ -214,6 +224,28 @@ void dungeon_test(struct gameState * state)
 	printf("\nENTRY DUNGEON TEST ");
 	setColor(10);
 	printf("%c",251);
+	setColor(15);
+}
+
+// test opening menu after loading in dungeon 
+void menu_test(struct gameState * state)
+{
+	int i;
+	for(i=0;i<100;i++)
+	{
+		int commands[10] = {13,109,13,0,0,0,0,0,27};
+	
+		initTest(state);
+		mainLoopTest(state,commands,10);
+		endTest(state);
+	}
+	
+	setColor(15);
+	system("cls");
+	printf("\nOPEN MENU TEST ");
+	setColor(10);
+	printf("%c",251);
+	setColor(15);
 }
 
 
@@ -227,9 +259,10 @@ int main(int argc, char *argv[])
 	
 	struct gameState state;
 	
-	init_test(&state);
+	//init_test(&state);
 	title_test(&state);
 	dungeon_test(&state);
+	menu_test(&state);
 
 	setColor(10);
 	printf("\nDONE");

@@ -95,8 +95,6 @@ void initFont(struct text * t, SDL_Renderer * r)
 			{
 				t->width = textSurface->w;
 				t->height = textSurface->h;
-				printf("\n\n%s",letter);
-				printf("\n%d %d", textSurface->w, textSurface->h);
 			}
 			
 			//Get rid of old surface

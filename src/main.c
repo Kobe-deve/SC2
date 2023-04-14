@@ -248,6 +248,9 @@ int main(int argc, char *argv[])
 		// deallocate renderer and window 
 		SDL_DestroyRenderer(state.renderer);
 		SDL_DestroyWindow(state.window);
+		
+		// quit sdl
+		SDL_Quit();
 	}
 	
 	// clear data being used 
