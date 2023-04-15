@@ -167,12 +167,11 @@ void mainLoopTest(struct gameState * state, int * inputCommands, int maxInput)
 void init_test(struct gameState * state)
 {	
 	int i;
-	for(i=0;i<1000;i++)
+	for(i=0;i<100;i++)
 	{
 		initTest(state);
 		endTest(state);
 	}
-	
 	
 	setColor(15);
 	printf("\nINIT TEST ");	

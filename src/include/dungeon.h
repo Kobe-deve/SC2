@@ -498,7 +498,7 @@ void enemyHandler(struct gameState * s)
 				setCursor(dungeonPrintCoordX+activeEnemies[i].x,dungeonPrintCoordX+activeEnemies[i].y);
 				printf("%c",quickConvert(d[s->floor][activeEnemies[i].y][activeEnemies[i].x]));	
 			}	
-			else if(!sleeping && conversation == NONE)
+			else if(!sleeping && conversation == NONE && visible[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 0)
 				updateStatus(ENEMY_MOVEMENT,s);	
 			
 			// set up direction variables 
