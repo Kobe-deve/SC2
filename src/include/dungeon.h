@@ -555,6 +555,8 @@ void enemyHandler(struct gameState * s)
 					break;
 				}
 			}
+		
+			// display enemy 
 			
 			// starting fight with npc 
 			int checkNPC = -1;
@@ -788,24 +790,31 @@ void npcHandler(struct gameState * s)
 			}
 			
 			// display npc 
-			if(graphicsMode == 0 && visible[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x] == 1 && s->floor == activeNPCs[i].floor)
+			if(visible[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x] == 1 && s->floor == activeNPCs[i].floor)
 			{
-				setCursor(dungeonPrintCoordX+activeNPCs[i].x,dungeonPrintCoordX+activeNPCs[i].y);
-				switch(activeNPCs[i].type)
+				switch(graphicsMode)
 				{
 					case 0:
-					setColor(DARK_BABY_BLUE);
+					setCursor(dungeonPrintCoordX+activeNPCs[i].x,dungeonPrintCoordX+activeNPCs[i].y);
+					switch(activeNPCs[i].type)
+					{
+						case 0:
+						setColor(DARK_BABY_BLUE);
+						break;
+						case 1:
+						setColor(SILVER);
+						break;
+					}
+				
+					if(activeNPCs[i].inCombat == 1) // shows a fight 
+						printf("X");
+					else
+						printf("%c",1);
 					break;
 					case 1:
-					setColor(SILVER);
+					
 					break;
 				}
-				
-				if(activeNPCs[i].inCombat == 1) // shows a fight 
-					printf("X");
-				else
-					printf("%c",1);
-				break;
 			}
 		}
 	}
@@ -1112,8 +1121,6 @@ void display(struct gameState * s)
 						spriteClip.y = 0;
 						break;
 						case 2: // up stairs 
-						
-						// display ground below 
 						spriteClip.x = SPRITE_SQUARE_SIZE;
 						spriteClip.y = 0;
 						s->images[0].x = ix*SPRITE_SQUARE_SIZE*s->images[0].scale;
@@ -1124,8 +1131,6 @@ void display(struct gameState * s)
 						spriteClip.y = 0;
 						break;
 						case 3: // down stairs
-						
-						// display ground below 
 						spriteClip.x = SPRITE_SQUARE_SIZE;
 						spriteClip.y = 0;
 						s->images[0].x = ix*SPRITE_SQUARE_SIZE*s->images[0].scale;
@@ -1144,8 +1149,6 @@ void display(struct gameState * s)
 						spriteClip.y = 0;
 						break;
 						case 9: // shop
-						
-						// display ground below 
 						spriteClip.x = SPRITE_SQUARE_SIZE;
 						spriteClip.y = 0;
 						s->images[0].x = ix*SPRITE_SQUARE_SIZE*s->images[0].scale;
@@ -1175,9 +1178,9 @@ void display(struct gameState * s)
 			{
 				// change sprite based on situation the npc is in 
 				if(activeNPCs[i].inCombat == 1)
-					spriteClip.x = SPRITE_SQUARE_SIZE*11;
-				else	
 					spriteClip.x = SPRITE_SQUARE_SIZE*10;
+				else	
+					spriteClip.x = SPRITE_SQUARE_SIZE*11;
 				
 				spriteClip.y = 0;
 						
