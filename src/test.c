@@ -43,16 +43,6 @@ void initTest(struct gameState * state)
 // close all procedures
 void endTest(struct gameState * state)
 {
-	if(graphicsMode == 1)
-	{
-		// deallocate renderer and window 
-		SDL_DestroyRenderer(state->renderer);
-		SDL_DestroyWindow(state->window);
-		
-		// quit sdl
-		SDL_Quit();
-	}
-	
 	// clear data being used 
 	clearState(state);
 	
@@ -79,7 +69,6 @@ void mainLoopTest(struct gameState * state, int * inputCommands, int maxInput)
 	struct EventHandler *handlers = state->listeners[DISPLAY];
 	
 	// used for window handling 
-	SDL_Event * e;
 	const Uint8* keyStates;
 	int frameRateTracker; // used for frame rate 
 	int inputTimer = 0; // used for keeping input timing consistent with ASCII version 
@@ -90,7 +79,6 @@ void mainLoopTest(struct gameState * state, int * inputCommands, int maxInput)
 	if(graphicsMode == 1)
 	{
 		// initialize event handler for SDL2 events and renderer color 
-		e = malloc(sizeof(SDL_Event));
 		colors[0] = 0;
 		colors[1] = 0;
 		colors[2] = 100;
@@ -155,15 +143,24 @@ void mainLoopTest(struct gameState * state, int * inputCommands, int maxInput)
 	{
 		// deallocate images
 		clearImages(state);
-		// deallocate font 
-		deallocateFont(state->fontHandler);
 		
 		// deallocate background image
 		deallocateImage(&backgroundAsset);
 		
-		
-	}
+		// deallocate font 
+		deallocateFont(state->fontHandler);	
 	
+		// deallocate renderer and window 
+		SDL_DestroyRenderer(state->renderer);
+		SDL_DestroyWindow(state->window);
+		
+		// quit sdl
+		state->renderer = NULL;
+		state->window = NULL;
+		Mix_Quit();
+		IMG_Quit();
+		SDL_Quit();
+	}
 }
 
 // check if init and end tests work 
