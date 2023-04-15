@@ -1210,7 +1210,20 @@ void display(struct gameState * s)
 		
 		// display UI
 		printText("Stats:", 1000, 10, s->fontHandler);
+		char displayer[400];
 		
+		sprintf(displayer,"%s - HP:%d/%d STAMINA:%d/%d",s->protag_stats.name,s->protag_stats.health,s->protag_stats.maxHealth,s->protag_stats.stamina,s->protag_stats.maxStamina);
+		
+		printText(displayer,1000,10+FONT_SIZE,s->fontHandler);
+		
+		
+		// print party 
+		for(i=0;i<s->partySize;i++)
+		{
+			sprintf(displayer,"%s - HP:%d/%d STAMINA:%d/%d",s->party[i].name,s->party[i].health,s->party[i].maxHealth,s->party[i].stamina,s->party[i].maxStamina);
+			printText(displayer,1000,10+FONT_SIZE+FONT_SIZE*(i+1),s->fontHandler);
+		}
+		// display in-game status 
 		displayStatus(s);
 		break;
 	}
