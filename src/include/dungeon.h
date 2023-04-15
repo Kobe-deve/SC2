@@ -1064,7 +1064,8 @@ void dungeonLogic(void *data, struct gameState * s)
 			case BACKSPACE:
 			if(testMode == 1) // testing encounters in dungeon if in test mode 
 				initShop(s);
-			
+			else
+				debug = !debug;
 			break;
 			default:
 					
@@ -1178,9 +1179,9 @@ void display(struct gameState * s)
 			{
 				// change sprite based on situation the npc is in 
 				if(activeNPCs[i].inCombat == 1)
-					spriteClip.x = SPRITE_SQUARE_SIZE*10;
-				else	
 					spriteClip.x = SPRITE_SQUARE_SIZE*11;
+				else	
+					spriteClip.x = SPRITE_SQUARE_SIZE*10;
 				
 				spriteClip.y = 0;
 						
