@@ -245,7 +245,7 @@ void menu_test(struct gameState * state)
 	setColor(15);
 }
 
-// test opening menu after loading in dungeon 
+// test battles after loading in dungeon 
 void battle_test(struct gameState * state)
 {
 	int i;
@@ -266,7 +266,7 @@ void battle_test(struct gameState * state)
 	setColor(15);
 }
 
-// test opening menu after loading in dungeon 
+// test opening shop after loading in dungeon 
 void shop_test(struct gameState * state)
 {
 	int i;
