@@ -1012,6 +1012,7 @@ void dungeonLogic(void *data, struct gameState * s)
 			// handle interacting with items/objects 
 			if(d[s->floor][s->playerY][s->playerX] != 0 && d[s->floor][s->playerY][s->playerX] != E)
 			{
+				// if not in test mode, check what space the character is on 
 				switch(d[s->floor][s->playerY][s->playerX])
 				{
 					case 9: // shop 
@@ -1020,6 +1021,8 @@ void dungeonLogic(void *data, struct gameState * s)
 					case 4: // chest
 					d[s->floor][s->playerY][s->playerX] = 5;
 					updateStatus(OPENED_CHEST,s);
+					break;
+					default:
 					break;
 				}
 			}	
@@ -1054,12 +1057,17 @@ void dungeonLogic(void *data, struct gameState * s)
 				// start encounter 
 				startEncounter(activeNPCs[npcTalked].enemyCombat,data);
 			}
+			else if(testMode == 1) // testing encounters in dungeon if in test mode 
+				startEncounter(1,data);
+			
 			break;
 			case BACKSPACE:
-			//tired = 1;
-			debug = !debug;
+			if(testMode == 1) // testing encounters in dungeon if in test mode 
+				initShop(s);
+			
 			break;
 			default:
+					
 			break;
 		}
 	}
