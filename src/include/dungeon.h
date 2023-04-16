@@ -555,12 +555,10 @@ void enemyHandler(struct gameState * s)
 					break;
 				}
 			}
-		
-			// display enemy 
 			
 			// starting fight with npc 
 			int checkNPC = -1;
-			
+		
 			for(j=0;j<numNPCs;j++)
 			{
 				if(activeNPCs[j].active == 1 && (activeNPCs[j].floor == s->floor && (activeEnemies[i].y == activeNPCs[j].y && activeEnemies[i].x == activeNPCs[j].x)))
@@ -570,9 +568,11 @@ void enemyHandler(struct gameState * s)
 				}
 			}
 
+			
 			// if npc found, start battle 
-			if(checkNPC != -1)
+			if(checkNPC != -1 && checkNPC < numNPCs)
 			{
+				printf("%d",checkNPC);
 				updateStatus(HEAR_FIGHT,s);
 				activeEnemies[i].inCombat = 1;
 				activeEnemies[i].npcFighting = checkNPC;
@@ -691,25 +691,24 @@ void npcHandler(struct gameState * s)
 					printf("%c",quickConvert(d[s->floor][activeNPCs[i].y][activeNPCs[i].x]));	
 				}
 				
-				// movement strategy 
-				/* 
-					0 - up 
-					1 - right 
-					2 - down 
-					3 - left 
-				*/
 				
+				// determine movement 
 				switch(activeNPCs[i].goal)
 				{
 					case ESCAPE_DUNGEON:
+					// store original position in case we have to go back 
 					cx = activeNPCs[i].x;
 					cy = activeNPCs[i].y;
 					
-					if(upStairCoords[activeNPCs[i].floor][0] == activeNPCs[i].x)
+					// move to new position 
+					
+					/*
+					// x movement 
+					if(upStairCoords[activeNPCs[i].floor][0] == activeNPCs[i].x) // on the same x
 						activeNPCs[i].direction = -2;			
-					else if(upStairCoords[activeNPCs[i].floor][0] > activeNPCs[i].x && d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x+1] != 1 && activeNPCs[i].x < dungeonSize-1)
+					else if(upStairCoords[activeNPCs[i].floor][0] > activeNPCs[i].x && d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x+1] != 1 && activeNPCs[i].x < dungeonSize-1) // stairs are to the right 
 						activeNPCs[i].direction = 1;
-					else if(upStairCoords[activeNPCs[i].floor][0] < activeNPCs[i].x &&  d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x-1] != 1 && activeNPCs[i].x > 0)
+					else if(upStairCoords[activeNPCs[i].floor][0] < activeNPCs[i].x &&  d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x-1] != 1 && activeNPCs[i].x > 0) // stairs are to the left
 						activeNPCs[i].direction = 3;
 					else
 						activeNPCs[i].direction = -1;
@@ -725,13 +724,16 @@ void npcHandler(struct gameState * s)
 						case -2:
 						break;
 						case -1:
-						if(d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x-1] != 1)
+						if(activeNPCs[i].x > 0 && d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x-1] != 1)
 							activeNPCs[i].x--;
-						else if(d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x+1] != 1)
+						else if(activeNPCs[i].x < dungeonSize-1 && d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x+1] != 1)
 							activeNPCs[i].x++;
 						break;
 					}
+					*/
 					
+					
+					// y movement 
 					if(upStairCoords[activeNPCs[i].floor][1] == activeNPCs[i].y)
 						activeNPCs[i].direction = -2;			
 					else if(upStairCoords[activeNPCs[i].floor][1] > activeNPCs[i].y && d[activeNPCs[i].floor][activeNPCs[i].y+1][activeNPCs[i].x] != 1 && activeNPCs[i].y < dungeonSize-1)
@@ -744,18 +746,19 @@ void npcHandler(struct gameState * s)
 					switch(activeNPCs[i].direction)
 					{
 						case 0:
-						activeNPCs[i].y--;
+						if(d[activeNPCs[i].floor][activeNPCs[i].y-1][activeNPCs[i].x] != 1)
+							activeNPCs[i].y--;
 						break;
 						case 2:
-						activeNPCs[i].y++;
+						if(d[activeNPCs[i].floor][activeNPCs[i].y+1][activeNPCs[i].x] != 1)
+							activeNPCs[i].y++;
 						break;
 						case -2:
 						break;
-						default:
 						case -1:
-						if(d[activeNPCs[i].floor][activeNPCs[i].y-1][activeNPCs[i].x] != 1)
+						if(activeNPCs[i].y > 0 && d[activeNPCs[i].floor][activeNPCs[i].y-1][activeNPCs[i].x] != 1)
 							activeNPCs[i].y--;
-						else if(d[activeNPCs[i].floor][activeNPCs[i].y+1][activeNPCs[i].x] != 1)
+						else if(activeNPCs[i].y < dungeonSize-1 && d[activeNPCs[i].floor][activeNPCs[i].y+1][activeNPCs[i].x] != 1)
 							activeNPCs[i].y++;
 						
 						break;
@@ -773,7 +776,7 @@ void npcHandler(struct gameState * s)
 					}
 					
 					// check if there isn't any overlap with the player 
-					if(activeNPCs[i].y == s->playerY && activeNPCs[i].x==  s->playerX)
+					if(activeNPCs[i].y == s->playerY && activeNPCs[i].x == s->playerX)
 					{
 						activeNPCs[i].x = cx;
 						activeNPCs[i].y = cy;
@@ -817,6 +820,7 @@ void npcHandler(struct gameState * s)
 				}
 			}
 		}
+	
 	}
 	setColor(WHITE);
 }

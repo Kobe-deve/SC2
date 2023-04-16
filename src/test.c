@@ -208,7 +208,7 @@ void dungeon_test(struct gameState * state)
 	int i;
 	for(i=0;i<100;i++)
 	{
-		int commands[10] = {13,0,0,0,0,0,0,0,27};
+		int commands[10] = {13,DOWN,DOWN,DOWN,0,0,0,0,27};
 	
 		initTest(state);
 		mainLoopTest(state,commands,10);
@@ -292,6 +292,7 @@ int main(int argc, char *argv[])
 	// set test mode 
 	testMode = 1;
 	graphicsMode = 0;
+	debug = 1;
 
 	srand((unsigned)time(NULL));
 	
