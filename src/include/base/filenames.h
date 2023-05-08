@@ -23,6 +23,26 @@
 // font file used in sprite mode 
 #define USED_FONT_FILE "resources/font/chiaro.ttf"
 
-#define TEST_ENEMY_SPRITE "resources/sprites/curses/cobol.png"
+// sprite files
+#define STRANJER_SPRITE "resources/sprites/curses/stranjer.png"
+#define COBOL_SPRITE "resources/sprites/curses/cobol.png"
+#define APOCALYPSE_SPRITE "resources/sprites/curses/apocalypse.png"
+#define COSMIC_SPRITE "resources/sprites/curses/cosmic_puppet.png"
+#define DREAM_SPRITE "resources/sprites/curses/dream_demon.png"
+#define EATER_SPRITE "resources/sprites/curses/eater.png"
+#define FIEND_SPRITE "resources/sprites/curses/fiend.png"
+#define GATSBY_SPRITE "resources/sprites/curses/gatsby.png"
+#define HEART_SPRITE "resources/sprites/curses/heart_and_soul.png"
+#define LOATING_SPRITE "resources/sprites/curses/loating.png"
+#define MOONLIGHT_SPRITE "resources/sprites/curses/moonlight.png"
+#define OLDER_SPRITE "resources/sprites/curses/old_order.png"
+#define SHELL_SPRITE "resources/sprites/curses/shell.png"
+#define SHOPKEEPER_SPRITE "resources/sprites/curses/shopkeeper.png"
+#define SORROW_SPRITE "resources/sprites/curses/sorrow.png"
+#define CURE_SPRITE "resources/sprites/curses/the_cure.png"
+#define TINKER_SPRITE "resources/sprites/curses/tinker.png"
+#define TOWER_SPRITE "resources/sprites/curses/tower.png"
+#define TRANSMITTER_SPRITE "resources/sprites/curses/transmitter.png"
+#define TRAOTIC_SPRITE "resources/sprites/curses/traotic.png"
 
 #endif

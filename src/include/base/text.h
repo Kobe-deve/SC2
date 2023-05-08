@@ -62,8 +62,8 @@
 	#define A_COMMAND "Attack" 
 	#define M_COMMAND "Magic"
 	#define T_COMMAND "Talk"
-	#define W_COMMAND "Lol" 
-	#define E_COMMAND "Exit"
+	#define W_COMMAND "Item" 
+	#define E_COMMAND "Run"
 
 	//title screen options 
 	#define NG "New Game"

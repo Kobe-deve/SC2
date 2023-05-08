@@ -144,7 +144,8 @@ void battleDisplay(void *data)
 		}
 		break;
 		case 1:
-		renderImage(&s->images[0], s->renderer,NULL);				
+		for(i =0;i<s->currentBattle.numEnemies;i++)
+			renderImage(&s->images[i], s->renderer,NULL);				
 		break;
 	}
 	setColor(WHITE);
@@ -161,7 +162,7 @@ void battleLoop(void *data)
 	{
 		switch(s->option)
 		{
-			case 0:
+			case 0: // attack
 			freeMenuProcess(s);
 			
 			registerEvent(MENU_SELECTION,menuSelection,s->listeners);
@@ -176,13 +177,13 @@ void battleLoop(void *data)
 		
 			free(array);
 			break;
-			case 1:
+			case 1: // magic 
 			break;
-			case 2:
+			case 2: // talk
 			break;
-			case 3:
+			case 3: // item 
 			break;
-			case 4:
+			case 4: // run
 			if(graphicsMode == 1)
 				clearImages(s);
 			
@@ -288,11 +289,63 @@ void initBattle(void *data)
 		case 1:
 		// set up enemy sprites used 
 		s->images = malloc(sizeof(struct image));
-		s->numImages = 1;
+		s->numImages = s->currentBattle.numEnemies;
 			
-		addImage(s,TEST_ENEMY_SPRITE);
-		s->images[0].x = 20*12;
-		s->images[0].y = 10*12;
+		// set image based on enemy type 
+		for(i =0;i<s->currentBattle.numEnemies;i++)
+		{
+			// switch based on enemy type 
+			switch(s->currentBattle.enemies[i].type)
+			{
+				case STRANJER:
+				addImage(s,STRANJER_SPRITE);
+				break;
+				case LOST_SPIRIT:
+				addImage(s,COBOL_SPRITE);
+				break;
+				case GUARD_DUCK:
+				addImage(s,APOCALYPSE_SPRITE);
+				break;
+				case WILLFUL_WISP:
+				addImage(s,COSMIC_SPRITE);
+				break;
+				case CHILLER:
+				addImage(s,DREAM_SPRITE);
+				break;
+				case BRASS:
+				addImage(s,EATER_SPRITE);
+				break;
+				case STARIP:
+				addImage(s,FIEND_SPRITE);
+				break;
+				case GUMMO:
+				addImage(s,GATSBY_SPRITE);
+				break;
+				case LOST_HERO:
+				addImage(s,HEART_SPRITE);
+				break;
+				case MICRONOS:
+				addImage(s,LOATING_SPRITE);
+				break;
+				case DIASNAK:
+				addImage(s,MOONLIGHT_SPRITE);
+				break;
+				case WANDERER:
+				addImage(s,OLDER_SPRITE);
+				break;
+				case DIAMAN:
+				addImage(s,SHELL_SPRITE);
+				break;
+				case REVENGE:
+				addImage(s,SHOPKEEPER_SPRITE);
+				break;
+				default:
+				addImage(s,STRANJER_SPRITE);
+				break;
+			}
+			s->images[i].x = 240+200*i;
+			s->images[i].y = 120+200*i;
+		}
 		
 		// because we need to constantly display the image to the window, set battleDisplay as an event 
 		registerEvent(DISPLAY,battleDisplay,s->listeners);
