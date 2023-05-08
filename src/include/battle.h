@@ -230,6 +230,7 @@ void freeBattleData(void *data)
 // start battle 
 void initBattle(void *data)
 {
+	int i;
 	struct gameState * s = (struct gameState *)data;
 	
 	// reset values for battle 
@@ -241,13 +242,18 @@ void initBattle(void *data)
 	{
 		default:
 		case 0:
-		s->currentBattle.numEnemies = 3;
+		s->currentBattle.numEnemies = rand()%3+1;
+		
+		system("cls");
+		printf("%d",s->currentBattle.numEnemies);
+		
 		// allocate enemy data 
 		s->currentBattle.enemies = malloc(s->currentBattle.numEnemies * sizeof(struct character));
 		
-		s->currentBattle.enemies[0] = generateCharacter(rand()%16+1);
-		s->currentBattle.enemies[1] = generateCharacter(rand()%16+1);
-		s->currentBattle.enemies[2] = generateCharacter(rand()%16+1);
+		for(i =0;i<s->currentBattle.numEnemies;i++)
+		{
+			s->currentBattle.enemies[i] = generateCharacter(rand()%4+2);
+		}
 		break;
 		case 1:
 		
