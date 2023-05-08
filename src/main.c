@@ -6,7 +6,6 @@
 	Original Stone Crawler
 	1/16/2019 - 6/9/2019
 */
-
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
@@ -28,9 +27,6 @@
 
 int main(int argc, char *argv[])
 {
-	// set test mode to 0 so the test parts of the code aren't run
-	testMode = 0;
-	
 	srand((unsigned)time(NULL));
 	
 	struct gameState state;
@@ -222,7 +218,6 @@ int main(int argc, char *argv[])
 		for(i=0;i<MAX_EVENTS;i++)
 		{
 			handlers = state.listeners[i];
-			
 			if(handlers != NULL)
 				handlers->mainFunction(&state);
 		}

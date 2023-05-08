@@ -28,8 +28,6 @@ struct image
 	int height;
 	int angle;
 	
-	int alpha;
-	
 	int x;
 	int y;
 	
@@ -56,7 +54,6 @@ struct image initImage(char * filename, SDL_Renderer*  renderer)
 	returnedImage.height = loadedSurface->h;
 	returnedImage.scale = 1;
 	returnedImage.angle = 0;
-	returnedImage.alpha = 255;
 	returnedImage.renderQuad = (SDL_Rect){ 0, 0, returnedImage.width*returnedImage.scale, returnedImage.height*returnedImage.scale };
 	
 	// free surface 
@@ -72,16 +69,11 @@ void renderImage(struct image * usedImage, SDL_Renderer*  renderer, SDL_Rect * c
 	usedImage->renderQuad.w = usedImage->width*usedImage->scale; 
 	usedImage->renderQuad.h = usedImage->height*usedImage->scale;
 	
-	// check if there isn't a clip of what part of the image to use 
 	if(clip != NULL)
 	{
 		usedImage->renderQuad.w = clip->w*usedImage->scale;
 		usedImage->renderQuad.h = clip->h*usedImage->scale;
 	}
-	
-	// set alpha 
-	SDL_SetTextureBlendMode(usedImage->texture, SDL_BLENDMODE_BLEND);
-	SDL_SetTextureAlphaMod(usedImage->texture, usedImage->alpha);
 	
 	SDL_RenderCopyEx(renderer, usedImage->texture, clip, &usedImage->renderQuad, usedImage->angle, NULL, SDL_FLIP_NONE);		
 }
