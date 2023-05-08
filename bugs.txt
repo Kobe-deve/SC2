@@ -1,0 +1,2 @@
+-Pressing enter when an NPC is fighting a curse results in crash sometimes
+	-Seems to be from startEncounter

@@ -101,6 +101,11 @@ void initDungeonFloor(void *data);
 void displayRange(struct gameState * s);
 void generateEnemies(struct gameState * s);
 
+// variable check to fade out if in sprite mode 
+int fadeOutofDungeon = 0;
+// holds enemy type to start battle if fading out
+int enemybattleType = 0;
+
 // function to check if an npc is at a certain coordinate 
 int npcNearby(int x, int y, int f, int isPlayer)
 {
@@ -321,33 +326,49 @@ void startEncounter(int type, void *data)
 {
 	struct gameState * s = (struct gameState *)data;
 	
-	// set up battle structure based on the type of enemy 
-	s->currentBattle.turns = 0;
-	s->currentBattle.numEnemies = 0;
-	s->currentBattle.enemies = malloc(s->currentBattle.numEnemies * sizeof(struct character));
-	switch(type)
+	if(fadeOutofDungeon == 0 && graphicsMode == 1)
 	{
-		case 0:
-		break;
-		case 1:
-		break;
-		case 2:
-		break;
-		case 3:
-		break;
+		fadeOutofDungeon = 1;
+		enemybattleType = type;
 	}
+	else if((graphicsMode == 1 && fadeOutofDungeon == 1) || graphicsMode == 0)
+	{
+		fadeOutofDungeon = 0;
+		
+		// set up battle structure based on the type of enemy 
+		s->currentBattle.turns = 0;
+		s->currentBattle.numEnemies = 0;
+		s->currentBattle.enemies = malloc(s->currentBattle.numEnemies * sizeof(struct character));
+		switch(type)
+		{
+			case 0:
+			break;
+			case 1:
+			break;
+			case 2:
+			break;
+			case 3:
+			break;
+		}
 	
-	// clear dungeon images 
-	if(graphicsMode == 1)
-		clearImages(s);
-	
-	// set events to start battle processing
-	destroyListener(MENU_SELECTION,s->listeners);
-	destroyListener(DISPLAY,s->listeners);
-	destroyListener(LOGIC_HANDLER,s->listeners);
-	registerEvent(LOGIC_HANDLER,initBattle,s->listeners);
-	
-	updateStatus(ENCOUNTERED,s);
+		// clear dungeon images if fade out is done 
+		if(graphicsMode == 1)
+		{
+			clearImages(s);
+		}
+		
+		
+		// set events to start battle processing
+		if(s->listeners[MENU_SELECTION] != NULL)
+			destroyListener(MENU_SELECTION,s->listeners);
+		destroyListener(DISPLAY,s->listeners);
+		destroyListener(LOGIC_HANDLER,s->listeners);
+		registerEvent(LOGIC_HANDLER,initBattle,s->listeners);
+		
+		// add to main status that an encounter started
+		updateStatus(ENCOUNTERED,s);
+		
+	}
 }
 
 // displaying a dream 
@@ -371,7 +392,8 @@ void startDream(struct gameState * s)
 	system("cls");
 	printf("You are dreaming");
 	
-	destroyListener(MENU_SELECTION,s->listeners);
+	if(s->listeners[MENU_SELECTION] != NULL)
+		destroyListener(MENU_SELECTION,s->listeners);
 	destroyListener(DISPLAY,s->listeners);
 	destroyListener(LOGIC_HANDLER,s->listeners);
 	registerEvent(DISPLAY,dreamDisplay,s->listeners);
@@ -1256,8 +1278,15 @@ void walkAround(void *data)
 	if(graphicsMode == 0)
 		clearDisplay(s);
 	
-	dungeonLogic(data,s);
+	// input with fade-out logic for graphics mode  
+	if(fadeOutofDungeon == 0)
+		dungeonLogic(data,s);
+	else if(graphicsMode == 1 && s->allImageAlpha > 0)
+		fadeOutImages(s);
 	
+	if(fadeOutofDungeon == 1 && s->allImageAlpha == 0 && graphicsMode == 1)
+		startEncounter(enemybattleType,data);
+		
 	// move floors and update display 
 	if(d[s->floor][s->playerY][s->playerX] == 2 || d[s->floor][s->playerY][s->playerX] == 3)
 	{	

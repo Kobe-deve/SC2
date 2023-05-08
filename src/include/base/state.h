@@ -102,6 +102,7 @@
 	
 		struct text * fontHandler; // handles text display
 		
+		int allImageAlpha; // the alpha of all images, used for fading in/out
 		struct image * images; // displayed images used in sprite mode
 		int imageStackSize; // number of images in array 
 		int numImages; // max size of array 
@@ -118,9 +119,34 @@
 		}
 	}
 	
+	// fading out all images 
+	void fadeOutImages(struct gameState * s)
+	{
+		int i;
+		for(i=0;i<s->numImages;i++)
+			s->images[i].alpha = s->allImageAlpha;
+		
+		s->allImageAlpha--;
+		if(s->allImageAlpha < 0)
+			s->allImageAlpha = 0;
+	}
+	
+	// fading in all images 
+	void fadeInImages(struct gameState * s)
+	{
+		int i;
+		for(i=0;i<s->numImages;i++)
+			s->images[i].alpha = s->allImageAlpha;
+	
+		s->allImageAlpha++;
+		if(s->allImageAlpha > 255)
+			s->allImageAlpha = 255;
+	}
+	
 	// clear image array 
 	void clearImages(struct gameState * s)
 	{
+		s->allImageAlpha = 0;
 		int i;
 		
 		for(i=0;i<s->numImages;i++)
