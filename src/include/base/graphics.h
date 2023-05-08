@@ -247,67 +247,67 @@ void printPattern(enum sprites patternType, int xPos, int yPos, int maxX, int ma
 				color = garlan[y][x];
 				break;
 				
-				case M1:
+				case M1: // stranjer
 				color = m1[y][x];	
 				break;
 				
-				case M2:
+				case M2: // lost spirit
 				color = m2[y][x];	
 				break;
 				
-				case M3:
+				case M3: // knight
 				color = m3[y][x];	
 				break;
 				
-				case M4:
+				case M4: // willful wisp
 				color = m4[y][x];	
 				break;
 				
-				case M5:
+				case M5: // guard duck 
 				color = m5[y][x];	
 				break;
 				
-				case M6:
+				case M6: // starip
 				color = m6[y][x];	
 				break;
 				
-				case M7:
+				case M7: // pengo
 				color = m7[y][x];	
 				break;
 				
-				case M8:
+				case M8: // brass
 				color = m8[y][x];	
 				break;
 				
-				case M9:
+				case M9: // gummo
 				color = m9[y][x];	
 				break;
 				
-				case M10:
+				case M10: // garland
 				color = m10[y][x];	
 				break;
 				
-				case M12:
+				case M12: // lost hero 
 				color = m12[y][x];	
 				break;
 				
-				case M13:
+				case M13: // micronos
 				color = m13[y][x];	
 				break;
 				
-				case M14:
+				case M14: // diasnak
 				color = m14[y][x];	
 				break;
 				
-				case M15:
+				case M15: // wanderer
 				color = m15[y][x];	
 				break;
 				
-				case M16:
+				case M16: // diaman 
 				color = m16[y][x];	
 				break;
 				
-				case M17:
+				case M17: // revenge
 				color = m17[y][x];	
 				break;
 				

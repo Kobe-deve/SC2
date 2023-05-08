@@ -92,7 +92,55 @@ void battleDisplay(void *data)
 		// display enemies 
 		for(i =0;i<s->currentBattle.numEnemies;i++)
 		{
-			printPattern(M12,i*25+5,0,20,20);
+			// switch based on enemy type 
+			switch(s->currentBattle.enemies[i].type)
+			{
+				case STRANJER:
+				printPattern(M1,i*25+5,0,20,20);
+				break;
+				case LOST_SPIRIT:
+				printPattern(M2,i*25+5,0,20,20);
+				break;
+				case GUARD_DUCK:
+				printPattern(M5,i*25+5,0,20,20);
+				break;
+				case WILLFUL_WISP:
+				printPattern(M4,i*25+5,0,20,20);
+				break;
+				case CHILLER:
+				printPattern(M7,i*25+5,0,20,20);
+				break;
+				case BRASS:
+				printPattern(M8,i*25+5,0,20,20);
+				break;
+				case STARIP:
+				printPattern(M6,i*25+5,0,20,20);
+				break;
+				case GUMMO:
+				printPattern(M9,i*25+5,0,20,20);
+				break;
+				case LOST_HERO:
+				printPattern(M12,i*25+5,0,20,20);
+				break;
+				case MICRONOS:
+				printPattern(M13,i*25+5,0,20,20);
+				break;
+				case DIASNAK:
+				printPattern(M14,i*25+5,0,20,20);
+				break;
+				case WANDERER:
+				printPattern(M15,i*25+5,0,20,20);
+				break;
+				case DIAMAN:
+				printPattern(M16,i*25+5,0,20,20);
+				break;
+				case REVENGE:
+				printPattern(M17,i*25+5,0,20,20);
+				break;
+				default:
+				printPattern(M12,i*25+5,0,20,20);
+				break;
+			}
 		}
 		break;
 		case 1:
@@ -188,15 +236,18 @@ void initBattle(void *data)
 	s->currentBattle.turns = 0;
 	s->currentBattle.numEnemies = 0;
 	
-	// set up enemies 
+	// set up enemies based on the type of battle 
 	switch(s->currentBattle.battleType)
 	{
 		default:
 		case 0:
-		s->currentBattle.numEnemies = 1;
+		s->currentBattle.numEnemies = 3;
 		// allocate enemy data 
 		s->currentBattle.enemies = malloc(s->currentBattle.numEnemies * sizeof(struct character));
-	
+		
+		s->currentBattle.enemies[0] = generateCharacter(rand()%16+1);
+		s->currentBattle.enemies[1] = generateCharacter(rand()%16+1);
+		s->currentBattle.enemies[2] = generateCharacter(rand()%16+1);
 		break;
 		case 1:
 		

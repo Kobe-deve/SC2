@@ -103,7 +103,9 @@ struct character
 	
 	int dnaSize; // dna of the specific character, uses char_type enum 
 	int * dna;
-
+	
+	int type; // the type of character 
+	
 	int weakness; // move type the character is weak to
 	
 	struct weapon heldWeapon; // the weapon the character is holding
@@ -115,6 +117,9 @@ struct character
 struct character generateCharacter(int characterType)
 {
 	struct character returnedChar = {};
+	
+	// set the type
+	returnedChar.type = characterType;
 	
 	switch(characterType)
 	{
