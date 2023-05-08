@@ -321,21 +321,7 @@ void startEncounter(int type, void *data)
 {
 	struct gameState * s = (struct gameState *)data;
 	
-	// set up battle structure based on the type of enemy 
-	s->currentBattle.turns = 0;
-	s->currentBattle.numEnemies = 0;
-	s->currentBattle.enemies = malloc(s->currentBattle.numEnemies * sizeof(struct character));
-	switch(type)
-	{
-		case 0:
-		break;
-		case 1:
-		break;
-		case 2:
-		break;
-		case 3:
-		break;
-	}
+	s->currentBattle.battleType = type;
 	
 	// clear dungeon images 
 	if(graphicsMode == 1)

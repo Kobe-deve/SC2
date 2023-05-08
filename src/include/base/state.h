@@ -60,6 +60,8 @@
 	// data structure for handling battles 
 	struct battle
 	{
+		int battleType; // the number used for initializing enemies in battle 
+		
 		int turns; // number of turns passed in the game
 		struct character * enemies; // enemies in combat 
 		int numEnemies; // number of enemies in combat 

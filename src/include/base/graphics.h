@@ -160,7 +160,7 @@ void init(struct gameState * s)
 		s->numImages = 0;
 	}
 	
-	// load libraries 
+	// load/link libraries 
 	LoadLibrary("./libfreetype-6.dll");
 	LoadLibrary("./libgcc_s_dw2-1.dll");
 	LoadLibrary("./libgcc_s_sjlj-1.dll");

@@ -89,10 +89,8 @@ void battleDisplay(void *data)
 			}
 		}	
 	
-		int numEnemies = 3;
-	
 		// display enemies 
-		for(i =0;i<numEnemies;i++)
+		for(i =0;i<s->currentBattle.numEnemies;i++)
 		{
 			printPattern(M12,i*25+5,0,20,20);
 		}
@@ -101,6 +99,7 @@ void battleDisplay(void *data)
 		renderImage(&s->images[0], s->renderer,NULL);				
 		break;
 	}
+	setColor(WHITE);
 }
 
 
@@ -185,6 +184,27 @@ void initBattle(void *data)
 {
 	struct gameState * s = (struct gameState *)data;
 	
+	// reset values for battle 
+	s->currentBattle.turns = 0;
+	s->currentBattle.numEnemies = 0;
+	
+	// set up enemies 
+	switch(s->currentBattle.battleType)
+	{
+		default:
+		case 0:
+		s->currentBattle.numEnemies = 1;
+		// allocate enemy data 
+		s->currentBattle.enemies = malloc(s->currentBattle.numEnemies * sizeof(struct character));
+	
+		break;
+		case 1:
+		
+		// allocate enemy data 
+		s->currentBattle.enemies = malloc(s->currentBattle.numEnemies * sizeof(struct character));
+		break;
+	}
+	
 	// destroy all listeners to make way for ones used in battle
 	destroyListeners(s->listeners,MAX_EVENTS);
 
@@ -209,12 +229,15 @@ void initBattle(void *data)
 		battleDisplay(data);
 		break;
 		case 1:
+		// set up enemy sprites used 
 		s->images = malloc(sizeof(struct image));
 		s->numImages = 1;
 			
 		addImage(s,TEST_ENEMY_SPRITE);
 		s->images[0].x = 20*12;
 		s->images[0].y = 10*12;
+		
+		// because we need to constantly display the image to the window, set battleDisplay as an event 
 		registerEvent(DISPLAY,battleDisplay,s->listeners);
 	
 		break;
