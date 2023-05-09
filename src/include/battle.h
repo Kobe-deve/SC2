@@ -144,6 +144,23 @@ void battleDisplay(void *data)
 		}
 		break;
 		case 1:
+		// display stats
+		printText("Stats:", 1000, 10, s->fontHandler);
+		char displayer[400];
+		
+		sprintf(displayer,"%s - HP:%d/%d STAMINA:%d/%d",s->protag_stats.name,s->protag_stats.health,s->protag_stats.maxHealth,s->protag_stats.stamina,s->protag_stats.maxStamina);
+		
+		printText(displayer,1000,10+FONT_SIZE,s->fontHandler);
+		
+		
+		// print party 
+		for(i=0;i<s->partySize;i++)
+		{
+			sprintf(displayer,"%s - HP:%d/%d STAMINA:%d/%d",s->party[i].name,s->party[i].health,s->party[i].maxHealth,s->party[i].stamina,s->party[i].maxStamina);
+			printText(displayer,1000,10+FONT_SIZE+FONT_SIZE*(i+1),s->fontHandler);
+		}
+		
+		// display enemy sprites 
 		for(i =0;i<s->currentBattle.numEnemies;i++)
 			renderImage(&s->images[i], s->renderer,NULL);				
 		break;
@@ -151,12 +168,25 @@ void battleDisplay(void *data)
 	setColor(WHITE);
 }
 
-
-
 // main loop for handling battles 
 void battleLoop(void *data)
 {
 	struct gameState * s = (struct gameState *)data;
+	int i;
+	
+	setCursor(125,0);
+	printf("Stats:");
+		
+	// print protag stats 
+	setCursor(125,1);
+	printf("%s - HP:%d/%d STAMINA:%d/%d",s->protag_stats.name,s->protag_stats.health,s->protag_stats.maxHealth,s->protag_stats.stamina,s->protag_stats.maxStamina);
+	
+	// print party 
+	for(i=0;i<s->partySize;i++)
+	{
+		setCursor(125,i+2);
+		printf("%s - HP:%d/%d STAMINA:%d/%d",s->party[i].name,s->party[i].health,s->party[i].maxHealth,s->party[i].stamina,s->party[i].maxStamina);
+	}
 	
 	if(s->input == ENTER)
 	{
@@ -344,7 +374,7 @@ void initBattle(void *data)
 				break;
 			}
 			s->images[i].x = 240+200*i;
-			s->images[i].y = 120+200*i;
+			s->images[i].y = 120;
 		}
 		
 		// because we need to constantly display the image to the window, set battleDisplay as an event 
