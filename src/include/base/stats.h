@@ -132,45 +132,73 @@ struct character generateCharacter(int characterType)
 		break;
 		case STRANJER:
 		strcpy(returnedChar.name,"Stranjer");
+		returnedChar.health = 5;
+		returnedChar.maxHealth = 5;
 		break;
 		case LOST_SPIRIT:
 		strcpy(returnedChar.name,"Lost Spirit");
+		returnedChar.health = 5;
+		returnedChar.maxHealth = 5;
 		break;
 		case GUARD_DUCK:
 		strcpy(returnedChar.name,"Guard Duck");
+		returnedChar.health = 5;
+		returnedChar.maxHealth = 5;
 		break;
 		case WILLFUL_WISP:
 		strcpy(returnedChar.name,"Willful Wisp");
+		returnedChar.health = 5;
+		returnedChar.maxHealth = 5;
 		break;
 		case CHILLER:
 		strcpy(returnedChar.name,"Chiller");
+		returnedChar.health = 5;
+		returnedChar.maxHealth = 5;
 		break;
 		case BRASS:
 		strcpy(returnedChar.name,"Brass");
+		returnedChar.health = 5;
+		returnedChar.maxHealth = 5;
 		break;
 		case STARIP:
 		strcpy(returnedChar.name,"Starip");
+		returnedChar.health = 5;
+		returnedChar.maxHealth = 5;
 		break;
 		case GUMMO:
 		strcpy(returnedChar.name,"Gummo");
+		returnedChar.health = 5;
+		returnedChar.maxHealth = 5;
 		break;
 		case LOST_HERO:
 		strcpy(returnedChar.name,"Lost Hero");
+		returnedChar.health = 5;
+		returnedChar.maxHealth = 5;
 		break;
 		case MICRONOS:
 		strcpy(returnedChar.name,"Micronos");
+		returnedChar.health = 5;
+		returnedChar.maxHealth = 5;
 		break;
 		case DIASNAK:
 		strcpy(returnedChar.name,"Diasnak");
+		returnedChar.health = 5;
+		returnedChar.maxHealth = 5;
 		break;
 		case WANDERER:
 		strcpy(returnedChar.name,"Wanderer");
+		returnedChar.health = 5;
+		returnedChar.maxHealth = 5;
 		break;
 		case DIAMAN:
 		strcpy(returnedChar.name,"Diaman");
+		returnedChar.health = 5;
+		returnedChar.maxHealth = 5;
 		break;
 		case REVENGE:
 		strcpy(returnedChar.name,"Vengence");
+		returnedChar.health = 5;
+		returnedChar.maxHealth = 5;
 		break;
 	}
 	

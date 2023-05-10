@@ -89,6 +89,8 @@
 		int playerY; // y coord in dungeon 
 		int floor; // floor in dungeon 
 		
+		int enemySelector; // selecting enemies in battle
+		
 		int building; // what building the player is in 
 	
 		struct character protag_stats; // stats of the main character 

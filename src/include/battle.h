@@ -65,13 +65,84 @@ void generateCommands(struct gameState * s)
 	free(array);
 }
 
+void displayEnemies(void *data)
+{
+	struct gameState * s = (struct gameState *)data;
+	int i = 0;
+	
+	switch(graphicsMode)
+	{
+		case 0:
+		// display enemies 
+		for(i = 0;i<s->currentBattle.numEnemies;i++)
+		{
+			if(s->currentBattle.enemies[i].health > 0)
+			{
+				// switch based on enemy type 
+				switch(s->currentBattle.enemies[i].type)
+				{
+					case STRANJER:
+					printPattern(M1,i*25+5,0,20,20);
+					break;
+					case LOST_SPIRIT:
+					printPattern(M2,i*25+5,0,20,20);
+					break;
+					case GUARD_DUCK:
+					printPattern(M5,i*25+5,0,20,20);
+					break;
+					case WILLFUL_WISP:
+					printPattern(M4,i*25+5,0,20,20);
+					break;
+					case CHILLER:
+					printPattern(M7,i*25+5,0,20,20);
+					break;
+					case BRASS:
+					printPattern(M8,i*25+5,0,20,20);
+					break;
+					case STARIP:
+					printPattern(M6,i*25+5,0,20,20);
+					break;
+					case GUMMO:
+					printPattern(M9,i*25+5,0,20,20);
+					break;
+					case LOST_HERO:
+					printPattern(M12,i*25+5,0,20,20);
+					break;
+					case MICRONOS:
+					printPattern(M13,i*25+5,0,20,20);
+					break;
+					case DIASNAK:
+					printPattern(M14,i*25+5,0,20,20);
+					break;
+					case WANDERER:
+					printPattern(M15,i*25+5,0,20,20);
+					break;
+					case DIAMAN:
+					printPattern(M16,i*25+5,0,20,20);
+					break;
+					case REVENGE:
+					printPattern(M17,i*25+5,0,20,20);
+					break;
+					default:
+					printPattern(M12,i*25+5,0,20,20);
+					break;
+				}
+			}
+		}
+		break;
+		case 1:
+		// display enemy sprites 
+		for(i =0;i<s->currentBattle.numEnemies;i++)
+			renderImage(&s->images[i], s->renderer,NULL);	
+		break;
+	}
+}
+
 // displaying during battle
 void battleDisplay(void *data)
 {
 	struct gameState * s = (struct gameState *)data;
-	int i = 0;
-	int x,y;
-	
+	int x,y,i;
 	switch(graphicsMode)
 	{
 		case 0:
@@ -88,60 +159,7 @@ void battleDisplay(void *data)
 				printf("%c",219);
 			}
 		}	
-	
-		// display enemies 
-		for(i =0;i<s->currentBattle.numEnemies;i++)
-		{
-			// switch based on enemy type 
-			switch(s->currentBattle.enemies[i].type)
-			{
-				case STRANJER:
-				printPattern(M1,i*25+5,0,20,20);
-				break;
-				case LOST_SPIRIT:
-				printPattern(M2,i*25+5,0,20,20);
-				break;
-				case GUARD_DUCK:
-				printPattern(M5,i*25+5,0,20,20);
-				break;
-				case WILLFUL_WISP:
-				printPattern(M4,i*25+5,0,20,20);
-				break;
-				case CHILLER:
-				printPattern(M7,i*25+5,0,20,20);
-				break;
-				case BRASS:
-				printPattern(M8,i*25+5,0,20,20);
-				break;
-				case STARIP:
-				printPattern(M6,i*25+5,0,20,20);
-				break;
-				case GUMMO:
-				printPattern(M9,i*25+5,0,20,20);
-				break;
-				case LOST_HERO:
-				printPattern(M12,i*25+5,0,20,20);
-				break;
-				case MICRONOS:
-				printPattern(M13,i*25+5,0,20,20);
-				break;
-				case DIASNAK:
-				printPattern(M14,i*25+5,0,20,20);
-				break;
-				case WANDERER:
-				printPattern(M15,i*25+5,0,20,20);
-				break;
-				case DIAMAN:
-				printPattern(M16,i*25+5,0,20,20);
-				break;
-				case REVENGE:
-				printPattern(M17,i*25+5,0,20,20);
-				break;
-				default:
-				printPattern(M12,i*25+5,0,20,20);
-				break;
-			}
-		}
+		
 		break;
 		case 1:
 		// display stats
@@ -152,20 +170,99 @@ void battleDisplay(void *data)
 		
 		printText(displayer,1000,10+FONT_SIZE,s->fontHandler);
 		
-		
 		// print party 
 		for(i=0;i<s->partySize;i++)
 		{
 			sprintf(displayer,"%s - HP:%d/%d STAMINA:%d/%d",s->party[i].name,s->party[i].health,s->party[i].maxHealth,s->party[i].stamina,s->party[i].maxStamina);
 			printText(displayer,1000,10+FONT_SIZE+FONT_SIZE*(i+1),s->fontHandler);
 		}
-		
-		// display enemy sprites 
-		for(i =0;i<s->currentBattle.numEnemies;i++)
-			renderImage(&s->images[i], s->renderer,NULL);				
 		break;
 	}
+	displayEnemies(data);
+		
 	setColor(WHITE);
+}
+
+// selecting enemies in battle 
+void selectEnemies(void *data)
+{
+	struct gameState * s = (struct gameState *)data;
+	int i,x,y;
+	
+	// display cursor 
+	//i*25+5,0
+	
+	for(i=0;i<5;i++)
+	{
+		setCursor(s->enemySelector*25,i+10);
+		printf(">");
+	}	
+	
+	switch(s->input)
+	{
+		case ENTER:
+		// perform action
+		s->currentBattle.enemies[s->enemySelector].health = 0;
+		battleDisplay(data);
+		s->enemySelector = -1;
+		
+		// reinitialize the menu 
+		registerEvent(MENU_SELECTION,menuSelection,s->listeners);
+		char ** array = malloc(5 * sizeof(char*));
+		array[0] = A_COMMAND;
+		array[1] = M_COMMAND;
+		array[2] = T_COMMAND;
+		array[3] = W_COMMAND;
+		array[4] = E_COMMAND;
+					
+		initMenu(s,5,array,50,21);
+			
+		free(array);
+		
+		break;
+		case RIGHT:
+		if(s->enemySelector < s->currentBattle.numEnemies-1)
+		{
+			for(i=0;i<5;i++)
+			{
+				x = s->enemySelector*25;
+				y = i+10;
+				
+				if(x%2 == 1)
+					setColor(1);
+				else 
+					setColor(4);
+				
+				setCursor(x,y);
+				printf("%c",219);
+			}
+			setColor(WHITE);
+
+			s->enemySelector++;
+		}
+		break;
+		case LEFT:
+		if(s->enemySelector > 0)
+		{
+			for(i=0;i<5;i++)
+			{
+				x = s->enemySelector*25;
+				y = i+10;
+				
+				if(x%2 == 1)
+					setColor(1);
+				else 
+					setColor(4);
+				
+				setCursor(x,y);
+				printf("%c",219);
+			}
+			setColor(WHITE);
+
+			s->enemySelector--;
+		}
+		break;
+	}
 }
 
 // main loop for handling battles 
@@ -176,7 +273,7 @@ void battleLoop(void *data)
 	
 	setCursor(125,0);
 	printf("Stats:");
-		
+	
 	// print protag stats 
 	setCursor(125,1);
 	printf("%s - HP:%d/%d STAMINA:%d/%d",s->protag_stats.name,s->protag_stats.health,s->protag_stats.maxHealth,s->protag_stats.stamina,s->protag_stats.maxStamina);
@@ -187,25 +284,16 @@ void battleLoop(void *data)
 		setCursor(125,i+2);
 		printf("%s - HP:%d/%d STAMINA:%d/%d",s->party[i].name,s->party[i].health,s->party[i].maxHealth,s->party[i].stamina,s->party[i].maxStamina);
 	}
-	
-	if(s->input == ENTER)
+
+	// menu selection 
+	if(s->enemySelector == -1 && s->input == ENTER) 
 	{
 		switch(s->option)
 		{
 			case 0: // attack
+			s->enemySelector = 0;
 			freeMenuProcess(s);
 			
-			registerEvent(MENU_SELECTION,menuSelection,s->listeners);
-			char ** array = malloc(5 * sizeof(char*));
-			array[0] = A_COMMAND;
-			array[1] = M_COMMAND;
-			array[2] = T_COMMAND;
-			array[3] = W_COMMAND;
-			array[4] = E_COMMAND;
-		
-			initMenu(s,5,array,70,21);
-		
-			free(array);
 			break;
 			case 1: // magic 
 			break;
@@ -223,6 +311,8 @@ void battleLoop(void *data)
 			break;
 		}
 	}
+	else if(s->enemySelector >= 0) // if enemy selection starts 
+		selectEnemies(data);
 }
 
 // free battle data 
@@ -264,6 +354,9 @@ void initBattle(void *data)
 	int i;
 	struct gameState * s = (struct gameState *)data;
 	
+	// set default enemy selector value_comp
+	s->enemySelector = -1;
+	
 	// reset values for battle 
 	s->currentBattle.turns = 0;
 	s->currentBattle.numEnemies = 0;
@@ -275,21 +368,13 @@ void initBattle(void *data)
 		case 0:
 		s->currentBattle.numEnemies = rand()%3+1;
 		
-		system("cls");
-		printf("%d",s->currentBattle.numEnemies);
-		
 		// allocate enemy data 
 		s->currentBattle.enemies = malloc(s->currentBattle.numEnemies * sizeof(struct character));
 		
 		for(i =0;i<s->currentBattle.numEnemies;i++)
 		{
-			s->currentBattle.enemies[i] = generateCharacter(rand()%4+2);
+			s->currentBattle.enemies[i] = generateCharacter(rand()%2+2);
 		}
-		break;
-		case 1:
-		
-		// allocate enemy data 
-		s->currentBattle.enemies = malloc(s->currentBattle.numEnemies * sizeof(struct character));
 		break;
 	}
 	
