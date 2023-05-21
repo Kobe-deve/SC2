@@ -487,6 +487,9 @@ void enemyHandler(struct gameState * s)
 			else if(!sleeping && conversation == NONE && visible[s->floor][activeEnemies[i].y][activeEnemies[i].x] == 0)
 				updateStatus(ENEMY_MOVEMENT,s);	
 			
+			/*
+			TODO fix enemy movement logic
+			
 			// set up direction variables 
 			if(s->playerX > activeEnemies[i].x)
 				directionX = 1;
@@ -541,6 +544,7 @@ void enemyHandler(struct gameState * s)
 					break;
 				}
 			}
+			*/
 			
 			// starting fight with npc 
 			int checkNPC = -1;
