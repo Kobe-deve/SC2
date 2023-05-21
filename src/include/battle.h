@@ -354,6 +354,11 @@
 			{
 				case 0: // attack
 				s->enemySelector = 0;
+				
+				// set the selector position to the first available enemy who is still alive 
+				while(s->enemySelector < s->currentBattle.numEnemies-1 && s->currentBattle.enemies[s->enemySelector].health <= 0)
+					s->enemySelector++;
+			
 				freeMenuProcess(s);
 				
 				break;
@@ -364,17 +369,33 @@
 				case 3: // item 
 				break;
 				case 4: // run
-				if(graphicsMode == 1)
-					clearImages(s);
-				
-				freeBattleData(s);
-				destroyListener(DISPLAY,s->listeners);
-				registerEvent(DISPLAY,resetDungeon,s->listeners);
 				break;
 			}
 		}
 		else if(s->enemySelector >= 0) // if enemy selection starts 
 			selectEnemies(data);
+		
+		int endBattle = 1;
+		// check if all enemies are defeated
+		for(i = 0;i<s->currentBattle.numEnemies;i++)
+		{
+			if(s->currentBattle.enemies[i].health > 0)
+			{
+				endBattle = 0;
+				break;
+			}
+		}
+		
+		// end battle if condition is met 
+		if(endBattle == 1)
+		{
+			if(graphicsMode == 1)
+					clearImages(s);
+				
+			freeBattleData(s);
+			destroyListener(DISPLAY,s->listeners);
+			registerEvent(DISPLAY,resetDungeon,s->listeners);	
+		}
 	}
 
 	// free battle data 
