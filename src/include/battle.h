@@ -244,6 +244,26 @@
 			
 		setColor(WHITE);
 	}
+	
+	// called when a character performs an action 
+	void performAction(void *data)
+	{
+		struct gameState * s = (struct gameState *)data;
+		
+		// update status to show that the action was performed 
+		char actionDisplayer[400];
+		char endStatus[400];
+		sprintf(actionDisplayer,"%s used slash on %s",s->protag_stats.name,s->currentBattle.enemies[s->enemySelector].name);
+		updateBattleStatus(actionDisplayer,s);
+		
+		// perform action
+		s->currentBattle.enemies[s->enemySelector].health = 0;
+		battleDisplay(data);
+		
+		sprintf(endStatus,"%s was defeated",s->currentBattle.enemies[s->enemySelector].name);
+		updateBattleStatus(endStatus,s);
+		
+	}
 
 	// selecting enemies in battle 
 	void selectEnemies(void *data)
@@ -263,11 +283,9 @@
 		switch(s->input)
 		{
 			case ENTER:
-			// perform action
-			s->currentBattle.enemies[s->enemySelector].health = 0;
-			battleDisplay(data);
+			performAction(data);
 			s->enemySelector = -1;
-			
+	
 			// reinitialize the menu 
 			registerEvent(MENU_SELECTION,menuSelection,s->listeners);
 			char ** array = malloc(5 * sizeof(char*));
@@ -359,8 +377,7 @@
 				while(s->enemySelector < s->currentBattle.numEnemies-1 && s->currentBattle.enemies[s->enemySelector].health <= 0)
 					s->enemySelector++;
 			
-				freeMenuProcess(s);
-				
+				freeMenuProcess(s);				
 				break;
 				case 1: // magic 
 				break;
@@ -461,7 +478,7 @@
 		{
 			default:
 			case 0:
-			s->currentBattle.numEnemies = rand()%3+1;
+			s->currentBattle.numEnemies = 4;//rand()%3+1;
 			
 			// allocate enemy data 
 			s->currentBattle.enemies = malloc(s->currentBattle.numEnemies * sizeof(struct character));
@@ -489,10 +506,7 @@
 			case 0:
 			// initialize battle display 
 			system("cls");
-
-			// display outlines 
-			borders();
-			
+	
 			// display sprites 
 			battleDisplay(data);
 			break;

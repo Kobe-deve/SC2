@@ -1,10 +1,10 @@
-// list of files names used in the game
+// list of asset files names used in the game
 
 #ifndef FILENAMES
 #define FILENAMES
 
 // music files 
-#define TITLE_MUSIC "resources/music/Killing Nature.wav"
+#define TITLE_MUSIC "resources/music/Stone.wav"
 #define BATTLE_MUSIC "resources/music/Stone Crawler Battle.wav"
 #define DUNGEON_MUSIC "resources/music/39 Arms vs 2.wav"
 #define DREAM_MUSIC "resources/music/Way Before.wav"

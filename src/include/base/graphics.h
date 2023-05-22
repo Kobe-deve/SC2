@@ -355,19 +355,6 @@ void printPattern(enum sprites patternType, int xPos, int yPos, int maxX, int ma
 	printf("\n");
 }
 
-// display borders used in game 
-void borders()
-{
-	int i = 0;
-	for(i = 21;i<41;i++)
-	{
-		// for text description 
-		setCursor(109,i);
-		printf("|");
-	}
-}
-
-
 // sprite graphics handling functions 
 
 #endif

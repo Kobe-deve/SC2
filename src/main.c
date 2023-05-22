@@ -1,6 +1,6 @@
 /*
-	Stone Crawler 2.0: Idle Bodies
-	Demi
+	SC2.0
+	Created by Kobe
 	12/17/2022 - 
 	
 	Original Stone Crawler
