@@ -2,9 +2,6 @@
 	SC2.0
 	Created by Kobe
 	12/17/2022 - 
-	
-	Original Stone Crawler
-	1/16/2019 - 6/9/2019
 */
 #include <stdio.h>
 #include <time.h>
