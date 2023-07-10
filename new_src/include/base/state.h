@@ -88,6 +88,11 @@
 		
 		// background asset used for sprite mode 
 		struct image backgroundAsset;
+		
+		// dungeon crawling variables
+		int playerX; // x coord in dungeon 
+		int playerY; // y coord in dungeon 
+		int floor; // floor in dungeon 
 	};
 	
 	// frame handling variables
@@ -148,9 +153,10 @@
 					//Initialize music handling 
 					if( Mix_OpenAudio( MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024*2 ) < 0 )
 						throwError("SDL_mixer could not initialize!");
-					
 				}
 			}
+
+			state->megaAlpha = 255;
 		}
 		else // if ascii, set screen information
 		{
@@ -179,11 +185,24 @@
 			
 			state->megaAlpha = 0;
 		}
-	
+		
+		// initialize fade in display variable 
+		state->fadeIn = 0;
+		
+		state->switchSystem = 0;
+		
 		// initialize array of displayed images 
 		state->images = NULL;
 		state->imageStackSize = 0;
 		state->numImages = 0;
+		
+		// set up current game system 
+		state->gameSystem = TITLE_SCREEN;
+		
+		// set up dungeon crawling position
+		state->playerX = 0; // x coord in dungeon 
+		state->playerY = 0; // y coord in dungeon 
+		state->floor = 0; // floor in dungeon 
 	}
 
 	// add to images used in current state 
@@ -199,6 +218,18 @@
 		{
 			s->images[s->imageStackSize] = initImage(filePath, s->renderer);
 			s->imageStackSize++;
+		}
+	}
+	
+	// sets the alpha of all images 
+	void setAlphaOfImages(struct gameState * state)
+	{
+		int i;
+		
+		for(i=0;i<state->numImages;i++)
+		{
+			SDL_SetTextureBlendMode(state->images[i].texture, SDL_BLENDMODE_BLEND);
+			SDL_SetTextureAlphaMod(state->images[i].texture, state->megaAlpha);
 		}
 	}
 	

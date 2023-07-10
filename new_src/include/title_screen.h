@@ -12,8 +12,6 @@ void titleScreenDisplay(struct gameState * state)
 		case 0: // ascii mode 
 		if(state->megaAlpha == 0) // update screen to add title screen 
 		{
-			system("cls");
-			
 			// display title 
 			printPattern(TITLE,45,10,80,10);
 		
