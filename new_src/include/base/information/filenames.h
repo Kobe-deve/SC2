@@ -7,5 +7,6 @@
 
 // image files and specific width/height
 #define LOGO_IMAGE "resources/sprites/logo.png"
+#define BACKGROUND_ASSET "resources/sprites/background/background_asset.png"
 
 #endif

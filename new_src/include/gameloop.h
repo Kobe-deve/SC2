@@ -55,7 +55,7 @@
 				if(state->graphicsMode == 1) // if sprite mode, start fading in 
 				{
 					state->fadeIn = 1;
-//					clearImages(state);
+					clearImages(state);
 				}
 				else
 					system("cls");

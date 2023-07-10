@@ -20,6 +20,13 @@ void dungeonDisplay(struct gameState * state)
 		printf("%c",1);	
 		break;
 		case 1:
+		// get dungeon assets if screen is cleared out
+		if(state->numImages == 0)
+		{
+			addImage(state,BACKGROUND_ASSET);
+			state->images[0].x = 20*12;
+			state->images[0].y = 10*12;
+		}
 		renderImage(&state->images[0], state->renderer, NULL);
 		break;
 	}

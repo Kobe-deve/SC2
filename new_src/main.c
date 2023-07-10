@@ -52,10 +52,6 @@ int main(int argc, char *argv[])
 		//initFont(state.fontHandler, state.renderer);
 	}
 	
-	addImage(&state,LOGO_IMAGE);
-	state.images[0].x = 20*12;
-	state.images[0].y = 10*12;
-	
 	// main loop
 	while(state.input != 27)
 	{
