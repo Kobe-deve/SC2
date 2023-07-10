@@ -59,6 +59,7 @@
 				}
 				else
 					system("cls");
+				state->megaAlpha = 0;
 			}
 		}
 		else if(state->megaAlpha <= 255 && state->fadeIn == 1) // fade into new system 

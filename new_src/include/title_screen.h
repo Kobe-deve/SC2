@@ -32,8 +32,8 @@ void titleScreenDisplay(struct gameState * state)
 			state->images[0].x = 20*12;
 			state->images[0].y = 10*12;
 		}
-		
-		renderImage(&state->images[0], state->renderer, NULL);
+		else
+			renderImage(&state->images[0], state->renderer, NULL);
 		break;
 	}
 }
