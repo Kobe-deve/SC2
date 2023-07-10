@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 	srand((unsigned)time(NULL));
 
 	struct gameState state;
-	state.graphicsMode = 1; // set graphics mode 
+	state.graphicsMode = 0; // set graphics mode 
 		
 	// initialize the game state 
 	init(&state);
@@ -201,7 +201,6 @@ int main(int argc, char *argv[])
 		
 		// game display handling 
 		displayHandler(&state);
-		renderImage(&state.images[0], state.renderer, NULL);
 		
 		// if sprite mode enabled, render screen and keep the frame rate 
 		if(state.graphicsMode == 1)

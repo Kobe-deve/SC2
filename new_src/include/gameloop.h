@@ -1,5 +1,6 @@
 #include "base/information/filenames.h"
 #include "base/state.h"
+#include "title_screen.h"
 
 // general game loop operations
 #ifndef GAMELOOP_HANDLED
@@ -19,13 +20,7 @@
 	// handles general display operations
 	void displayHandler(struct gameState * state)
 	{
-		switch(state->graphicsMode)
-		{
-			case 0: // ascii mode 
-			break;
-			case 1: // sprite mode
-			break;
-		}
+		titleScreenDisplay(state);
 		
 		if(state->switchSystem == 1) // if switching to system, begin switch process with alpha handling 
 		{

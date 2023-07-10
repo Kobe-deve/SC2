@@ -52,12 +52,12 @@
 	// game system enumeration used 
 	enum gameSystem
 	{
-		TITLE = 1,
-		DUNGEON = 2,
-		BATTLE = 3,
-		SHOP = 4,
-		GAMEOVER = 5,
-		CUTSCENE = 6,
+		TITLE_SCREEN = 1,
+		DUNGEON_SCREEN = 2,
+		BATTLE_SCREEN = 3,
+		SHOP_SCREEN = 4,
+		GAMEOVER_SCREEN = 5,
+		CUTSCENE_SCREEN = 6,
 	};
 
 	// data structure for handling the state/data of the game 
@@ -176,6 +176,8 @@
 			info.dwSize = 1;
 			info.bVisible = FALSE;
 			SetConsoleCursorInfo(hConsole, &info);
+			
+			state->megaAlpha = 0;
 		}
 	
 		// initialize array of displayed images 
