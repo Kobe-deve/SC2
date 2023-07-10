@@ -122,7 +122,7 @@
 		}
 	}
 	
-	// clear image array 
+	// clear image array and free up memory
 	void clearImages(struct gameState * s)
 	{
 		int i;

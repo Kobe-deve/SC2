@@ -5,7 +5,19 @@
 #include <conio.h>
 #include <windows.h>
 
-#include "include/base/state.h"
+// displaying errors 
+void throwError(char * errorText)
+{		
+	HWND consoleWindow = GetConsoleWindow();
+	
+	// make sure command prompt is shown 
+	ShowWindow(consoleWindow, SW_NORMAL);
+	
+	printf("%s",errorText);
+	exit(0);
+}
+
+#include "include/gameloop.h"
 
 // windres main.rs -o main.o 
 // gcc main.c main.o -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -o "Stone Crawler 2"
@@ -15,7 +27,7 @@ int main(int argc, char *argv[])
 	srand((unsigned)time(NULL));
 
 	struct gameState state;
-	state.graphicsMode = 0; // set graphics mode 
+	state.graphicsMode = 1; // set graphics mode 
 		
 	// initialize the game state 
 	init(&state);
@@ -39,6 +51,10 @@ int main(int argc, char *argv[])
 		// initialize text handler
 		//initFont(state.fontHandler, state.renderer);
 	}
+	
+	addImage(&state,LOGO_IMAGE);
+	state.images[0].x = 20*12;
+	state.images[0].y = 10*12;
 	
 	// main loop
 	while(state.input != 27)
@@ -179,6 +195,13 @@ int main(int argc, char *argv[])
 			}			
 			break;
 		}
+		
+		// game logic handling 
+		logicHandler(&state);
+		
+		// game display handling 
+		displayHandler(&state);
+		renderImage(&state.images[0], state.renderer, NULL);
 		
 		// if sprite mode enabled, render screen and keep the frame rate 
 		if(state.graphicsMode == 1)

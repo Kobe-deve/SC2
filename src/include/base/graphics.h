@@ -15,7 +15,7 @@
 // will be used for toggling between ascii/sprite modes 
 // 0 - ascii
 // 1 - sprites 
-int graphicsMode = 0;
+int graphicsMode = 1;
 
 #ifndef SDL_MAIN_HANDLED
 #define SDL_MAIN_HANDLED

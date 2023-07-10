@@ -21,6 +21,14 @@
 
 #endif
 
+#ifndef FONT_HANDLED
+#include "graphics/font.h"
+#endif
+
+#ifndef IMAGE_HANDLED
+#include "graphics/image.h"
+#endif
+
 // screen dimensions in ascii mode 
 #define WINDOW_WIDTH 1500
 #define WINDOW_HEIGHT 800
@@ -40,13 +48,27 @@
 		MENU = 109, 
 		BACKSPACE = 8
 	};
+	
+	// game system enumeration used 
+	enum gameSystem
+	{
+		TITLE = 1,
+		DUNGEON = 2,
+		BATTLE = 3,
+		SHOP = 4,
+		GAMEOVER = 5,
+		CUTSCENE = 6,
+	};
 
 	// data structure for handling the state/data of the game 
 	struct gameState
 	{
 		int graphicsMode; // the graphics mode of the game (0 - ascii 1 - sprite)
-		int input;
-	
+		int input; // input variable used 
+		int gameSystem; // the current game system that is running 
+		int switchTo; // system to switch to
+		int switchSystem; // boolean variable for switching (0 - don't switch, 1 - switch)
+			
 		// for rendering in sprite mode 
 		SDL_Window* window; // window 
 		SDL_Renderer* renderer; // window renderer
@@ -56,7 +78,16 @@
 		const Uint8* keyStates;
 		int frameRateTracker; // used for frame rate 
 		int colors[4]; // renderer color 
-		//struct image backgroundAsset;
+		int megaAlpha; // graphic transition variable used in sprite mode (used in ascii for when a new screen is displayed)
+		int fadeIn; // used in graphics mode for alpha changing
+		
+		// images used in sprite mode 
+		struct image * images; // displayed images used in sprite mode
+		int imageStackSize; // number of images in array 
+		int numImages; // max size of array 
+		
+		// background asset used for sprite mode 
+		struct image backgroundAsset;
 	};
 	
 	// frame handling variables
@@ -65,18 +96,6 @@
 	int SCREEN_FPS = 30; 
 	// calculates ticks per frame for timers
 	int SCREEN_TICK_PER_FRAME;  // 1000 / SCREEN_FPS
-
-	// displaying error 
-	void throwError(char * errorText)
-	{		
-		HWND consoleWindow = GetConsoleWindow();
-		
-		// make sure command prompt is shown 
-		ShowWindow(consoleWindow, SW_NORMAL);
-		
-		printf("%s",errorText);
-		exit(0);
-	}
 	
 	// initialize the game state 
 	void init(struct gameState * state)
@@ -158,12 +177,70 @@
 			info.bVisible = FALSE;
 			SetConsoleCursorInfo(hConsole, &info);
 		}
+	
+		// initialize array of displayed images 
+		state->images = NULL;
+		state->imageStackSize = 0;
+		state->numImages = 0;
+	}
+
+	// add to images used in current state 
+	void addImage(struct gameState * s,char * filePath)
+	{
+		if(s->imageStackSize == 0)
+		{
+			s->images = malloc(sizeof(struct image));
+			s->numImages = 1;
+			s->images[s->imageStackSize] = initImage(filePath, s->renderer);
+		}
+		else if(s->imageStackSize < s->numImages)
+		{
+			s->images[s->imageStackSize] = initImage(filePath, s->renderer);
+			s->imageStackSize++;
+		}
 	}
 	
+	// clear image array and free up memory
+	void clearImages(struct gameState * s)
+	{
+		int i;
+		
+		for(i=0;i<s->numImages;i++)
+		{
+			deallocateImage(&s->images[i]);
+		}
+		
+		s->images = NULL;
+		
+		s->imageStackSize = 0;
+		s->numImages = 0;
+	}
+
 	// deallocate the game state 
 	void deallocate(struct gameState * state)
 	{
+		// deallocate data used for sprite mode 
+		if(state->graphicsMode == 1)
+		{
+			
+			// deallocate images
+			clearImages(state);
+			/*
+			// deallocate background image
+			deallocateImage(&backgroundAsset);
+			
+			// deallocate font 
+			deallocateFont(state.fontHandler);
+			*/
+			
+			// deallocate renderer and window 
+			SDL_DestroyRenderer(state->renderer);
+			SDL_DestroyWindow(state->window);
+			
+			// quit sdl
+			SDL_Quit();
+		}
+	
 	}
 	
-
 #endif
