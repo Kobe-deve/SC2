@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 	srand((unsigned)time(NULL));
 
 	struct gameState state;
-	state.graphicsMode = 1; // set graphics mode 
+	state.graphicsMode = 0; // set graphics mode 
 		
 	// initialize the game state 
 	init(&state);
@@ -208,27 +208,6 @@ int main(int argc, char *argv[])
 				SDL_Delay( SCREEN_TICK_PER_FRAME - framet );
 		}
 	}
-	
-	/*
-	init()
-	
-	if(spriteMode)
-		allocateGraphics()
-	
-	while not closed:
-		if(spriteMode):
-			clearScreen()
-		inputHandler(state)
-		logicHandler(state)
-		displayHandler(state)
-		if(spriteMode)
-			displaytoRenderer()
-	
-	if(spriteMode)
-		deallocateGraphics()
-		
-	deallocate()
-	*/
 	
 	deallocate(&state);	
 	

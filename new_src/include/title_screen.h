@@ -6,7 +6,7 @@
 
 // display function for title screen 
 void titleScreenDisplay(struct gameState * state)
-{
+{	
 	switch(state->graphicsMode)
 	{
 		case 0: // ascii mode 
@@ -38,6 +38,14 @@ void titleScreenDisplay(struct gameState * state)
 	}
 }
 
-
+// logic handling for title screen 
+void titleScreenHandler(struct gameState * state)
+{
+	if(state->input == ENTER)
+	{		
+		state->switchSystem = 1;
+		state->switchTo = DUNGEON_SCREEN;
+	}
+}
 
 #endif

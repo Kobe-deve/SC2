@@ -1,8 +1,7 @@
 // for defining/handling the state data of the program
 
-#ifndef TEXT_HANDLED
 #include "information/text.h"
-#endif 
+#include "information/filenames.h"
 
 #ifndef SDL_MAIN_HANDLED
 #define SDL_MAIN_HANDLED
@@ -21,13 +20,8 @@
 
 #endif
 
-#ifndef FONT_HANDLED
 #include "graphics/font.h"
-#endif
-
-#ifndef IMAGE_HANDLED
 #include "graphics/image.h"
-#endif
 
 // screen dimensions in ascii mode 
 #define WINDOW_WIDTH 1500
@@ -93,6 +87,35 @@
 		int playerX; // x coord in dungeon 
 		int playerY; // y coord in dungeon 
 		int floor; // floor in dungeon 
+		int building; // the building the player is in 
+		
+		// array of visible tiles in an area
+		int *** visible;
+
+		// width/height of the current dungeon
+		int dungeonSize;
+
+		// enemy movement information for dungeon 
+		int numEnemies;
+		struct enemies * activeEnemies;
+
+		// status text lines 
+		int maxStatus; // max number of status lines visible 
+		char ** statusText;
+		int numStatusLines;
+
+		// is the player going to sleep?
+		int sleeping;
+		int tired;
+
+		// dungeon array pointer 
+		int *** d;
+
+		// coordinates of stairs going up for AI 
+		int ** upStairCoords;
+		
+		// for sprite rendering a section of a spirte sheet 
+		SDL_Rect spriteClip; 	
 	};
 	
 	// frame handling variables
@@ -157,6 +180,7 @@
 			}
 
 			state->megaAlpha = 255;
+			state->spriteClip = (SDL_Rect){0,0,SPRITE_SQUARE_SIZE,SPRITE_SQUARE_SIZE};
 		}
 		else // if ascii, set screen information
 		{
@@ -199,10 +223,30 @@
 		// set up current game system 
 		state->gameSystem = TITLE_SCREEN;
 		
-		// set up dungeon crawling position
+		// set up dungeon crawling variables 
 		state->playerX = 0; // x coord in dungeon 
 		state->playerY = 0; // y coord in dungeon 
-		state->floor = 0; // floor in dungeon 
+		state->floor = 0; // floor in dungeon
+		state->building = 0;
+		
+		state->visible = NULL;
+
+		state->dungeonSize = 0;
+
+		state->numEnemies = 0;
+		state->activeEnemies = NULL;
+
+		state->maxStatus = 10; // max number of status lines visible 
+		state->statusText = NULL;
+		state->numStatusLines = 0;
+
+		state->sleeping = 0;
+		state->tired = 0;
+
+		state->d = NULL;
+
+		state->upStairCoords = NULL;
+		
 	}
 
 	// add to images used in current state 

@@ -10,21 +10,27 @@
 	// handles general logic operations 
 	void logicHandler(struct gameState * state)
 	{	
+		// initialize logic 
+		if((state->megaAlpha == 0 && state->graphicsMode == 0) || (state->graphicsMode == 1 && state->numImages == 0))
+		{
+			switch(state->gameSystem)
+			{
+				case DUNGEON_SCREEN:
+				initDungeonFloor(state);
+				break;
+			}
+		}
+		
 		if(state->switchSystem != 1) // if switching to system, begin switch process
 		{
-			if(state->input == ENTER)
-			{		
-				state->switchSystem = 1;
-	
-				switch(state->gameSystem)
-				{
-					case TITLE_SCREEN:
-					state->switchTo = DUNGEON_SCREEN;
-					break;
-					case DUNGEON_SCREEN:
-					state->switchTo = TITLE_SCREEN;
-					break;
-				}
+			switch(state->gameSystem)
+			{
+				case TITLE_SCREEN:
+				titleScreenHandler(state);
+				break;
+				case DUNGEON_SCREEN:
+				dungeonLogic(state);
+				break;
 			}
 		}
 	}
