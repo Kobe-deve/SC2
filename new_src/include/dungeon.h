@@ -85,11 +85,34 @@ int dungeonPrintCoordY = 1;
 // dungeon display function 
 void dungeonDisplay(struct gameState * state)
 {	
+	// reset visibility array if it is empty/deleted
+	int iz,ix,iy;
+	
 	switch(state->graphicsMode)
 	{
 		case 0:
 		if(state->megaAlpha == 0) // update screen to add title screen 
-		{	
+		{					
+			// display dungeon walls 
+			for(iy = -1;iy < state->dungeonSize+1;iy++)
+			{
+				for(ix = -1;ix < state->dungeonSize+1;ix++)
+				{
+					setCursor(dungeonPrintCoordX+ix,dungeonPrintCoordY+iy);
+					if((ix == -1 || ix == state->dungeonSize || iy == -1 || iy == state->dungeonSize))
+					{	
+						setColor(BLUE);
+						printf("%c",219);
+					}
+					else if(state->visible[state->floor][iy][ix] == 1)
+					{
+						setColor(WHITE);
+						printf("%c",quickConvert(state->d[state->floor][iy][ix]));
+					}
+				}
+			}		
+			setColor(WHITE);
+		
 			state->megaAlpha = 1;
 		}		
 		// display player
@@ -100,12 +123,25 @@ void dungeonDisplay(struct gameState * state)
 		// get dungeon assets if screen is cleared out
 		if(state->numImages == 0)
 		{
-			addImage(state,BACKGROUND_ASSET);
-			state->images[0].x = 20*12;
-			state->images[0].y = 10*12;
+			// initialize images used in dungeon crawling
+			state->images = malloc(sizeof(struct image));
+			state->numImages = 1;
+				
+			addImage(state,DUNGEON_SPRITE);
+			state->images[0].x = SPRITE_SQUARE_SIZE;
+			state->images[0].y = SPRITE_SQUARE_SIZE;
+			state->images[0].scale = 2;
 		}
 		else
-			renderImage(&state->images[0], state->renderer, NULL);
+		{
+			// display player 
+			state->spriteClip.x = 0;
+			state->spriteClip.y = 0;
+							
+			state->images[0].x = state->playerX*SPRITE_SQUARE_SIZE*state->images[0].scale;
+			state->images[0].y = state->playerY*SPRITE_SQUARE_SIZE*state->images[0].scale;
+			renderImage(&state->images[0], state->renderer,&state->spriteClip);
+		}			
 		break;
 	}
 }

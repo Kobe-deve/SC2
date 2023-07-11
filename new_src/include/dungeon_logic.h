@@ -147,6 +147,26 @@ void generateEnemies(struct gameState * state)
 	}
 }
 
+// function to check if an npc is at a certain coordinate 
+int npcNearby(int x, int y, int f, int isPlayer)
+{
+	/*
+	int i;
+	
+	for(i=0;i<numNPCs;i++)
+	{
+		if(!activeNPCs[i].passBy && activeNPCs[i].active && (activeNPCs[i].floor == f && (y == activeNPCs[i].y && x == activeNPCs[i].x)))
+		{
+			// if the coordinates are for the player, set the talked variable to this npc 
+			if(isPlayer)
+				npcTalked = i;
+			return 1;
+		}
+	}
+	*/
+	return 0;
+}
+
 // used for start of dungeon crawling 
 void initDungeonFloor(struct gameState * state)
 {
@@ -205,41 +225,6 @@ void initDungeonFloor(struct gameState * state)
 	// initial display range 
 	displayRange(state);
 	
-	if(state->graphicsMode == 0)
-	{
-		// display dungeon walls 
-		for(iy = -1;iy < state->dungeonSize+1;iy++)
-		{
-			for(ix = -1;ix < state->dungeonSize+1;ix++)
-			{
-				setCursor(dungeonPrintCoordX+ix,dungeonPrintCoordY+iy);
-				if((ix == -1 || ix == state->dungeonSize || iy == -1 || iy == state->dungeonSize))
-				{	
-					setColor(BLUE);
-					printf("%c",219);
-				}
-				else if(state->visible[state->floor][iy][ix] == 1)
-				{
-					setColor(WHITE);
-					printf("%c",quickConvert(state->d[state->floor][iy][ix]));
-				}
-			}
-		}		
-		setColor(WHITE);
-	}
-	else
-	{
-		// initialize images used in dungeon crawling
-		state->images = malloc(sizeof(struct image));
-		state->numImages = 1;
-			
-		addImage(state,DUNGEON_SPRITE);
-		state->images[0].x = SPRITE_SQUARE_SIZE;
-		state->images[0].y = SPRITE_SQUARE_SIZE;
-		state->images[0].scale = 2;
-		
-	}
-	
 	// generate npcs
 	//generateNPCs(state->building);
 
@@ -254,26 +239,6 @@ void initDungeonFloor(struct gameState * state)
 
 	// start dungeon crawling music 
 	//switchTrack(DUNGEON_MUSIC,s);
-}
-
-// function to check if an npc is at a certain coordinate 
-int npcNearby(int x, int y, int f, int isPlayer)
-{
-	/*
-	int i;
-	
-	for(i=0;i<numNPCs;i++)
-	{
-		if(!activeNPCs[i].passBy && activeNPCs[i].active && (activeNPCs[i].floor == f && (y == activeNPCs[i].y && x == activeNPCs[i].x)))
-		{
-			// if the coordinates are for the player, set the talked variable to this npc 
-			if(isPlayer)
-				npcTalked = i;
-			return 1;
-		}
-	}
-	*/
-	return 0;
 }
 
 // reset after encounter or moving to a new floor
@@ -346,7 +311,6 @@ void resetDungeon(struct gameState * s)
 	//if(s->graphicsMode == 0)
 	//	displayStatus(s);
 }
-
 
 // handles the player's movement in the dungeon 
 void dungeonMovement(struct gameState * state)
