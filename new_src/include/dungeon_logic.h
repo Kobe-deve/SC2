@@ -276,6 +276,78 @@ int npcNearby(int x, int y, int f, int isPlayer)
 	return 0;
 }
 
+// reset after encounter or moving to a new floor
+void resetDungeon(struct gameState * s)
+{
+	int counterx,countery;
+	int i;
+	
+	// clear screen
+	system("cls");	
+
+	// allocate sprites back if they're gone 
+	if(s->graphicsMode == 1 && s->images == NULL)
+	{
+		s->images = malloc(sizeof(struct image));
+		s->numImages = 1;
+			
+		addImage(s,DUNGEON_SPRITE);
+		s->images[0].x = SPRITE_SQUARE_SIZE;
+		s->images[0].y = SPRITE_SQUARE_SIZE;
+		s->images[0].scale = 2;
+	}
+	
+	// if variables used in battle aren't null, free them
+	//if(s->currentBattle.enemies != NULL)
+	//	free(s->currentBattle.enemies);
+	//s->currentBattle.enemies = NULL;
+	
+	// display visible spaces and dungeon border 
+	for(countery = -1;countery < s->dungeonSize+1;countery++)
+	{
+		for(counterx = -1;counterx < s->dungeonSize+1;counterx++)
+		{
+			setCursor(dungeonPrintCoordX+counterx,dungeonPrintCoordY+countery);
+			if((counterx == -1 || counterx == s->dungeonSize || countery == -1 || countery == s->dungeonSize))
+			{	
+				setColor(BLUE);
+				printf("%c",219);
+			}				
+			else if(s->visible[s->floor][countery][counterx] == 1)
+				printf("%c",quickConvert(s->d[s->floor][countery][counterx]));
+			setColor(WHITE);
+		}
+	}
+	
+	// check main display range around the player 
+	displayRange(s);
+	
+	// display visible enemies 
+	if(s->graphicsMode == 0)
+	{
+		for(i = 0;i<s->numEnemies;i++)
+		{
+			if(s->visible[s->floor][s->activeEnemies[i].y][s->activeEnemies[i].x] == 1 && s->activeEnemies[i].active == 1)
+			{
+				setCursor(dungeonPrintCoordX+s->activeEnemies[i].x,dungeonPrintCoordX+s->activeEnemies[i].y);
+				printf("+");
+			}
+		}
+	}
+	
+	// reset passBy variable for npcs 
+	//for(i=0;i<s->numNPCs;i++)
+	//	s->activeNPCs[i].passBy = 0;
+	
+	// switch back to dungeon track 
+	//switchTrack(DUNGEON_MUSIC,s);
+	
+	// get dungeon status back up 
+	//if(s->graphicsMode == 0)
+	//	displayStatus(s);
+}
+
+
 // handles the player's movement in the dungeon 
 void dungeonMovement(struct gameState * state)
 {
@@ -340,7 +412,25 @@ void dungeonMovement(struct gameState * state)
 				
 		break;
 	}
-
+	
+	// move floors and update display if on stairs 
+	if(state->d[state->floor][state->playerY][state->playerX] == 2 || state->d[state->floor][state->playerY][state->playerX] == 3)
+	{	
+		system("cls");
+		switch(state->d[state->floor][state->playerY][state->playerX])
+		{
+			case 2:
+			//updateStatus(WALK_UP,s);
+			state->floor = state->floor+1;
+			break;
+			case 3:
+			//updateStatus(WALK_DOWN,s);
+			state->floor = state->floor-1;
+			break;
+		}	
+		//generateEnemies(s);
+		resetDungeon(state);
+	}
 }
 
 #endif

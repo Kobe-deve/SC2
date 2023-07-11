@@ -114,7 +114,7 @@ void dungeonDisplay(struct gameState * state)
 void dungeonLogic(struct gameState * state)
 {
 	// clear the screen before movement 
-	if(graphicsMode == 0)
+	if(state->graphicsMode == 0)
 		clearDisplay(state);
 	
 	// player movement logic 
