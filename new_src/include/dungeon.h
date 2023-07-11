@@ -82,7 +82,6 @@ int dungeonPrintCoordY = 1;
 #ifndef DUNGEON_HANDLED
 #define DUNGEON_HANDLED
 
-
 // dungeon display function 
 void dungeonDisplay(struct gameState * state)
 {	
@@ -92,8 +91,7 @@ void dungeonDisplay(struct gameState * state)
 		if(state->megaAlpha == 0) // update screen to add title screen 
 		{	
 			state->megaAlpha = 1;
-		}
-		
+		}		
 		// display player
 		setCursor(dungeonPrintCoordX+state->playerX,dungeonPrintCoordY+state->playerY);
 		printf("%c",1);	
@@ -115,7 +113,12 @@ void dungeonDisplay(struct gameState * state)
 // logic handler for dungeon crawling 
 void dungeonLogic(struct gameState * state)
 {
+	// clear the screen before movement 
+	if(graphicsMode == 0)
+		clearDisplay(state);
 	
+	// player movement logic 
+	dungeonMovement(state);
 }
 
 #endif

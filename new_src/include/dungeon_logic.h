@@ -200,7 +200,7 @@ void initDungeonFloor(struct gameState * state)
 	}
 	
 	// generate enemies on the first floor 
-	generateEnemies(s);
+	//generateEnemies(s);
 	
 	// initial display range 
 	displayRange(state);
@@ -256,5 +256,91 @@ void initDungeonFloor(struct gameState * state)
 	//switchTrack(DUNGEON_MUSIC,s);
 }
 
+// function to check if an npc is at a certain coordinate 
+int npcNearby(int x, int y, int f, int isPlayer)
+{
+	/*
+	int i;
+	
+	for(i=0;i<numNPCs;i++)
+	{
+		if(!activeNPCs[i].passBy && activeNPCs[i].active && (activeNPCs[i].floor == f && (y == activeNPCs[i].y && x == activeNPCs[i].x)))
+		{
+			// if the coordinates are for the player, set the talked variable to this npc 
+			if(isPlayer)
+				npcTalked = i;
+			return 1;
+		}
+	}
+	*/
+	return 0;
+}
+
+// handles the player's movement in the dungeon 
+void dungeonMovement(struct gameState * state)
+{
+	// input handling with moving the player and other commands 
+	switch(state->input)
+	{
+		// movement 
+		case UP:
+		state->direction = 0;
+		if(state->playerY > 0 && state->d[state->floor][state->playerY-1][state->playerX] != 1 && !npcNearby(state->playerX,state->playerY-1,state->floor,0))
+		{
+			displayRange(state);
+			state->playerY--;
+			state->direction = 0;
+			description(state);
+			displayRange(state);
+		}
+		break;
+		case DOWN:
+		state->direction = 2;
+		if(state->playerY < state->dungeonSize-1 && state->d[state->floor][state->playerY+1][state->playerX] != 1 && !npcNearby(state->playerX,state->playerY+1,state->floor,0))
+		{
+			displayRange(state);
+			state->playerY++;
+			state->direction = 2;
+			description(state);
+			displayRange(state);
+		}
+		break;
+		case LEFT:
+		state->direction = 3;
+		if(state->playerX > 0 && state->d[state->floor][state->playerY][state->playerX-1] != 1 && !npcNearby(state->playerX-1,state->playerY,state->floor,0))
+		{
+			displayRange(state);
+			state->playerX--;
+			state->direction = 3;
+			description(state);
+			displayRange(state);
+		}
+		break;
+		case RIGHT:
+		state->direction = 1;
+		if(state->playerX < state->dungeonSize-1 && state->d[state->floor][state->playerY][state->playerX+1] != 1  && !npcNearby(state->playerX+1,state->playerY,state->floor,0))
+		{
+			displayRange(state);
+			state->playerX++;
+			state->direction = 1;
+			description(state);
+			displayRange(state);
+		}	
+		break;
+		
+		case MENU: // toggle menu 
+		break;
+		
+		case ENTER: // interact with nearby objects
+	
+		break;
+		case BACKSPACE:
+		break;
+		default:
+				
+		break;
+	}
+
+}
 
 #endif

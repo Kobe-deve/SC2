@@ -88,6 +88,7 @@
 		int playerY; // y coord in dungeon 
 		int floor; // floor in dungeon 
 		int building; // the building the player is in 
+		int direction; // the direction the player is facing in the dungeon 
 		
 		// array of visible tiles in an area
 		int *** visible;
@@ -228,6 +229,7 @@
 		state->playerY = 0; // y coord in dungeon 
 		state->floor = 0; // floor in dungeon
 		state->building = 0;
+		state->direction = 0;
 		
 		state->visible = NULL;
 
