@@ -121,7 +121,7 @@ void dungeonDisplay(struct gameState * state)
 		break;
 		case 1: // sprite mode
 		
-		// get dungeon assets if screen is cleared out
+		// get dungeon image assets initialized if screen is cleared out
 		if(state->numImages == 0)
 		{
 			// initialize images used in dungeon crawling
@@ -135,6 +135,71 @@ void dungeonDisplay(struct gameState * state)
 		}
 		else
 		{
+			// display dungeon 
+			for(iy=0;iy<state->dungeonSize;iy++)
+			{
+				for(ix=0;ix<state->dungeonSize;ix++)
+				{	
+					if(state->visible[state->floor][iy][ix])
+					{
+						
+						switch(state->d[state->floor][iy][ix])
+						{
+							case 1: // wall
+							state->spriteClip.x = SPRITE_SQUARE_SIZE*2;
+							state->spriteClip.y = 0;
+							break;
+							case 2: // up stairs 
+							state->spriteClip.x = SPRITE_SQUARE_SIZE;
+							state->spriteClip.y = 0;
+							state->images[0].x = ix*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							state->images[0].y = iy*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							renderImage(&state->images[0], state->renderer,&state->spriteClip);
+							
+							state->spriteClip.x = SPRITE_SQUARE_SIZE*3;
+							state->spriteClip.y = 0;
+							break;
+							case 3: // down stairs
+							state->spriteClip.x = SPRITE_SQUARE_SIZE;
+							state->spriteClip.y = 0;
+							state->images[0].x = ix*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							state->images[0].y = iy*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							renderImage(&state->images[0], state->renderer,&state->spriteClip);
+						
+							state->spriteClip.x = SPRITE_SQUARE_SIZE*6;
+							state->spriteClip.y = 0;
+							break;
+							case 4: // chest 
+							state->spriteClip.x = SPRITE_SQUARE_SIZE*4;
+							state->spriteClip.y = 0;
+							break;
+							case 5: // opened chest 
+							state->spriteClip.x = SPRITE_SQUARE_SIZE*5;
+							state->spriteClip.y = 0;
+							break;
+							case 9: // shop
+							state->spriteClip.x = SPRITE_SQUARE_SIZE;
+							state->spriteClip.y = 0;
+							state->images[0].x = ix*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							state->images[0].y = iy*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							renderImage(&state->images[0], state->renderer,&state->spriteClip);
+						
+							state->spriteClip.x = SPRITE_SQUARE_SIZE*9;
+							state->spriteClip.y = 0;
+							break;
+							default: // floor 
+							state->spriteClip.x = SPRITE_SQUARE_SIZE;
+							state->spriteClip.y = 0;
+							break;
+						}
+					
+						state->images[0].x = ix*SPRITE_SQUARE_SIZE*state->images[0].scale;
+						state->images[0].y = iy*SPRITE_SQUARE_SIZE*state->images[0].scale;
+						renderImage(&state->images[0], state->renderer,&state->spriteClip);
+					}
+				}
+			}
+			
 			// display player 
 			state->spriteClip.x = 0;
 			state->spriteClip.y = 0;
