@@ -53,23 +53,19 @@ int quickConvert(int x)
 	}
 }
 
-// struct for movable enemies
-struct enemies 
-{
-	int x; // coordinates
-	int y;
-	int active; // is the enemy alive 
-	int type; // the type of enemy for the encounter 
-	int inCombat; // is the enemy fighting an npc 
-	int npcFighting; // what npc the enemy is fighting 
-	int speed; // what interval does the enemy move 
-	int startTicks;
-	int health; // overworld health of enemy 
-};
-
 // coord to print dungeon at 
 int dungeonPrintCoordX = 1;
 int dungeonPrintCoordY = 1;
+
+void generateEnemies(struct gameState * state);
+
+#ifndef DUNGEON_ENEMIES__HANDLED
+#include "dungeon_enemies.h"
+#endif
+
+#ifndef DUNGEON_NPC__HANDLED
+#include "dungeon_npc.h"
+#endif
 
 #ifndef DUNGEON_LOGIC_HANDLED
 #include "dungeon_logic.h"
@@ -82,16 +78,18 @@ int dungeonPrintCoordY = 1;
 #ifndef DUNGEON_HANDLED
 #define DUNGEON_HANDLED
 
-// dungeon display function 
+// general dungeon display function 
 void dungeonDisplay(struct gameState * state)
 {	
 	// reset visibility array if it is empty/deleted
 	int iz,ix,iy;
 	
+	// display dungeon process
 	switch(state->graphicsMode)
 	{
-		case 0:
-		if(state->megaAlpha == 0) // update screen to add title screen 
+		case 0: // ascii mode 
+		
+		if(state->megaAlpha == 0) //  initialize display 
 		{					
 			// display dungeon walls 
 			for(iy = -1;iy < state->dungeonSize+1;iy++)
@@ -115,11 +113,14 @@ void dungeonDisplay(struct gameState * state)
 		
 			state->megaAlpha = 1;
 		}		
+		
 		// display player
 		setCursor(dungeonPrintCoordX+state->playerX,dungeonPrintCoordY+state->playerY);
 		printf("%c",1);	
+		
 		break;
-		case 1:
+		case 1: // sprite mode
+		
 		// get dungeon assets if screen is cleared out
 		if(state->numImages == 0)
 		{
@@ -142,11 +143,12 @@ void dungeonDisplay(struct gameState * state)
 			state->images[0].y = state->playerY*SPRITE_SQUARE_SIZE*state->images[0].scale;
 			renderImage(&state->images[0], state->renderer,&state->spriteClip);
 		}			
+		
 		break;
 	}
 }
 
-// logic handler for dungeon crawling 
+// general logic handler for dungeon crawling 
 void dungeonLogic(struct gameState * state)
 {
 	// clear the screen before movement 

@@ -27,7 +27,8 @@ int main(int argc, char *argv[])
 	srand((unsigned)time(NULL));
 
 	struct gameState state;
-	state.graphicsMode = 1; // set graphics mode 
+	
+	state.graphicsMode = 0; // set graphics mode 
 		
 	// initialize the game state 
 	init(&state);

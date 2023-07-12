@@ -4,6 +4,10 @@
 #ifndef DUNGEON_LOGIC_HANDLED
 #define DUNGEON_LOGIC_HANDLED
 
+#ifndef DUNGEON_NPC__HANDLED
+#include "dungeon_npc.h"
+#endif
+
 #ifndef DUNGEON_DISPLAY_HANDLED
 #include "dungeon_display.h"
 #endif
@@ -80,93 +84,6 @@ void readDungeonFile(struct gameState * state, char * fileName)
 	free(fileReader);
 }
 
-// generate enemies on the floor 
-void generateEnemies(struct gameState * state)
-{
-	// number of spawn points specifically on the map
-	int numSpawnPoints = 0;
-	int ix,iy;
-	int i = 0;
-	
-	// set enemies on floor
-	if(state->activeEnemies != NULL)
-	{
-		free(state->activeEnemies);
-		state->activeEnemies = NULL;
-	}
-	
-	// variable used to check how many predetermined spawn points there are vs generated number from file 
-	int numGenerate = state->numEnemies;
-	
-	// allocate memory
-	state->activeEnemies = malloc(state->numEnemies * sizeof(struct enemies));
-	
-	// check if the map has any specific enemy spawn points 
-	for(iy=0;iy<state->dungeonSize;iy++)
-	{	
-		for(ix=0;ix<state->dungeonSize;ix++)
-		{	
-			if(state->d[state->floor][iy][ix] == E && numGenerate > 0)
-			{
-				state->activeEnemies[numGenerate-1].speed = rand()%3+1; 
-				state->activeEnemies[numGenerate-1].startTicks = 0;
-				state->activeEnemies[numGenerate-1].x = ix;
-				state->activeEnemies[numGenerate-1].y = iy;
-				state->activeEnemies[numGenerate-1].inCombat = 0;
-				
-				state->activeEnemies[numGenerate-1].active = 1;
-				state->activeEnemies[numGenerate-1].type = rand()%3+1;
-				state->activeEnemies[numGenerate-1].npcFighting = -1;
-				state->activeEnemies[numGenerate-1].health = 5;
-				numGenerate--;
-			}
-		}
-	}
-	
-	// if there are no specific spawn point coordinates, randomly spawn the remaining number of enemies 
-	if(numGenerate > 0)
-	{
-		// generate enemies to specific coordinates 
-		for(i = 0;i<state->numEnemies;i++)
-		{
-			state->activeEnemies[i].speed = rand()%3+1; 
-			state->activeEnemies[i].x = rand()%state->dungeonSize;
-			state->activeEnemies[i].startTicks = 0;
-			state->activeEnemies[i].y = rand()%state->dungeonSize;
-			state->activeEnemies[i].inCombat = 0;
-			while(state->d[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == 1)
-			{
-				state->activeEnemies[i].x = rand()%state->dungeonSize;
-				state->activeEnemies[i].y = rand()%state->dungeonSize;	
-			}
-			state->activeEnemies[i].active = 1;
-			state->activeEnemies[i].npcFighting = -1;
-			state->activeEnemies[i].type = rand()%3+1;
-			state->activeEnemies[i].health = 5;
-		}
-	}
-}
-
-// function to check if an npc is at a certain coordinate 
-int npcNearby(int x, int y, int f, int isPlayer)
-{
-	/*
-	int i;
-	
-	for(i=0;i<numNPCs;i++)
-	{
-		if(!activeNPCs[i].passBy && activeNPCs[i].active && (activeNPCs[i].floor == f && (y == activeNPCs[i].y && x == activeNPCs[i].x)))
-		{
-			// if the coordinates are for the player, set the talked variable to this npc 
-			if(isPlayer)
-				npcTalked = i;
-			return 1;
-		}
-	}
-	*/
-	return 0;
-}
-
 // used for start of dungeon crawling 
 void initDungeonFloor(struct gameState * state)
 {
@@ -220,7 +137,7 @@ void initDungeonFloor(struct gameState * state)
 	}
 	
 	// generate enemies on the first floor 
-	//generateEnemies(s);
+	generateEnemies(state);
 	
 	// initial display range 
 	displayRange(state);
