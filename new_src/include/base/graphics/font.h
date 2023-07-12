@@ -38,6 +38,7 @@ struct text
 // initialize font handling 
 void initFont(struct text * t, SDL_Renderer * r)
 {
+	
 	TTF_Font * font = TTF_OpenFont(USED_FONT_FILE,FONT_SIZE);
 	
 	// set renderer to given renderer		
@@ -59,6 +60,7 @@ void initFont(struct text * t, SDL_Renderer * r)
 	int i = 0;
 	
 	char * letter = malloc(sizeof(char));
+	
 	
 	// load letters 
 	for(i=29;i<126;i++)
@@ -99,6 +101,7 @@ void initFont(struct text * t, SDL_Renderer * r)
 	}
 	
 	TTF_CloseFont( font );
+	
 };
 
 // display text to string 

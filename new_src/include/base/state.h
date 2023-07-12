@@ -66,6 +66,7 @@
 		// for rendering in sprite mode 
 		SDL_Window* window; // window 
 		SDL_Renderer* renderer; // window renderer
+		struct text * fontHandler; // handles text display
 		
 		// used for window handling 
 		SDL_Event * e;
@@ -182,6 +183,10 @@
 
 			state->megaAlpha = 255;
 			state->spriteClip = (SDL_Rect){0,0,SPRITE_SQUARE_SIZE,SPRITE_SQUARE_SIZE};
+			
+			// initialize text handler
+			state->fontHandler = malloc(sizeof(struct text));
+			initFont(state->fontHandler, state->renderer);
 		}
 		else // if ascii, set screen information
 		{
@@ -307,10 +312,10 @@
 			/*
 			// deallocate background image
 			deallocateImage(&backgroundAsset);
-			
-			// deallocate font 
-			deallocateFont(state.fontHandler);
 			*/
+			// deallocate font 
+			deallocateFont(state->fontHandler);
+			
 			
 			// deallocate renderer and window 
 			SDL_DestroyRenderer(state->renderer);
