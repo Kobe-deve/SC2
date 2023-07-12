@@ -82,7 +82,7 @@ void generateEnemies(struct gameState * state);
 void dungeonDisplay(struct gameState * state)
 {	
 	// reset visibility array if it is empty/deleted
-	int iz,ix,iy;
+	int i,iz,ix,iy;
 	
 	// display dungeon process
 	switch(state->graphicsMode)
@@ -199,6 +199,19 @@ void dungeonDisplay(struct gameState * state)
 					}
 				}
 			}
+			
+			// display enemies 
+			for(i = 0;i<state->numEnemies;i++)
+			{		
+				if(state->visible[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == 1 && state->activeEnemies[i].inCombat == 0 && state->activeEnemies[i].active == 1)
+				{				
+					state->spriteClip.x = SPRITE_SQUARE_SIZE*8;
+					state->spriteClip.y = 0;
+					state->images[0].x = state->activeEnemies[i].x*SPRITE_SQUARE_SIZE*state->images[0].scale;
+					state->images[0].y = state->activeEnemies[i].y*SPRITE_SQUARE_SIZE*state->images[0].scale;
+					renderImage(&state->images[0], state->renderer,&state->spriteClip);			
+				}
+			}	
 			
 			// display player 
 			state->spriteClip.x = 0;
