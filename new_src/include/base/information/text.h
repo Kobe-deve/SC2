@@ -28,7 +28,8 @@
 	#define PASSOUT "You feel tired and can't move..."
 	#define WAKIGNUP "You wake up."
 
-#define FIRST_FLOOR_TEXT "You wake up in a strange stone room, dimly lit but still dark."
+// specific dungeon narrative/description text 
+	#define FIRST_FLOOR_TEXT "You wake up in a strange stone room, dimly lit but still dark."
 
 // npc names/description
 	#define NPC1_N "Stranger"

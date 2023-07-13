@@ -152,7 +152,7 @@ void initDungeonFloor(struct gameState * state)
 		state->statusText[iy] = NULL;
 	
 	// set initial status 
-	//updateStatus(FIRST_FLOOR_TEXT,s);
+	updateStatus(FIRST_FLOOR_TEXT,state);
 
 	// start dungeon crawling music 
 	//switchTrack(DUNGEON_MUSIC,s);
@@ -224,9 +224,9 @@ void resetDungeon(struct gameState * s)
 	// switch back to dungeon track 
 	//switchTrack(DUNGEON_MUSIC,s);
 	
-	// get dungeon status back up 
-	//if(s->graphicsMode == 0)
-	//	displayStatus(s);
+	// get dungeon status back up if in ascii mode 
+	if(s->graphicsMode == 0)
+		displayStatus(s);
 }
 
 // handles the player's movement in the dungeon 
@@ -285,7 +285,6 @@ void dungeonMovement(struct gameState * state)
 		break;
 		
 		case ENTER: // interact with nearby objects
-	
 		break;
 		case BACKSPACE:
 		break;

@@ -121,8 +121,7 @@ void dungeonDisplay(struct gameState * state)
 		break;
 		case 1: // sprite mode
 		
-		// get dungeon image assets initialized if screen is cleared out
-		if(state->numImages == 0)
+		if(state->numImages == 0) // get dungeon image assets initialized if screen is cleared out
 		{
 			// initialize images used in dungeon crawling
 			state->images = malloc(sizeof(struct image));
@@ -133,7 +132,7 @@ void dungeonDisplay(struct gameState * state)
 			state->images[0].y = SPRITE_SQUARE_SIZE;
 			state->images[0].scale = 2;
 		}
-		else
+		else // general display operations 
 		{
 			// display dungeon 
 			for(iy=0;iy<state->dungeonSize;iy++)
@@ -220,6 +219,9 @@ void dungeonDisplay(struct gameState * state)
 			state->images[0].x = state->playerX*SPRITE_SQUARE_SIZE*state->images[0].scale;
 			state->images[0].y = state->playerY*SPRITE_SQUARE_SIZE*state->images[0].scale;
 			renderImage(&state->images[0], state->renderer,&state->spriteClip);
+			
+			// display in-game status 
+			displayStatus(state);
 		}			
 		
 		break;

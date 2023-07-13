@@ -67,6 +67,71 @@ void displayRange(struct gameState * state)
 	}
 }
 
+// display status in dungeon 
+void displayStatus(struct gameState * state)
+{
+	int i;
+	
+	switch(state->graphicsMode)
+	{
+		case 0:
+		setCursor(1,30);
+		printf("STATUS:");
+	
+		// reset displayed order 
+		for(i=0;i<state->numStatusLines;i++)
+		{
+			setCursor(1,31+i);
+			printf("\33[2K");
+			setCursor(1,31+i);
+			printf("%s",state->statusText[i]);
+		}
+		break;
+		case 1:
+		
+		printText("STATUS:", 10, 400, state->fontHandler);
+		
+		for(i=0;i<state->numStatusLines;i++)
+			printText(state->statusText[i], 10, 400+FONT_SIZE+i*FONT_SIZE, state->fontHandler);
+		break;
+	}
+}
+
+// update status text and display it 
+void updateStatus(char * text,struct gameState * state)
+{
+	int i;
+
+	// set order of text
+	if(state->numStatusLines < state->maxStatus)
+	{
+		state->statusText[state->numStatusLines] = text;
+		++state->numStatusLines;
+	}
+	else // move recent to bottom if max is filled 
+	{
+		if(state->graphicsMode == 0 && strlen(state->statusText[0]) > strlen(text))
+		{
+			setColor(BLACK);
+			for(i=0;i<strlen(state->statusText[0])+1;i++)
+			{
+				setCursor(1+i,21);
+				printf("%c",219);
+			}
+			setColor(WHITE);
+		}
+	
+		free(state->statusText[0]);
+		for(i=0;i<state->numStatusLines-1;i++)
+			state->statusText[i] = state->statusText[i+1];
+		
+		state->statusText[state->numStatusLines-1] = text;
+	}
+	
+	if(state->graphicsMode == 0)
+		displayStatus(state);
+}
+
 // generate text status descriptions based on where the player is 
 void description(struct gameState * s)
 {	
