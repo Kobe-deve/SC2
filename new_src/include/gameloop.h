@@ -1,6 +1,7 @@
 #include "base/information/filenames.h"
 #include "base/state.h"
 #include "title_screen.h"
+#include "battle.h"
 #include "dungeon.h"
 
 // general game loop operations
@@ -11,17 +12,19 @@
 	void logicHandler(struct gameState * state)
 	{	
 		// initialize logic 
-		if((state->megaAlpha == 0 && state->graphicsMode == 0) || (state->graphicsMode == 1 && state->numImages == 0))
+		if((state->megaAlpha == 0 && state->graphicsMode == 0) || (state->graphicsMode == 1 && state->numImages == -1))
 		{
+			state->numImages = 0;
 			switch(state->gameSystem)
 			{
 				case DUNGEON_SCREEN:
 				initDungeonFloor(state);
 				break;
+				case BATTLE_SCREEN:
+				break;
 			}
 		}
-		
-		if(state->switchSystem != 1) // if switching to system, begin switch process
+		else if(state->switchSystem != 1 && state->fadeIn == 0) // basic logic used
 		{
 			switch(state->gameSystem)
 			{
@@ -30,6 +33,9 @@
 				break;
 				case DUNGEON_SCREEN:
 				dungeonLogic(state);
+				break;
+				case BATTLE_SCREEN:
+				battleLogic(state);
 				break;
 			}
 		}
@@ -46,6 +52,9 @@
 			case DUNGEON_SCREEN:
 			dungeonDisplay(state);
 			break;
+			case BATTLE_SCREEN:
+			battleDisplay(state);
+			break;
 		}
 		
 		if(state->switchSystem == 1 && state->fadeIn == 0 &&  state->megaAlpha > 0) // if switching to system, begin switch process with alpha handling 
@@ -60,8 +69,9 @@
 				
 				if(state->graphicsMode == 1) // if sprite mode, start fading in 
 				{
-					state->fadeIn = 1;
+					state->fadeIn = 1;	
 					clearImages(state);
+					state->numImages = -1;
 				}
 				else
 					system("cls");
@@ -76,7 +86,8 @@
 				state->fadeIn = 0;
 		}
 		
-		setAlphaOfImages(state);
+		if(state->graphicsMode == 1 && state->numImages >= 0)
+			setAlphaOfImages(state);
 	}
 
 #endif

@@ -158,6 +158,53 @@ void initDungeonFloor(struct gameState * state)
 	//switchTrack(DUNGEON_MUSIC,s);
 }
 
+// deallocate dungeon assets 
+void deallocateDungeon(struct gameState * state)
+{
+	int iy, iz, ix;
+
+	
+	if(state->d != NULL && state->visible != NULL)
+	{
+		// free dungeon and visibility array 
+		for(iz=0;iz<state->dungeonSize;iz++)
+		{
+			for(iy=0;iy<state->dungeonSize;iy++)
+			{		
+				free(state->d[iz][iy]);
+				free(state->visible[iz][iy]);
+			}
+			free(state->upStairCoords[iz]);
+			free(state->visible[iz]);
+			free(state->d[iz]);
+		}
+	}
+	
+	// free enemies/NPCs
+	if(state->activeEnemies != NULL)
+		free(state->activeEnemies);
+	
+	//if(state->activeNPCs != NULL)
+	//	free(state->activeNPCs);
+
+	// free status
+	if(state->statusText != NULL)
+	{
+		for(iy=0;iy<state->maxStatus;iy++)
+		{
+			if(state->statusText[iy] != NULL)
+				free(state->statusText[iy]);
+		}
+		free(state->statusText);
+	}
+	
+	state->statusText = NULL;
+	state->d = NULL;
+	state->visible = NULL;
+	//state->activeNPCs = NULL;
+	state->activeEnemies = NULL;
+}
+
 // reset after encounter or moving to a new floor
 void resetDungeon(struct gameState * s)
 {
@@ -285,6 +332,10 @@ void dungeonMovement(struct gameState * state)
 		break;
 		
 		case ENTER: // interact with nearby objects
+		
+		state->switchSystem = 1;
+		state->switchTo = BATTLE_SCREEN;
+		
 		break;
 		case BACKSPACE:
 		break;
@@ -300,15 +351,15 @@ void dungeonMovement(struct gameState * state)
 		switch(state->d[state->floor][state->playerY][state->playerX])
 		{
 			case 2:
-			//updateStatus(WALK_UP,s);
+			updateStatus(WALK_UP,state);
 			state->floor = state->floor+1;
 			break;
 			case 3:
-			//updateStatus(WALK_DOWN,s);
+			updateStatus(WALK_DOWN,state);
 			state->floor = state->floor-1;
 			break;
 		}	
-		//generateEnemies(s);
+		generateEnemies(state);
 		resetDungeon(state);
 	}
 }

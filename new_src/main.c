@@ -210,6 +210,14 @@ int main(int argc, char *argv[])
 		}
 	}
 	
+	// deallocate based on the current system being used 
+	switch(state.gameSystem)
+	{
+		case DUNGEON_SCREEN:
+		deallocateDungeon(&state);
+		break;
+	}
+	
 	deallocate(&state);	
 	
 	return 0;

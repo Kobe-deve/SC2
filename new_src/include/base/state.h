@@ -147,7 +147,7 @@
 
 			// hide console window 
 			//if(testMode == 0)
-			ShowWindow(consoleWindow, SW_HIDE);
+			//ShowWindow(consoleWindow, SW_HIDE);
 			
 			// initialize window and SDL handling
 			if(SDL_Init( IMG_INIT_JPG | IMG_INIT_PNG | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO) >= 0)
@@ -272,16 +272,20 @@
 		}
 	}
 	
-	// sets the alpha of all images 
+	// sets the alpha of all images/fonts 
 	void setAlphaOfImages(struct gameState * state)
 	{
 		int i;
 		
+		// set alpha of all images used 
 		for(i=0;i<state->numImages;i++)
 		{
 			SDL_SetTextureBlendMode(state->images[i].texture, SDL_BLENDMODE_BLEND);
 			SDL_SetTextureAlphaMod(state->images[i].texture, state->megaAlpha);
 		}
+		
+		// set alpha of text 
+		state->fontHandler->textColor.a = state->megaAlpha;
 	}
 	
 	// clear image array and free up memory
