@@ -25,7 +25,7 @@ void battleDisplay(struct gameState * state)
 		break;
 		case 1: // sprite mode
 		
-		printText("TOOL", 10, 400, state->fontHandler);
+		printText("We are battling lmao", 10, 400, state->fontHandler);
 		/*if(state->numImages == 0)
 		{
 			addImage(state,LOGO_IMAGE);

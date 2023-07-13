@@ -111,6 +111,17 @@ void dungeonDisplay(struct gameState * state)
 			}		
 			setColor(WHITE);
 		
+			// display visible enemies 
+			for(i = 0;i<state->numEnemies;i++)
+			{
+				if(state->visible[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == 1 && state->activeEnemies[i].active == 1)
+				{
+					setCursor(dungeonPrintCoordX+state->activeEnemies[i].x,dungeonPrintCoordX+state->activeEnemies[i].y);
+					printf("+");
+				}
+			}
+		
+			
 			state->megaAlpha = 1;
 		}		
 		

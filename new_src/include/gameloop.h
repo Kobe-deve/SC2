@@ -18,7 +18,10 @@
 			switch(state->gameSystem)
 			{
 				case DUNGEON_SCREEN:
-				initDungeonFloor(state);
+				if(state->d == NULL) // check if the dungeon array is empty, if so initialize
+					initDungeonFloor(state);
+				else
+					resetDungeon(state);
 				break;
 				case BATTLE_SCREEN:
 				break;

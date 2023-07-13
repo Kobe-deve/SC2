@@ -206,74 +206,77 @@ void deallocateDungeon(struct gameState * state)
 }
 
 // reset after encounter or moving to a new floor
-void resetDungeon(struct gameState * s)
+void resetDungeon(struct gameState * state)
 {
 	int counterx,countery;
-	int i;
+	int i, iy, iz, ix;
 	
 	// clear screen
 	system("cls");	
 
 	// allocate sprites back if they're gone 
-	if(s->graphicsMode == 1 && s->images == NULL)
+	if(state->graphicsMode == 1 && state->images == NULL)
 	{
-		s->images = malloc(sizeof(struct image));
-		s->numImages = 1;
+		state->images = malloc(sizeof(struct image));
+		state->numImages = 1;
 			
-		addImage(s,DUNGEON_SPRITE);
-		s->images[0].x = SPRITE_SQUARE_SIZE;
-		s->images[0].y = SPRITE_SQUARE_SIZE;
-		s->images[0].scale = 2;
+		addImage(state,DUNGEON_SPRITE);
+		state->images[0].x = SPRITE_SQUARE_SIZE;
+		state->images[0].y = SPRITE_SQUARE_SIZE;
+		state->images[0].scale = 2;
 	}
 	
 	// if variables used in battle aren't null, free them
-	//if(s->currentBattle.enemies != NULL)
-	//	free(s->currentBattle.enemies);
-	//s->currentBattle.enemies = NULL;
+	//if(state->currentBattle.enemies != NULL)
+	//	free(state->currentBattle.enemies);
+	//state->currentBattle.enemies = NULL;
 	
-	// display visible spaces and dungeon border 
-	for(countery = -1;countery < s->dungeonSize+1;countery++)
+	if(state->megaAlpha != 0)
 	{
-		for(counterx = -1;counterx < s->dungeonSize+1;counterx++)
+		// display dungeon walls 
+		for(iy = -1;iy < state->dungeonSize+1;iy++)
 		{
-			setCursor(dungeonPrintCoordX+counterx,dungeonPrintCoordY+countery);
-			if((counterx == -1 || counterx == s->dungeonSize || countery == -1 || countery == s->dungeonSize))
-			{	
-				setColor(BLUE);
-				printf("%c",219);
-			}				
-			else if(s->visible[s->floor][countery][counterx] == 1)
-				printf("%c",quickConvert(s->d[s->floor][countery][counterx]));
-			setColor(WHITE);
-		}
-	}
-	
-	// check main display range around the player 
-	displayRange(s);
-	
-	// display visible enemies 
-	if(s->graphicsMode == 0)
-	{
-		for(i = 0;i<s->numEnemies;i++)
-		{
-			if(s->visible[s->floor][s->activeEnemies[i].y][s->activeEnemies[i].x] == 1 && s->activeEnemies[i].active == 1)
+			for(ix = -1;ix < state->dungeonSize+1;ix++)
 			{
-				setCursor(dungeonPrintCoordX+s->activeEnemies[i].x,dungeonPrintCoordX+s->activeEnemies[i].y);
+				setCursor(dungeonPrintCoordX+ix,dungeonPrintCoordY+iy);
+				if((ix == -1 || ix == state->dungeonSize || iy == -1 || iy == state->dungeonSize))
+				{	
+					setColor(BLUE);
+					printf("%c",219);
+				}
+				else if(state->visible[state->floor][iy][ix] == 1)
+				{
+					setColor(WHITE);
+					printf("%c",quickConvert(state->d[state->floor][iy][ix]));
+				}
+			}
+		}		
+		setColor(WHITE);
+	
+		// display visible enemies 
+		for(i = 0;i<state->numEnemies;i++)
+		{
+			if(state->visible[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == 1 && state->activeEnemies[i].active == 1)
+			{
+				setCursor(dungeonPrintCoordX+state->activeEnemies[i].x,dungeonPrintCoordX+state->activeEnemies[i].y);
 				printf("+");
 			}
 		}
 	}
 	
+	// check main display range around the player 
+	displayRange(state);
+	
 	// reset passBy variable for npcs 
-	//for(i=0;i<s->numNPCs;i++)
-	//	s->activeNPCs[i].passBy = 0;
+	//for(i=0;i<state->numNPCs;i++)
+	//	state->activeNPCs[i].passBy = 0;
 	
 	// switch back to dungeon track 
 	//switchTrack(DUNGEON_MUSIC,s);
 	
 	// get dungeon status back up if in ascii mode 
-	if(s->graphicsMode == 0)
-		displayStatus(s);
+	if(state->graphicsMode == 0)
+		displayStatus(state);
 }
 
 // handles the player's movement in the dungeon 
