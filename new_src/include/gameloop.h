@@ -1,6 +1,7 @@
 #include "base/information/filenames.h"
 #include "base/state.h"
 #include "base/menu.h"
+#include "base/graphics/music.h"
 #include "title_screen.h"
 #include "battle.h"
 #include "character_menu.h"

@@ -63,7 +63,10 @@
 		int gameSystem; // the current game system that is running 
 		int switchTo; // system to switch to
 		int switchSystem; // boolean variable for switching (0 - don't switch, 1 - switch)
-			
+
+		Mix_Music * music; // the music playing
+		char * track; // the song that is playing
+	
 		// for rendering in sprite mode 
 		SDL_Window* window; // window 
 		SDL_Renderer* renderer; // window renderer
@@ -145,7 +148,9 @@
 		// initialize state variables
 		state->input = 0;
 		
-		// initialize SDL2 for music 
+		// initialize music 
+		state->music = NULL;	
+		state->track = NULL;
 		
 		// if sprite mode, initialize graphics/music
 		if(state->graphicsMode == 1)

@@ -41,6 +41,9 @@ int main(int argc, char *argv[])
 	// initialize the game state 
 	init(&state);
 	
+	// initialize music handler
+	initMusic(&state);
+	
 	// set up SDL input handling if graphics mode enabled 
 	if(state.graphicsMode == 1)
 	{
