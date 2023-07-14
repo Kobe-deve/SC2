@@ -21,7 +21,10 @@ void initMenu(struct gameState * state, int numOpts, char ** options, int x, int
 {
 	// if there's already an allocated menu, clear it 
 	if(state->options != NULL)
+	{
 		deallocateMenu(state);
+		state->options = NULL;
+	}
 	
 	state->options = malloc(numOpts * sizeof(char*));
 	

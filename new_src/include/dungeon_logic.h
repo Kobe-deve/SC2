@@ -332,6 +332,10 @@ void dungeonMovement(struct gameState * state)
 		break;
 		
 		case MENU: // toggle menu 
+		
+		state->switchSystem = 1;
+		state->switchTo = MENU_SCREEN;
+		
 		break;
 		
 		case ENTER: // interact with nearby objects

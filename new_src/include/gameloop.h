@@ -3,6 +3,7 @@
 #include "base/menu.h"
 #include "title_screen.h"
 #include "battle.h"
+#include "character_menu.h"
 #include "dungeon.h"
 
 // how much the alpha will change per frame when transitioning
@@ -30,6 +31,9 @@
 				case BATTLE_SCREEN:
 				initBattle(state);
 				break;
+				case MENU_SCREEN:
+				initCharacterMenu(state);
+				break;
 			}
 		}
 		else if(state->switchSystem != 1 && state->fadeIn == 0) // basic logic used
@@ -44,6 +48,9 @@
 				break;
 				case BATTLE_SCREEN:
 				battleLogic(state);
+				break;
+				case MENU_SCREEN:
+				characterMenuLogic(state);
 				break;
 			}
 		}
@@ -63,6 +70,9 @@
 			break;
 			case BATTLE_SCREEN:
 			battleDisplay(state);
+			break;
+			case MENU_SCREEN:
+			characterMenuDisplay(state);
 			break;
 		}
 		

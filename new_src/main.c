@@ -57,8 +57,6 @@ int main(int argc, char *argv[])
 		//backgroundAsset = initImage(BACKGROUND_ASSET,state.renderer);
 		//backgroundAsset.scale = 4;
 		
-		// initialize text handler
-		//initFont(state.fontHandler, state.renderer);
 	}
 	
 	// main loop
