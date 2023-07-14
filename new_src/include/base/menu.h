@@ -121,7 +121,7 @@ void handleMenu(struct gameState * state)
 			printText(">", state->menuX-FONT_SIZE,state->menuY+state->option*FONT_SIZE, state->fontHandler);
 		}		
 	}
-	
+		
 }
 
 #endif

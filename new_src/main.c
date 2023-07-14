@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 
 	struct gameState state;
 	
-	state.graphicsMode = 0; // set graphics mode 
+	state.graphicsMode = 1; // set graphics mode 
 		
 	// initialize the game state 
 	init(&state);
@@ -200,6 +200,9 @@ int main(int argc, char *argv[])
 			}			
 			break;
 		}
+		
+		if(state.switchSystem == 1 && state.input != 27)
+			state.input = 0;
 		
 		// game logic handling 
 		logicHandler(&state);

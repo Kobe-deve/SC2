@@ -5,6 +5,13 @@
 // initialize battle data 
 void initBattle(struct gameState * state)
 {
+	char ** array = malloc(2 * sizeof(char*));
+	array[0] = NG;
+	array[1] = CT;
+	
+	initMenu(state,2,array,85,24);
+	
+	free(array);
 }
 
 // deallocate battle data 
@@ -43,10 +50,13 @@ void battleDisplay(struct gameState * state)
 // general battle logic 
 void battleLogic(struct gameState * state)
 {
+	handleMenu(state);
 	if(state->input == ENTER)
 	{		
 		state->switchSystem = 1;
 		state->switchTo = DUNGEON_SCREEN;
+
+		deallocateMenu(state);
 	}
 }
 

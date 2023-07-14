@@ -5,6 +5,9 @@
 #include "battle.h"
 #include "dungeon.h"
 
+// how much the alpha will change per frame when transitioning
+#define ALPHA_CHANGE 10
+
 // general game loop operations
 #ifndef GAMELOOP_HANDLED
 #define GAMELOOP_HANDLED
@@ -25,6 +28,7 @@
 					resetDungeon(state);
 				break;
 				case BATTLE_SCREEN:
+				initBattle(state);
 				break;
 			}
 		}
@@ -43,6 +47,7 @@
 				break;
 			}
 		}
+			
 	}
 
 	// handles general display operations
@@ -61,9 +66,9 @@
 			break;
 		}
 		
-		if(state->switchSystem == 1 && state->fadeIn == 0 &&  state->megaAlpha > 0) // if switching to system, begin switch process with alpha handling 
+		if(state->switchSystem == 1 && state->fadeIn == 0 &&  state->megaAlpha >= 0) // if switching to system, begin switch process with alpha handling 
 		{
-			state->megaAlpha-=5;
+			state->megaAlpha-=ALPHA_CHANGE;
 			
 			// if alpha is at zero, change system and start fade in 
 			if(state->megaAlpha <= 0)
@@ -84,10 +89,13 @@
 		}
 		else if(state->megaAlpha <= 255 && state->fadeIn == 1) // fade into new system 
 		{
-			state->megaAlpha+=5;
+			state->megaAlpha+=ALPHA_CHANGE;
 			
 			if((state->megaAlpha >= 255 && state->graphicsMode == 1))
+			{
+				state->megaAlpha = 255;
 				state->fadeIn = 0;
+			}
 		}
 		
 		if(state->graphicsMode == 1 && state->numImages >= 0)
