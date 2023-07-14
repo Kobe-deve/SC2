@@ -17,6 +17,14 @@ void throwError(char * errorText)
 	exit(0);
 }
 
+// set cursor at a position on the screen 
+void setCursor(int x, int y) // sets the cursor to a position on the screen 
+{
+	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD p = {x,y};
+    SetConsoleCursorPosition(h,p);
+}
+
 #include "include/gameloop.h"
 
 // windres main.rs -o main.o 
@@ -217,6 +225,10 @@ int main(int argc, char *argv[])
 		deallocateDungeon(&state);
 		break;
 	}
+	
+	// deallocate menu if it is being used
+	if(state.options != NULL)
+		deallocateMenu(&state);
 	
 	deallocate(&state);	
 	

@@ -653,14 +653,6 @@ void setColor(int ForgC)
 	return;
 }
 
-// set cursor at a position on the screen 
-void setCursor(int x, int y) // sets the cursor to a position on the screen 
-{
-	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
-    COORD p = {x,y};
-    SetConsoleCursorPosition(h,p);
-}
-
 // print specific array patterns 
 void printPattern(enum sprites patternType, int xPos, int yPos, int maxX, int maxY)
 {

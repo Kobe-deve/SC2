@@ -52,6 +52,7 @@
 		SHOP_SCREEN = 4,
 		GAMEOVER_SCREEN = 5,
 		CUTSCENE_SCREEN = 6,
+		MENU_SCREEN = 7,
 	};
 
 	// data structure for handling the state/data of the game 
@@ -118,7 +119,15 @@
 		
 		// for sprite rendering a section of a spirte sheet 
 		SDL_Rect spriteClip; 	
+		
+		// menu variables
+		int option; // menu option 
+		char ** options; // strings for options 
+		int numOptions; // number of options 
+		int menuX, menuY; // menu option coordinates
+		
 	};
+	
 	
 	// frame handling variables
 
@@ -220,6 +229,13 @@
 		state->fadeIn = 0;
 		
 		state->switchSystem = 0;
+		
+		// initialize menu options
+		state->option = 0; // menu option 
+		state->options = NULL; // strings for options 
+		state->numOptions = 0; // number of options 
+		state->menuX = 0; 
+		state->menuY = 0; // menu option coordinates
 		
 		// initialize array of displayed images 
 		state->images = NULL;
@@ -328,7 +344,6 @@
 			// quit sdl
 			SDL_Quit();
 		}
-	
 	}
 	
 #endif

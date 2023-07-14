@@ -1,0 +1,11 @@
+-Menu system
+	-A generic menu system that can be called
+	 at any point
+-Shops
+-Menu
+-NPCs
+-Enemy movement
+	-When enemy moves over player while they are talking with an
+	 NPC, end menu and start battle
+-Music handling
+-Background assets for sprite mode

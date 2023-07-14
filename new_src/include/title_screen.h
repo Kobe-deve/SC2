@@ -41,10 +41,25 @@ void titleScreenDisplay(struct gameState * state)
 // logic handling for title screen 
 void titleScreenHandler(struct gameState * state)
 {
+	if(state->options == NULL) // initialize menu used
+	{
+		char ** array = malloc(2 * sizeof(char*));
+		array[0] = NG;
+		array[1] = CT;
+		
+		initMenu(state,2,array,85,24);
+		
+		free(array);
+	}
+	else
+		handleMenu(state);
+	
 	if(state->input == ENTER)
 	{		
 		state->switchSystem = 1;
 		state->switchTo = DUNGEON_SCREEN;
+		
+		deallocateMenu(state);
 	}
 }
 
