@@ -1,58 +1,5 @@
 // for general handling dungeon crawling in the game 
 
-// convert specific tiles in dungeon to type
-int quickConvert(int x)
-{
-	switch(x)
-	{
-		case 1:
-		return 219;
-		break;
-		
-		case 2:
-		case 3:
-		return 220;
-		break;
-		
-		case 4:
-		return 233;
-		break;
-		
-		case 5:
-		return 237;
-		break;
-		
-		case 6:
-		case A:
-		case B:
-		case 12:
-		case D:
-		case F:
-		case G:
-		case 7:
-		return 1;
-		break;
-		
-		case 8:
-		case 17:
-		case 18:
-		case 19:
-		case 20:
-		case 21:
-		return 234;
-		break;
-		
-		case 9:
-		return 206;
-		break;
-		
-		default:
-		case 100:
-		return 178;
-		break;
-	}
-}
-
 // coord to print dungeon at 
 int dungeonPrintCoordX = 1;
 int dungeonPrintCoordY = 1;
