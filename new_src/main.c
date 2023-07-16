@@ -32,6 +32,8 @@ void setCursor(int x, int y) // sets the cursor to a position on the screen
 
 int main(int argc, char *argv[])
 {
+	int i;
+	
 	srand((unsigned)time(NULL));
 
 	struct gameState state;
@@ -54,11 +56,9 @@ int main(int argc, char *argv[])
 		state.colors[2] = 100;
 		state.colors[3] = 0;
 		
-		//state.fontHandler = malloc(sizeof(struct text));
-		
 		// initialize background assets
-		//backgroundAsset = initImage(BACKGROUND_ASSET,state.renderer);
-		//backgroundAsset.scale = 4;
+		state.backgroundAsset = initImage(BACKGROUND_ASSET,state.renderer);
+		state.backgroundAsset.scale = 4;
 		
 	}
 	
@@ -72,17 +72,16 @@ int main(int argc, char *argv[])
 			SDL_RenderClear(state.renderer);
 			state.frameRateTracker = SDL_GetTicks();
 			
-			/*
 			// if in sprite mode, render background 
-			backgroundAsset.angle++;
-			backgroundAsset.angle%=360;
-			backgroundAsset.y = 500;
+			state.backgroundAsset.angle++;
+			state.backgroundAsset.angle%=360;
+			state.backgroundAsset.y = 500;
 			for(i=0;i<6;i++)
 			{
-				backgroundAsset.x = i*200;
-				renderImage(&backgroundAsset,state.renderer,NULL);
+				state.backgroundAsset.x = i*200;
+				renderImage(&state.backgroundAsset,state.renderer,NULL);
 			}
-			*/
+			
 		}
 		
 		// input handling based on mode 
@@ -228,6 +227,12 @@ int main(int argc, char *argv[])
 		case DUNGEON_SCREEN:
 		deallocateDungeon(&state);
 		break;
+	}
+	
+	// deallocate background image if in spirte mode 
+	if(state.graphicsMode == 1)
+	{
+		deallocateImage(&state.backgroundAsset);
 	}
 	
 	// deallocate menu if it is being used
