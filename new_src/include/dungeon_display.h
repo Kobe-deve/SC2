@@ -133,8 +133,40 @@ void updateStatus(char * text,struct gameState * state)
 }
 
 // generate text status descriptions based on where the player is 
-void description(struct gameState * s)
+void description(struct gameState * state)
 {	
+	// update status text based on where the player is at 
+	switch(state->d[state->floor][state->playerY][state->playerX])
+	{
+		case 5:
+		updateStatus(EMPTY_CHEST,state);
+		break;
+		case 4:
+		updateStatus(CLOSED_CHEST,state);
+		break;
+		case 9:
+		updateStatus(SHOP_ENTRANCE,state);
+		break;
+		default:
+		/*
+		// if an npc is nearby, update status 
+		if(npcNearPlayer && !activeNPCs[npcTalked].inCombat && activeNPCs[npcTalked].active == 1)
+		{
+			switch(activeNPCs[npcTalked].type)
+			{
+				case 0:
+				updateStatus(NPC1,state);	
+				break;
+				case 1:
+				updateStatus(NPC2,state);	
+				break;
+			}
+		}
+		else if(npcNearPlayer && activeNPCs[npcTalked].inCombat )
+			updateStatus(NPC_FIGHT,state);	
+		*/		
+		break;
+	}
 }
 
 #endif

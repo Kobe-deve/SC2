@@ -2,6 +2,8 @@
 #include "base/state.h"
 #include "base/menu.h"
 #include "base/graphics/music.h"
+#include "base/graphics/sprite_data.h"
+#include "shops.h"
 #include "title_screen.h"
 #include "battle.h"
 #include "character_menu.h"

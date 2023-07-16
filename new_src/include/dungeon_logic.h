@@ -340,8 +340,11 @@ void dungeonMovement(struct gameState * state)
 		
 		case ENTER: // interact with nearby objects
 		
-		state->switchSystem = 1;
-		state->switchTo = BATTLE_SCREEN;
+		switch(state->d[state->floor][state->playerY][state->playerX])
+		{
+			case 9: // shop 
+			break;
+		}
 		
 		break;
 		case BACKSPACE:
@@ -351,9 +354,11 @@ void dungeonMovement(struct gameState * state)
 		break;
 	}
 	
-	// move floors and update display if on stairs 
-	if(state->d[state->floor][state->playerY][state->playerX] == 2 || state->d[state->floor][state->playerY][state->playerX] == 3)
-	{	
+	// check what kind of tile the player is on 
+	switch(state->d[state->floor][state->playerY][state->playerX])
+	{
+		case 2:
+		case 3:
 		system("cls");
 		switch(state->d[state->floor][state->playerY][state->playerX])
 		{
@@ -368,6 +373,7 @@ void dungeonMovement(struct gameState * state)
 		}	
 		generateEnemies(state);
 		resetDungeon(state);
+		break;
 	}
 }
 
