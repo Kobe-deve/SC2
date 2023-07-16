@@ -225,13 +225,7 @@ void resetDungeon(struct gameState * state)
 		state->images[0].y = SPRITE_SQUARE_SIZE;
 		state->images[0].scale = 2;
 	}
-	
-	// if variables used in battle aren't null, free them
-	//if(state->currentBattle.enemies != NULL)
-	//	free(state->currentBattle.enemies);
-	//state->currentBattle.enemies = NULL;
-	
-	if(state->megaAlpha != 0)
+	else if(state->graphicsMode == 0 && state->megaAlpha != 0) // if in ascii mode, reset view 
 	{
 		// display dungeon walls 
 		for(iy = -1;iy < state->dungeonSize+1;iy++)

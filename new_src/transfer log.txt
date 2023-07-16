@@ -1,4 +1,3 @@
--Shops
 -NPCs
 -Enemy movement
 	-When enemy moves over player while they are talking with an
