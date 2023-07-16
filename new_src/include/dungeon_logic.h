@@ -342,6 +342,10 @@ void dungeonMovement(struct gameState * state)
 		
 		switch(state->d[state->floor][state->playerY][state->playerX])
 		{
+			case 4: // chest
+			state->d[state->floor][state->playerY][state->playerX] = 5;
+			updateStatus(OPENED_CHEST,state);
+			break;
 			case 9: // shop 
 			state->switchSystem = 1;
 			state->switchTo = SHOP_SCREEN;
