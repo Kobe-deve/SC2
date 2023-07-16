@@ -35,7 +35,7 @@ void shopScreenDisplay(struct gameState * state)
 	}
 }
 
-void shopScreenHandler(struct gameState * state)
+void shopLogic(struct gameState * state)
 {
 	if(state->options == NULL) // initialize menu used
 	{

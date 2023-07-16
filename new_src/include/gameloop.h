@@ -55,6 +55,9 @@
 				case MENU_SCREEN:
 				characterMenuLogic(state);
 				break;
+				case SHOP_SCREEN:
+				shopLogic(state);
+				break;
 			}
 		}
 			
@@ -76,6 +79,9 @@
 			break;
 			case MENU_SCREEN:
 			characterMenuDisplay(state);
+			break;
+			case SHOP_SCREEN:
+			shopScreenDisplay(state);
 			break;
 		}
 		
