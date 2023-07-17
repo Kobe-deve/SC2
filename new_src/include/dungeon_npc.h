@@ -145,39 +145,7 @@ void npcHandler(struct gameState * state)
 				
 				// move to new position 
 				
-				if(state->d[state->activeNPCs[i].floor][state->activeNPCs[i].y][state->activeNPCs[i].x+1] != 1)
-					state->activeNPCs[i].x = state->activeNPCs[i].x+1;
 				
-				// y movement 
-				if(state->upStairCoords[state->activeNPCs[i].floor][1] == state->activeNPCs[i].y)
-					state->activeNPCs[i].direction = -2;			
-				else if(state->upStairCoords[state->activeNPCs[i].floor][1] > state->activeNPCs[i].y && state->d[state->activeNPCs[i].floor][state->activeNPCs[i].y+1][state->activeNPCs[i].x] != 1 && state->activeNPCs[i].y < state->dungeonSize-1)
-					state->activeNPCs[i].direction = 2;
-				else if(state->upStairCoords[state->activeNPCs[i].floor][1] < state->activeNPCs[i].y && state->d[state->activeNPCs[i].floor][state->activeNPCs[i].y-1][state->activeNPCs[i].x] != 1 && state->activeNPCs[i].y > 0)
-					state->activeNPCs[i].direction = 0;
-				else
-					state->activeNPCs[i].direction = -1;
-				
-				switch(state->activeNPCs[i].direction)
-				{
-					case 0:
-					if(state->d[state->activeNPCs[i].floor][state->activeNPCs[i].y-1][state->activeNPCs[i].x] != 1)
-						state->activeNPCs[i].y--;
-					break;
-					case 2:
-					if(state->d[state->activeNPCs[i].floor][state->activeNPCs[i].y+1][state->activeNPCs[i].x] != 1)
-						state->activeNPCs[i].y++;
-					break;
-					case -2:
-					break;
-					case -1:
-					if(state->activeNPCs[i].y > 0 && state->d[state->activeNPCs[i].floor][state->activeNPCs[i].y-1][state->activeNPCs[i].x] != 1)
-						state->activeNPCs[i].y--;
-					else if(state->activeNPCs[i].y < state->dungeonSize-1 && state->d[state->activeNPCs[i].floor][state->activeNPCs[i].y+1][state->activeNPCs[i].x] != 1)
-						state->activeNPCs[i].y++;
-					
-					break;
-				}
 				
 				// check if there isn't an overlap with another npc 
 				for(j=0;j<state->numNPCs;j++)

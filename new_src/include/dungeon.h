@@ -209,6 +209,8 @@ void dungeonDisplay(struct gameState * state)
 // general logic handler for dungeon crawling 
 void dungeonLogic(struct gameState * state)
 {
+	int i;
+	
 	// clear the screen before movement 
 	if(state->graphicsMode == 0)
 		clearDisplay(state);
@@ -233,6 +235,19 @@ void dungeonLogic(struct gameState * state)
 	
 	// enemy handler 
 	enemyHandler(state);
+	
+	// check if player has run into enemies, if so start a battle  
+	for(i=0;i<state->numEnemies;i++)
+	{
+		if(state->activeEnemies[i].active == 1 && state->activeEnemies[i].y == state->playerY && state->activeEnemies[i].x == state->playerX)
+		{
+			state->activeEnemies[i].active = 0;
+			updateStatus(ENCOUNTERED,state);
+	
+			state->switchSystem = 1;
+			state->switchTo = BATTLE_SCREEN;
+		}
+	}
 }
 
 #endif

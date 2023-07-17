@@ -188,7 +188,7 @@ void enemyHandler(struct gameState * state)
 		
 			for(j=0;j<state->numNPCs;j++)
 			{
-				if(state->activeEnemies[j].active == 1 && (state->activeNPCs[j].floor == state->floor && (state->activeEnemies[i].y == state->activeEnemies[j].y && state->activeEnemies[i].x == state->activeNPCs[j].x)))
+				if(state->activeNPCs[j].active == 1 && (state->activeNPCs[j].floor == state->floor && (state->activeEnemies[i].y == state->activeNPCs[j].y && state->activeEnemies[i].x == state->activeNPCs[j].x)))
 				{
 					checkNPC = j;
 					break;
@@ -199,7 +199,8 @@ void enemyHandler(struct gameState * state)
 			// if npc found, start battle 
 			if(checkNPC != -1 && checkNPC < state->numNPCs)
 			{
-				printf("%d",checkNPC);
+				if(state->graphicsMode == 0)
+					printf("%d",checkNPC);
 				updateStatus(HEAR_FIGHT,state);
 				state->activeEnemies[i].inCombat = 1;
 				state->activeEnemies[i].npcFighting = checkNPC;
