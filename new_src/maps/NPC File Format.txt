@@ -1,0 +1,8 @@
+NPC File format
+-
+x
+y
+floor
+type
+speed
+-

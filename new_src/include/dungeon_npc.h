@@ -62,6 +62,15 @@ void generateNPCs(struct gameState * state, int dungeonType)
 		for(i=0;i<state->numNPCs;i++)
 		{
 			// define variables from file 
+			/*
+				x
+				y
+				floor
+				type
+				speed
+				stat type 
+			*/
+			
 			fscanf(readFile,"%s",fileReader);
 			state->activeNPCs[i].x = atoi(fileReader);
 		
@@ -73,19 +82,16 @@ void generateNPCs(struct gameState * state, int dungeonType)
 			
 			fscanf(readFile,"%s",fileReader);
 			state->activeNPCs[i].type = atoi(fileReader);
-			
-			fscanf(readFile,"%s",fileReader);
-			state->activeNPCs[i].speed = atoi(fileReader);
-			
-			fscanf(readFile,"%s",fileReader);
-			
-			fscanf(readFile,"%s",fileReader);
-			switch(atoi(fileReader))
+			switch(state->activeNPCs[i].type)
 			{
 				default:
 				state->activeNPCs[i].stats = generateCharacter(HUMAN); // set up stats 
 				break;
 			}
+			
+			fscanf(readFile,"%s",fileReader);
+			state->activeNPCs[i].speed = atoi(fileReader);
+		
 			
 			// set default for conditions
 			state->activeNPCs[i].inCombat = 0;  
