@@ -60,6 +60,8 @@
 	// data structure for handling the state/data of the game 
 	struct gameState
 	{
+		int testMode; // for testing the game 
+		
 		int graphicsMode; // the graphics mode of the game (0 - ascii 1 - sprite)
 		int input; // input variable used 
 		int gameSystem; // the current game system that is running 
@@ -151,6 +153,9 @@
 	{
 		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		HWND consoleWindow = GetConsoleWindow();
+	
+		// make sure test mode is off
+		state->testMode = 0;
 	
 		// initialize state variables
 		state->input = 0;
