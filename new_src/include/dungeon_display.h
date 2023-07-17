@@ -62,12 +62,12 @@ int quickConvert(int x)
 }
 
 // clear display when player moves  
-void clearDisplay(struct gameState * s)
+void clearDisplay(struct gameState * state)
 {	
-	if(s->input != 0)
+	if(state->input != 0)
 	{
-		setCursor(dungeonPrintCoordX+s->playerX,dungeonPrintCoordY+s->playerY);
-		printf("%c",quickConvert(s->d[s->floor][s->playerY][s->playerX]));	
+		setCursor(dungeonPrintCoordX+state->playerX,dungeonPrintCoordY+state->playerY);
+		printf("%c",quickConvert(state->d[state->floor][state->playerY][state->playerX]));	
 	}
 }
 
@@ -188,6 +188,9 @@ void updateStatus(char * text,struct gameState * state)
 // generate text status descriptions based on where the player is 
 void description(struct gameState * state)
 {	
+	// check nearby npcs close to the player 
+	int npcTalked = (npcNearby(state->playerX,state->playerY-1,state->floor,1,state) || npcNearby(state->playerX,state->playerY+1,state->floor,1,state) || npcNearby(state->playerX+1,state->playerY,state->floor,1,state) || npcNearby(state->playerX-1,state->playerY,state->floor,1,state));
+		
 	// update status text based on where the player is at 
 	switch(state->d[state->floor][state->playerY][state->playerX])
 	{
@@ -201,11 +204,10 @@ void description(struct gameState * state)
 		updateStatus(SHOP_ENTRANCE,state);
 		break;
 		default:
-		/*
 		// if an npc is nearby, update status 
-		if(npcNearPlayer && !activeNPCs[npcTalked].inCombat && activeNPCs[npcTalked].active == 1)
+		if(npcTalked && !state->activeNPCs[state->nearestNPC].inCombat && state->activeNPCs[state->nearestNPC].active == 1)
 		{
-			switch(activeNPCs[npcTalked].type)
+			switch(state->activeNPCs[state->nearestNPC].type)
 			{
 				case 0:
 				updateStatus(NPC1,state);	
@@ -215,9 +217,8 @@ void description(struct gameState * state)
 				break;
 			}
 		}
-		else if(npcNearPlayer && activeNPCs[npcTalked].inCombat )
+		else if(npcTalked && state->activeNPCs[state->nearestNPC].inCombat )
 			updateStatus(NPC_FIGHT,state);	
-		*/		
 		break;
 	}
 }

@@ -19,12 +19,15 @@ int npcNearby(int x, int y, int f, int isPlayer, struct gameState * state)
 	{
 		if(!state->activeNPCs[i].passBy && state->activeNPCs[i].active && (state->activeNPCs[i].floor == f && (y == state->activeNPCs[i].y && x == state->activeNPCs[i].x)))
 		{
-			// if the coordinates are for the player, return the specific npc value
-			if(isPlayer)
-				return i;
+			if(isPlayer == 1)
+				state->nearestNPC = i;
 			return 1;
 		}
 	}
+	
+	if(isPlayer == 1)
+		state->nearestNPC = 0;
+			
 	return 0;
 }
 
@@ -67,8 +70,6 @@ void generateNPCs(struct gameState * state, int dungeonType)
 				y
 				floor
 				type
-				speed
-				stat type 
 			*/
 			
 			fscanf(readFile,"%s",fileReader);
@@ -82,16 +83,13 @@ void generateNPCs(struct gameState * state, int dungeonType)
 			
 			fscanf(readFile,"%s",fileReader);
 			state->activeNPCs[i].type = atoi(fileReader);
+			
 			switch(state->activeNPCs[i].type)
 			{
 				default:
 				state->activeNPCs[i].stats = generateCharacter(HUMAN); // set up stats 
 				break;
 			}
-			
-			fscanf(readFile,"%s",fileReader);
-			state->activeNPCs[i].speed = atoi(fileReader);
-		
 			
 			// set default for conditions
 			state->activeNPCs[i].inCombat = 0;  

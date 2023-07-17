@@ -5,6 +5,7 @@ int dungeonPrintCoordX = 1;
 int dungeonPrintCoordY = 1;
 
 void generateEnemies(struct gameState * state);
+int npcNearby(int x, int y, int f, int isPlayer, struct gameState * state);
 
 #ifndef DUNGEON_ENEMIES__HANDLED
 #include "dungeon_enemies.h"

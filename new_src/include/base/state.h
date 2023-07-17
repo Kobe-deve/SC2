@@ -100,6 +100,7 @@
 		// npc information for dungeon 
 		int numNPCs;
 		struct npc * activeNPCs;
+		int nearestNPC; // the npc the player is closest to
 		
 		// array of visible tiles in an area
 		int *** visible;
@@ -247,6 +248,7 @@
 		state->numOptions = 0; // number of options 
 		state->menuX = 0; 
 		state->menuY = 0; // menu option coordinates
+		state->nearestNPC = 0;
 		
 		// initialize array of displayed images 
 		state->images = NULL;

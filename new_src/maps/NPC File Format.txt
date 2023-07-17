@@ -4,5 +4,4 @@ x
 y
 floor
 type
-speed
 -
