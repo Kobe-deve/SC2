@@ -4,59 +4,105 @@ A rebuild of Stone Crawler from the ground up using
 C and the SDL2 (along with SDL2_Mixer) library
 
 Compiling command:
-run setup_sc2.bat with a C++ compiler installed with the following libraries:
+run setup_sc2.bat with a C/C++ compiler installed with the following libraries:
 	SDL2
 	SDL2_image
 	SDL2_ttf
 	SDL2_mixer
 
+	the commands in setup_sc2.bat:
+	windres main.rs -o main.o 
+	gcc main.c main.o -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -o "Stone Crawler 2"
+
 File Organization:
-src: - main.c
+src:  
+  	 test.c - test program used for implementation  
+	 main.c - main program 
+	 setup_sc2 - batch file for compiling 
      -> include - header files used
-		-battle.h - handles battle system operations 
-		-dungeon.h - handles dungeon system operations
-		-title.h - handles title screen operations
-		-shop.h - handles shop operations 
-		-menu.h - handles menu operations (accessed while in dungeon/overworld)
+		-battle.h - general battle system operations 
+		-character_menu.h - general status menu operations 
+		-cutscene.h - general cutscene operations 
+		
+		-dungeon.h - general dungeon operations 
+		-dungeon_logic.h - specific dungeon logic 
+		-dungeon_npc.h - npc dungeon logic 
+		-dungeon_display.h - display dungeon logic 
+		-dungeon_enemies.h - enemy dungeon logic 
+		
+		-gameloop.h - contains the main game loop 
+		-gameover.h - general gameover screen operations
+		
+		-shops.h - handles shop operations 
+		-title_screen.h - handles title screen operations
+		
 		-> base
-			-event_handler.h - event handling operations
-			-filenames.h - holds filenames for assets used
-			-graphics.h - display sprite data operations and init
-			-input.h - input handling (contains menu operations also)
-			-music.h - music handling
-			-sprite_data.h - contains graphic arrays
-			-state.h - game state operations
-			-stats.h - character stat operations
-			-npc.h - npc operations in dungeon crawling 
-			-text.h - all text/dialogue in the game is stored here
-			-font.h - handling font in window/sprite mode
-			-image.h - handling images in window/sprite mode 
-     -> data - folder for holding save data
+			-> graphics
+				-font.h - contains all font/text handling from sprite mode 
+				-image.h - contains image handling for sprite mode 
+				-music.h - contains all music handling 
+				-sprite_data.h - contains sprite data for ascii mode from the first Stone Crawler
+			
+			-> information
+				-filenames.h - contains all the names of files used in the game 
+				-npc.h - specifies npc data structure
+				-stats.h - specifies stat data structure 
+				-text.h - contains all text used in the game 
+				
+			-sc2.h - general functions used in the game code 
+			-menu.h - generic menu operations 
+			-state.h - contains the game state and operations for initializing/loading/saving/deallocating the data 
+
      -> maps - contains map files read by the game 
+		-> npc_data - contains npc data files to be read for the dungeon 
+		
      -> resources - contains asset data 
-     	 -> font - contains font assets
-	 -> music - contains music/sound assets
-	 -> sprites - contains sprite data
-		-> background - contains assets used for the background
-		-> curses - enemy sprites during combat
-     -> dlls - contains dlls used for compiling 
+     	-> font - contains font assets
+		-> music - contains music/sound assets
+		-> sprites - contains image data for sprite mode
+			-> background - contains assets used for the background
+			-> curses - enemy sprites during combat
+
 	 -> data - save data files 
 	 
 	 
-
 Graphic Modes:
 	With Stone Crawler Rebuild there are two graphical modes: ASCII and sprite 
 	
-	To toggle a specific mode with a build, a global graphicsMode is set to a 
+	To toggle a specific mode with a build, the state variable graphicsMode is set to a 
 	specific value with these being the specific modes
 	0 - ascii
 	1 - sprites
 
-Debug Mode
-	Debug mode is a toggled variable in state.h
+Game Systems:
+	Each state of the general game application (such as being in a battle, dungeon, title screen)
+	involves having a specific display and logic function. Generally the only specification
+	for each system is that it should have the below set up for display functions so as
+	to fit with the constraints of the Ascii/sprite mode.
 	
-	0 - off
-	1 - on
+	void display(void)
+	{	
+		switch(state->graphicsMode)
+		{
+			case 0: // ascii mode 
+			if(state->megaAlpha == 0) // update screen to add title screen 
+			{
+				state->megaAlpha = 1;
+			}
+			break;
+			case 1: // sprite mode
+			if(state->numImages == 0)
+			{
+				// initialize images used 
+			}
+			else
+			{
+				// display operations 
+			}
+			
+			break;
+		}
+	}
 
 Controls:
 	Arrow Keys - Movement/Selecting
@@ -65,12 +111,3 @@ Controls:
 	Backspace - exit conversation with npc
 	M - (in dungeon) menu 
 	H - (in debug mode for sprite version) open command prompt
-
-Event Handling:
-	Events are registered through the registerEvent function specifically with 
-	a certain enumerated value to represent said function, it's important to
-	deallocate this with destroyListener when said function/event does not need
-	to be utilized.
-	
-	For example menu handling in this game is done with MENU_SELECTION
-	but it first must be initialized with values before being used

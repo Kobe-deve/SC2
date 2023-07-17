@@ -1,101 +1,46 @@
-/*
-	SC2.0
-	Created by Kobe
-	12/17/2022 - 
-*/
-#include <stdio.h>
-#include <time.h>
-#include <string.h>
-#include <stdlib.h>
-
-#include "include/base/font.h"
-#include "include/base/state.h"
-#include "include/base/music.h"
-#include "include/base/event_handler.h"
-#include "include/base/input.h"
-#include "include/base/graphics.h"
-#include "include/battle.h"
-#include "include/dungeon.h"
-#include "include/title.h"
-#include "include/file_selection.h"
+#include "include/base/sc2.h"
+#include "include/gameloop.h"
 
 // windres main.rs -o main.o 
 // gcc main.c main.o -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -o "Stone Crawler 2"
 
 int main(int argc, char *argv[])
 {
-	srand((unsigned)time(NULL));
+	int i;
 	
+	srand((unsigned)time(NULL));
+
 	struct gameState state;
 	
-	// initialize the window 
-	init(&state);
-	// initialize music handling
-	initMusic(&state);
-	
-	// initialize listeners 
-	initListeners(state.listeners,MAX_EVENTS);
-	
-	// register events used at the title screen 
-	registerEvent(DISPLAY,titleScreenDisplay,state.listeners);
-	registerEvent(MENU_SELECTION,menuSelection,state.listeners);
-	registerEvent(LOGIC_HANDLER,titleScreenLogic,state.listeners);
-	
-	struct EventHandler *handlers = state.listeners[DISPLAY];
-	
-	// for loop variable 
-	int i = 0;
-	
-	// used for window handling 
-	SDL_Event * e;
-	const Uint8* keyStates;
-	int frameRateTracker; // used for frame rate 
-	int inputTimer = 0; // used for keeping input timing consistent with ASCII version 
-	int colors[4]; // renderer color 
-	struct image backgroundAsset;
-	
-	// set up SDL input handling if graphics mode enabled 
-	if(graphicsMode == 1)
-	{
-		// initialize event handler for SDL2 events and renderer color 
-		e = malloc(sizeof(SDL_Event));
-		colors[0] = 0;
-		colors[1] = 0;
-		colors[2] = 100;
-		colors[3] = 0;
+	state.graphicsMode = 1; // set graphics mode 
 		
-		state.fontHandler = malloc(sizeof(struct text));
-		
-		// initialize background assets
-		backgroundAsset = initImage(BACKGROUND_ASSET,state.renderer);
-		backgroundAsset.scale = 4;
-		
-		// initialize text handler
-		initFont(state.fontHandler, state.renderer);
-	}
+	// initialize game 	
+	initializeGame(&state);
 	
 	// main loop
 	while(state.input != 27)
 	{
-		if(graphicsMode == 1) // if sprite mode enabled, clear screen 
+		// if sprite mode enabled, clear screen
+		if(state.graphicsMode == 1)
 		{
-			SDL_SetRenderDrawColor(state.renderer, colors[0], colors[1], colors[2], colors[3]);
+			SDL_SetRenderDrawColor(state.renderer, state.colors[0], state.colors[1], state.colors[2], state.colors[3]);
 			SDL_RenderClear(state.renderer);
-			frameRateTracker = SDL_GetTicks();
-		
+			state.frameRateTracker = SDL_GetTicks();
+			
 			// if in sprite mode, render background 
-			backgroundAsset.angle++;
-			backgroundAsset.angle%=360;
-			backgroundAsset.y = 500;
+			state.backgroundAsset.angle++;
+			state.backgroundAsset.angle%=360;
+			state.backgroundAsset.y = 500;
 			for(i=0;i<6;i++)
 			{
-				backgroundAsset.x = i*200;
-				renderImage(&backgroundAsset,state.renderer,NULL);
+				state.backgroundAsset.x = i*200;
+				renderImage(&state.backgroundAsset,state.renderer,NULL);
 			}
-		}
 			
+		}
+		
 		// input handling based on mode 
-		switch(graphicsMode)
+		switch(state.graphicsMode)
 		{
 			case 0:
 			if ( _kbhit() )
@@ -105,18 +50,19 @@ int main(int argc, char *argv[])
 			break;
 
 			case 1:
-			keyStates = SDL_GetKeyboardState(NULL);
+			
+			state.keyStates = SDL_GetKeyboardState(NULL);
 			
 			state.input = 0;
 			
-			while(SDL_PollEvent(e)) 
+			while(SDL_PollEvent(state.e)) 
 			{
-				switch(e->type)
+				switch(state.e->type)
 				{
 					case SDL_WINDOWEVENT_MINIMIZED:
-						while (SDL_WaitEvent(e))
+						while (SDL_WaitEvent(state.e))
 						{
-							if (e->window.event == SDL_WINDOWEVENT_RESTORED)
+							if (state.e->window.event == SDL_WINDOWEVENT_RESTORED)
 							{
 								break;
 							}
@@ -125,7 +71,7 @@ int main(int argc, char *argv[])
 					
 					case SDL_JOYBUTTONDOWN: // for controller input
 					
-						switch(e->jbutton.button)
+						switch(state.e->jbutton.button)
 						{
 							case SDL_CONTROLLER_BUTTON_DPAD_UP:
 								state.input=UP;
@@ -150,7 +96,7 @@ int main(int argc, char *argv[])
 					break;
 					
 					case SDL_KEYDOWN: // for keyboard input
-						switch(e->key.keysym.sym)
+						switch(state.e->key.keysym.sym)
 						{
 							case SDLK_RETURN:
 								state.input = 13;
@@ -179,11 +125,11 @@ int main(int argc, char *argv[])
 							break;
 							
 							case SDLK_h:
-							if(debug == 1)
+							/*if(debug == 1)
 							{
 								HWND consoleWindow = GetConsoleWindow();
 								ShowWindow(consoleWindow, SW_NORMAL);
-							}
+							}*/
 							break;
 							
 							case SDLK_s:
@@ -206,61 +152,32 @@ int main(int argc, char *argv[])
 					break;
 				}
 			
-			}				
-			
+			}			
 			break;
 		}
 		
-		// go through and execute events 
-		for(i=0;i<MAX_EVENTS;i++)
-		{
-			handlers = state.listeners[i];
-			if(handlers != NULL)
-				handlers->mainFunction(&state);
-		}
+		if(state.switchSystem == 1 && state.input != 27)
+			state.input = 0;
+		
+		// game logic handling 
+		logicHandler(&state);
+		
+		// game display handling 
+		displayHandler(&state);
 		
 		// if sprite mode enabled, render screen and keep the frame rate 
-		if(graphicsMode == 1)
+		if(state.graphicsMode == 1)
 		{
 			SDL_RenderPresent(state.renderer);
-			++(frames); // adds to frame tally
 		
-			int framet = SDL_GetTicks() - frameRateTracker; // for capping frame rate
+			int framet = SDL_GetTicks() - state.frameRateTracker; // for capping frame rate
 			if( framet < SCREEN_TICK_PER_FRAME)
 				SDL_Delay( SCREEN_TICK_PER_FRAME - framet );
 		}
 	}
 	
-	// deallocate data used for sprite mode 
-	if(graphicsMode == 1)
-	{
-		// deallocate images
-		clearImages(&state);
-		// deallocate background image
-		deallocateImage(&backgroundAsset);
-		
-		// deallocate font 
-		deallocateFont(state.fontHandler);
-		
-		// deallocate renderer and window 
-		SDL_DestroyRenderer(state.renderer);
-		SDL_DestroyWindow(state.window);
-		
-		// quit sdl
-		SDL_Quit();
-	}
-	
-	// clear data being used 
-	clearState(&state);
-	
-	// free data
-	freeMenuProcess(&state);
-		
-	freeDungeonData(&state);
-	freeBattleData(&state);
-	
-	// destroy all listeners when game is done
-	destroyListeners(state.listeners,MAX_EVENTS);
+	// deallocate game before closing 
+	deallocateGame(&state);	
 	
 	return 0;
 }
