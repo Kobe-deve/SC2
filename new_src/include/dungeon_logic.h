@@ -374,6 +374,8 @@ void dungeonMovement(struct gameState * state)
 				state->activeNPCs[state->nearestNPC].numSaved++;
 				
 				// start encounter 
+				state->switchSystem = 1;
+				state->switchTo = BATTLE_SCREEN;
 			}
 			
 			break;

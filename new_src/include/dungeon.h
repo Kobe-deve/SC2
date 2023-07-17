@@ -230,6 +230,9 @@ void dungeonLogic(struct gameState * state)
 	
 	// npc handler
 	npcHandler(state);
+	
+	// enemy handler 
+	enemyHandler(state);
 }
 
 #endif

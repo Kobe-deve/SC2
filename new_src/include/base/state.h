@@ -167,8 +167,7 @@
 			SCREEN_TICK_PER_FRAME = 25;  // 1000 / SCREEN_FPS
 
 			// hide console window 
-			//if(testMode == 0)
-			//ShowWindow(consoleWindow, SW_HIDE);
+			ShowWindow(consoleWindow, SW_HIDE);
 			
 			// initialize window and SDL handling
 			if(SDL_Init( IMG_INIT_JPG | IMG_INIT_PNG | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO) >= 0)
