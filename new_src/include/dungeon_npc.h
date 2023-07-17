@@ -91,6 +91,9 @@ void generateNPCs(struct gameState * state, int dungeonType)
 				break;
 			}
 			
+			fscanf(readFile,"%s",fileReader);
+			state->activeNPCs[i].speed = atoi(fileReader);
+			
 			// set default for conditions
 			state->activeNPCs[i].inCombat = 0;  
 			state->activeNPCs[i].talking = 0;  
@@ -113,14 +116,13 @@ void generateNPCs(struct gameState * state, int dungeonType)
 void npcHandler(struct gameState * state)
 {
 	int i,j;
-	int movement = 0;
+	int movement = 0; // boolean variable for if the npc should move at all when their movement timer is up 
 	int cx,cy;
 	
 	// display/move npcs  
 	for(i = 0;i<state->numNPCs;i++)
 	{	
-		movement = 0;
-
+		movement = 1;
 		if(state->activeNPCs[i].active)
 		{	
 			// movement logic 
@@ -143,36 +145,8 @@ void npcHandler(struct gameState * state)
 				
 				// move to new position 
 				
-				/*
-				// x movement 
-				if(upStairCoords[activeNPCs[i].floor][0] == activeNPCs[i].x) // on the same x
-					activeNPCs[i].direction = -2;			
-				else if(upStairCoords[activeNPCs[i].floor][0] > activeNPCs[i].x && d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x+1] != 1 && activeNPCs[i].x < dungeonSize-1) // stairs are to the right 
-					activeNPCs[i].direction = 1;
-				else if(upStairCoords[activeNPCs[i].floor][0] < activeNPCs[i].x &&  d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x-1] != 1 && activeNPCs[i].x > 0) // stairs are to the left
-					activeNPCs[i].direction = 3;
-				else
-					activeNPCs[i].direction = -1;
-					
-				switch(activeNPCs[i].direction)
-				{
-					case 1:
-					activeNPCs[i].x++;
-					break;
-					case 3:
-					activeNPCs[i].x--;
-					break;
-					case -2:
-					break;
-					case -1:
-					if(activeNPCs[i].x > 0 && d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x-1] != 1)
-						activeNPCs[i].x--;
-					else if(activeNPCs[i].x < dungeonSize-1 && d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x+1] != 1)
-						activeNPCs[i].x++;
-					break;
-				}
-				*/
-				
+				if(state->d[state->activeNPCs[i].floor][state->activeNPCs[i].y][state->activeNPCs[i].x+1] != 1)
+					state->activeNPCs[i].x = state->activeNPCs[i].x+1;
 				
 				// y movement 
 				if(state->upStairCoords[state->activeNPCs[i].floor][1] == state->activeNPCs[i].y)

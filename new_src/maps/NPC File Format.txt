@@ -1,7 +1,8 @@
 NPC File format
 -
-x
+x 
 y
 floor
-type
+type - the type of npc
+speed - number of sections till movement 
 -
