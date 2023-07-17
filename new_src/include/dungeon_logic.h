@@ -143,7 +143,7 @@ void initDungeonFloor(struct gameState * state)
 	displayRange(state);
 	
 	// generate npcs
-	//generateNPCs(state->building);
+	generateNPCs(state,state->building);
 
 	// set up status handling array 
 	state->numStatusLines = 0;

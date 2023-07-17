@@ -78,7 +78,6 @@ void generateNPCs(struct gameState * state, int dungeonType)
 			state->activeNPCs[i].speed = atoi(fileReader);
 			
 			fscanf(readFile,"%s",fileReader);
-			//state->activeNPCs[i].goal = (enum goals)atoi(fileReader);
 			
 			fscanf(readFile,"%s",fileReader);
 			switch(atoi(fileReader))
@@ -104,6 +103,161 @@ void generateNPCs(struct gameState * state, int dungeonType)
 			fscanf(readFile,"%s",fileReader);
 		}
 	}
+}
+
+// handling npcs on the floor 
+void npcHandler(struct gameState * state)
+{
+	int i,j;
+	int movement = 0;
+	int cx,cy;
+	
+	// display/move npcs  
+	for(i = 0;i<state->numNPCs;i++)
+	{	
+		movement = 0;
+
+		if(state->activeNPCs[i].active)
+		{	
+			// movement logic 
+			if(movement == 1 && state->activeNPCs[i].inCombat != 1 && state->activeNPCs[i].talking != 1 && ((int)(SDL_GetTicks() - state->activeNPCs[i].startTicks))/1000.f >= state->activeNPCs[i].speed)
+			{
+				// erase/update current spot when moving 
+				if(state->graphicsMode == 0 && !state->activeNPCs[i].talking && !state->activeNPCs[i].inCombat && movement == 1 && state->floor == state->activeNPCs[i].floor && state->visible[state->activeNPCs[i].floor][state->activeNPCs[i].y][state->activeNPCs[i].x] == 1)
+				{
+					setColor(WHITE);
+					setCursor(dungeonPrintCoordX+state->activeNPCs[i].x,dungeonPrintCoordX+state->activeNPCs[i].y);
+					printf("%c",quickConvert(state->d[state->floor][state->activeNPCs[i].y][state->activeNPCs[i].x]));	
+				}
+				
+				
+				// determine movement 
+				
+				// store original position in case we have to go back 
+				cx = state->activeNPCs[i].x;
+				cy = state->activeNPCs[i].y;
+				
+				// move to new position 
+				
+				/*
+				// x movement 
+				if(upStairCoords[activeNPCs[i].floor][0] == activeNPCs[i].x) // on the same x
+					activeNPCs[i].direction = -2;			
+				else if(upStairCoords[activeNPCs[i].floor][0] > activeNPCs[i].x && d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x+1] != 1 && activeNPCs[i].x < dungeonSize-1) // stairs are to the right 
+					activeNPCs[i].direction = 1;
+				else if(upStairCoords[activeNPCs[i].floor][0] < activeNPCs[i].x &&  d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x-1] != 1 && activeNPCs[i].x > 0) // stairs are to the left
+					activeNPCs[i].direction = 3;
+				else
+					activeNPCs[i].direction = -1;
+					
+				switch(activeNPCs[i].direction)
+				{
+					case 1:
+					activeNPCs[i].x++;
+					break;
+					case 3:
+					activeNPCs[i].x--;
+					break;
+					case -2:
+					break;
+					case -1:
+					if(activeNPCs[i].x > 0 && d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x-1] != 1)
+						activeNPCs[i].x--;
+					else if(activeNPCs[i].x < dungeonSize-1 && d[activeNPCs[i].floor][activeNPCs[i].y][activeNPCs[i].x+1] != 1)
+						activeNPCs[i].x++;
+					break;
+				}
+				*/
+				
+				
+				// y movement 
+				if(state->upStairCoords[state->activeNPCs[i].floor][1] == state->activeNPCs[i].y)
+					state->activeNPCs[i].direction = -2;			
+				else if(state->upStairCoords[state->activeNPCs[i].floor][1] > state->activeNPCs[i].y && state->d[state->activeNPCs[i].floor][state->activeNPCs[i].y+1][state->activeNPCs[i].x] != 1 && state->activeNPCs[i].y < state->dungeonSize-1)
+					state->activeNPCs[i].direction = 2;
+				else if(state->upStairCoords[state->activeNPCs[i].floor][1] < state->activeNPCs[i].y && state->d[state->activeNPCs[i].floor][state->activeNPCs[i].y-1][state->activeNPCs[i].x] != 1 && state->activeNPCs[i].y > 0)
+					state->activeNPCs[i].direction = 0;
+				else
+					state->activeNPCs[i].direction = -1;
+				
+				switch(state->activeNPCs[i].direction)
+				{
+					case 0:
+					if(state->d[state->activeNPCs[i].floor][state->activeNPCs[i].y-1][state->activeNPCs[i].x] != 1)
+						state->activeNPCs[i].y--;
+					break;
+					case 2:
+					if(state->d[state->activeNPCs[i].floor][state->activeNPCs[i].y+1][state->activeNPCs[i].x] != 1)
+						state->activeNPCs[i].y++;
+					break;
+					case -2:
+					break;
+					case -1:
+					if(state->activeNPCs[i].y > 0 && state->d[state->activeNPCs[i].floor][state->activeNPCs[i].y-1][state->activeNPCs[i].x] != 1)
+						state->activeNPCs[i].y--;
+					else if(state->activeNPCs[i].y < state->dungeonSize-1 && state->d[state->activeNPCs[i].floor][state->activeNPCs[i].y+1][state->activeNPCs[i].x] != 1)
+						state->activeNPCs[i].y++;
+					
+					break;
+				}
+				
+				// check if there isn't an overlap with another npc 
+				for(j=0;j<state->numNPCs;j++)
+				{
+					if(j!=i && (state->activeNPCs[i].x == state->activeNPCs[j].x) && (state->activeNPCs[i].y == state->activeNPCs[j].y))
+					{
+						state->activeNPCs[i].x = cx;
+						state->activeNPCs[i].y = cy;
+						break;
+					}
+				}
+				
+				// check if there isn't any overlap with the player 
+				if(state->activeNPCs[i].y == state->playerY && state->activeNPCs[i].x == state->playerX)
+				{
+					state->activeNPCs[i].x = cx;
+					state->activeNPCs[i].y = cy;
+				}						
+				
+				
+				// go upstairs if at stairs 
+				if(state->d[state->activeNPCs[i].floor][state->activeNPCs[i].y][state->activeNPCs[i].x] == 2)
+					state->activeNPCs[i].floor++;
+				
+				state->activeNPCs[i].startTicks = SDL_GetTicks();
+			}
+			
+			// display npc 
+			if(state->visible[state->activeNPCs[i].floor][state->activeNPCs[i].y][state->activeNPCs[i].x] == 1 && state->floor == state->activeNPCs[i].floor)
+			{
+				switch(state->graphicsMode)
+				{
+					case 0:
+					setCursor(dungeonPrintCoordX+state->activeNPCs[i].x,dungeonPrintCoordX+state->activeNPCs[i].y);
+					switch(state->activeNPCs[i].type)
+					{
+						case 0:
+						setColor(DARK_BABY_BLUE);
+						break;
+						case 1:
+						setColor(SILVER);
+						break;
+					}
+				
+					if(state->activeNPCs[i].inCombat == 1) // shows a fight 
+						printf("X");
+					else
+						printf("%c",1);
+					break;
+					case 1:
+					
+					break;
+				}
+			}
+		}
+	
+	}
+	setColor(WHITE);
 }
 
 #endif

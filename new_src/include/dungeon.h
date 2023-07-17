@@ -170,6 +170,25 @@ void dungeonDisplay(struct gameState * state)
 				}
 			}	
 			
+			// display npc 
+			for(i = 0;i<state->numNPCs;i++)
+			{		
+				if(state->activeNPCs[i].active && state->visible[state->activeNPCs[i].floor][state->activeNPCs[i].y][state->activeNPCs[i].x] == 1 && state->floor == state->activeNPCs[i].floor)
+				{
+					// change sprite based on situation the npc is in 
+					if(state->activeNPCs[i].inCombat == 1)
+						state->spriteClip.x = SPRITE_SQUARE_SIZE*11;
+					else	
+						state->spriteClip.x = SPRITE_SQUARE_SIZE*10;
+					
+					state->spriteClip.y = 0;
+							
+					state->images[0].x = state->activeNPCs[i].x*SPRITE_SQUARE_SIZE*state->images[0].scale;
+					state->images[0].y = state->activeNPCs[i].y*SPRITE_SQUARE_SIZE*state->images[0].scale;
+					renderImage(&state->images[0], state->renderer,&state->spriteClip);
+				}
+			}
+			
 			// display player 
 			state->spriteClip.x = 0;
 			state->spriteClip.y = 0;
@@ -195,6 +214,9 @@ void dungeonLogic(struct gameState * state)
 	
 	// player movement logic 
 	dungeonMovement(state);
+	
+	// npc handler
+	npcHandler(state);
 }
 
 #endif
