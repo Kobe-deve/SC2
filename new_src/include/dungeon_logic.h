@@ -282,7 +282,7 @@ void dungeonMovement(struct gameState * state)
 		// movement 
 		case UP:
 		state->direction = 0;
-		if(state->playerY > 0 && state->d[state->floor][state->playerY-1][state->playerX] != 1 && !npcNearby(state->playerX,state->playerY-1,state->floor,0))
+		if(state->playerY > 0 && state->d[state->floor][state->playerY-1][state->playerX] != 1 && !npcNearby(state->playerX,state->playerY-1,state->floor,0,state))
 		{
 			displayRange(state);
 			state->playerY--;
@@ -293,7 +293,7 @@ void dungeonMovement(struct gameState * state)
 		break;
 		case DOWN:
 		state->direction = 2;
-		if(state->playerY < state->dungeonSize-1 && state->d[state->floor][state->playerY+1][state->playerX] != 1 && !npcNearby(state->playerX,state->playerY+1,state->floor,0))
+		if(state->playerY < state->dungeonSize-1 && state->d[state->floor][state->playerY+1][state->playerX] != 1 && !npcNearby(state->playerX,state->playerY+1,state->floor,0,state))
 		{
 			displayRange(state);
 			state->playerY++;
@@ -304,7 +304,7 @@ void dungeonMovement(struct gameState * state)
 		break;
 		case LEFT:
 		state->direction = 3;
-		if(state->playerX > 0 && state->d[state->floor][state->playerY][state->playerX-1] != 1 && !npcNearby(state->playerX-1,state->playerY,state->floor,0))
+		if(state->playerX > 0 && state->d[state->floor][state->playerY][state->playerX-1] != 1 && !npcNearby(state->playerX-1,state->playerY,state->floor,0,state))
 		{
 			displayRange(state);
 			state->playerX--;
@@ -315,7 +315,7 @@ void dungeonMovement(struct gameState * state)
 		break;
 		case RIGHT:
 		state->direction = 1;
-		if(state->playerX < state->dungeonSize-1 && state->d[state->floor][state->playerY][state->playerX+1] != 1  && !npcNearby(state->playerX+1,state->playerY,state->floor,0))
+		if(state->playerX < state->dungeonSize-1 && state->d[state->floor][state->playerY][state->playerX+1] != 1  && !npcNearby(state->playerX+1,state->playerY,state->floor,0,state))
 		{
 			displayRange(state);
 			state->playerX++;

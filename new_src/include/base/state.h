@@ -22,6 +22,8 @@
 
 #include "graphics/font.h"
 #include "graphics/image.h"
+#include "information/stats.h"
+#include "information/npc.h"
 
 // screen dimensions in ascii mode 
 #define WINDOW_WIDTH 1500
@@ -94,6 +96,10 @@
 		int floor; // floor in dungeon 
 		int building; // the building the player is in 
 		int direction; // the direction the player is facing in the dungeon 
+		
+		// npc information for dungeon 
+		int numNPCs;
+		struct npc * activeNPCs;
 		
 		// array of visible tiles in an area
 		int *** visible;
@@ -256,6 +262,8 @@
 		state->floor = 0; // floor in dungeon
 		state->building = 0;
 		state->direction = 0;
+		state->numNPCs = 0;
+		state->activeNPCs = NULL;	
 		
 		state->visible = NULL;
 

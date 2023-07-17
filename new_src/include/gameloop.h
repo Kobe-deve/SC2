@@ -1,4 +1,5 @@
 #include "base/information/filenames.h"
+#include "base/information/stats.h"
 #include "base/state.h"
 #include "base/menu.h"
 #include "base/graphics/music.h"
