@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
 	
 	state.graphicsMode = 1; // set graphics mode 
 		
+	// initialize game 	
 	initializeGame(&state);
 	
 	// main loop
@@ -175,6 +176,7 @@ int main(int argc, char *argv[])
 		}
 	}
 	
+	// deallocate game before closing 
 	deallocateGame(&state);	
 	
 	return 0;
