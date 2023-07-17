@@ -6,6 +6,7 @@ int dungeonPrintCoordY = 1;
 
 void generateEnemies(struct gameState * state);
 int npcNearby(int x, int y, int f, int isPlayer, struct gameState * state);
+int nearbyBlocks(struct gameState * state, int action);
 
 #ifndef DUNGEON_ENEMIES__HANDLED
 #include "dungeon_enemies.h"
@@ -145,6 +146,15 @@ void dungeonDisplay(struct gameState * state)
 							state->spriteClip.x = SPRITE_SQUARE_SIZE*9;
 							state->spriteClip.y = 0;
 							break;
+							
+							case B: // door
+							state->spriteClip.x = SPRITE_SQUARE_SIZE*12;
+							state->spriteClip.y = 0;
+							state->images[0].x = ix*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							state->images[0].y = iy*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							renderImage(&state->images[0], state->renderer,&state->spriteClip);
+							break;
+							
 							default: // floor 
 							state->spriteClip.x = SPRITE_SQUARE_SIZE;
 							state->spriteClip.y = 0;

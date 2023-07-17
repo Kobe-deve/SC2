@@ -122,8 +122,8 @@ void enemyHandler(struct gameState * state)
 				updateStatus(ENEMY_MOVEMENT,state);	
 			
 			
-			if(state->activeEnemies[i].x < state->dungeonSize-1 && state->d[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x+1] != 1)
-				state->activeEnemies[i].x++;
+			//if(state->activeEnemies[i].x < state->dungeonSize-1 && state->d[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x+1] != 1)
+			//	state->activeEnemies[i].x++;
 			/*
 			TODO fix enemy movement logic
 			

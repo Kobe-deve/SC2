@@ -1,0 +1,55 @@
+Dungeon Maker
+	
+	Save File Format:
+		-First Line: Dungeon Size (the x/y/floor size of the dungeon)
+		-Second Line: Number of enemies spawned per floor
+			-As the program scans through the file per floor,
+			 it will set specific enemies to spawn points but if the
+			 number of spawn points is less than the number of enemies spawned
+			 their spawn points will be randomized
+		-Space/Dash
+		-Repeat the following for all dungeon floors 
+			-Array Ex: 0 0 0 1 0 E 0 0 E 0 
+					   0 0 1 1 1 1 1 1 0 0 
+					   0 0 0 0 0 0 0 1 0 0 
+					   0 0 0 0 0 1 0 1 1 1 
+					   0 0 0 9 1 0 0 0 0 0 
+					   1 1 1 1 1 0 0 0 2 0 
+					   0 4 0 0 1 0 0 0 0 0 
+					   0 4 4 0 0 0 0 0 0 0 
+					   1 1 0 1 0 0 0 0 0 0 
+					   4 4 0 0 0 0 0 0 0 0 
+		-Space
+	
+	
+	A 10
+	B 11
+	D 13
+	E 14
+	F 15
+	G 16
+	I 18
+	J 19
+	K 20
+	M 22
+
+	Block Types:
+		1 - Wall
+		2 - Stairs(up)
+		3 - Stairs(down)
+		4 - chest
+		5 - opened chest 
+		9 - shop
+		A(10) - switch  
+		
+		D(13) - hidden door (closed) 
+		F(15) - hidden door (open)
+		
+		B(11) - locked door
+		
+		E(14) - Enemy spawn point 
+
+	Mechanics:
+		-Locked doors
+			Need keys dropped from enemies to open 
+	

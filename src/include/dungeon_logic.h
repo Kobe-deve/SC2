@@ -12,6 +12,71 @@
 #include "dungeon_display.h"
 #endif
 
+// return nearby blocks that the player can interact with (if action is more than 0 then perform action)
+int nearbyBlocks(struct gameState * state, int action)
+{	
+	int * spots[4] = {NULL,NULL,NULL,NULL};
+	int numSpots = 0;
+	
+	int val;
+	
+	if(state->playerY-1 > 0)
+	{
+		spots[numSpots] = &state->d[state->floor][state->playerY-1][state->playerX];
+		numSpots++;
+	}
+	
+	if(state->playerY+1 < state->dungeonSize)
+	{
+		spots[numSpots] = &state->d[state->floor][state->playerY+1][state->playerX];
+		numSpots++;
+	}
+	
+	if(state->playerX+1 < state->dungeonSize)
+	{
+		spots[numSpots] = &state->d[state->floor][state->playerY][state->playerX+1];
+		numSpots++;
+	}
+	
+	if(state->playerX-1 > 0)
+	{
+		spots[numSpots] = &state->d[state->floor][state->playerY][state->playerX-1];
+		numSpots++;
+	}
+	
+	int i;
+	
+	// check which spot has a value 
+	for(i=0;i<numSpots;i++)
+	{
+		if(spots[i] != NULL)
+		{		
+			val = (*spots[i]);
+			
+			if(val >= A && val != E)
+			{
+				// if an action is being performed on the nearby block, perform it 
+				switch(action)
+				{
+					case 1: // unlock door 
+					
+					if(state->keys > 0)
+					{
+						(*spots[i]) = 0; 
+						
+						updateStatus(UNLOCK_DOOR,state);
+					}
+					break;
+				}
+				return val;
+			}
+		}
+				
+	}
+	
+	return 0;
+}
+
 // define dungeon based on file
 void readDungeonFile(struct gameState * state, char * fileName)
 {
@@ -284,7 +349,7 @@ void dungeonMovement(struct gameState * state)
 		// movement 
 		case UP:
 		state->direction = 0;
-		if(state->playerY > 0 && state->d[state->floor][state->playerY-1][state->playerX] != 1 && !npcNearby(state->playerX,state->playerY-1,state->floor,0,state))
+		if(state->playerY > 0 && state->d[state->floor][state->playerY-1][state->playerX] != 1 && !npcNearby(state->playerX,state->playerY-1,state->floor,0,state) && state->d[state->floor][state->playerY-1][state->playerX] != B)
 		{
 			displayRange(state);
 			state->playerY--;
@@ -295,7 +360,7 @@ void dungeonMovement(struct gameState * state)
 		break;
 		case DOWN:
 		state->direction = 2;
-		if(state->playerY < state->dungeonSize-1 && state->d[state->floor][state->playerY+1][state->playerX] != 1 && !npcNearby(state->playerX,state->playerY+1,state->floor,0,state))
+		if(state->playerY < state->dungeonSize-1 && state->d[state->floor][state->playerY+1][state->playerX] != 1 && !npcNearby(state->playerX,state->playerY+1,state->floor,0,state) && state->d[state->floor][state->playerY+1][state->playerX] != B)
 		{
 			displayRange(state);
 			state->playerY++;
@@ -306,7 +371,7 @@ void dungeonMovement(struct gameState * state)
 		break;
 		case LEFT:
 		state->direction = 3;
-		if(state->playerX > 0 && state->d[state->floor][state->playerY][state->playerX-1] != 1 && !npcNearby(state->playerX-1,state->playerY,state->floor,0,state))
+		if(state->playerX > 0 && state->d[state->floor][state->playerY][state->playerX-1] != 1 && !npcNearby(state->playerX-1,state->playerY,state->floor,0,state) && state->d[state->floor][state->playerY][state->playerX-1] != B)
 		{
 			displayRange(state);
 			state->playerX--;
@@ -317,7 +382,7 @@ void dungeonMovement(struct gameState * state)
 		break;
 		case RIGHT:
 		state->direction = 1;
-		if(state->playerX < state->dungeonSize-1 && state->d[state->floor][state->playerY][state->playerX+1] != 1  && !npcNearby(state->playerX+1,state->playerY,state->floor,0,state))
+		if(state->playerX < state->dungeonSize-1 && state->d[state->floor][state->playerY][state->playerX+1] != 1  && !npcNearby(state->playerX+1,state->playerY,state->floor,0,state) && state->d[state->floor][state->playerY][state->playerX+1] != B)
 		{
 			displayRange(state);
 			state->playerX++;
@@ -377,7 +442,9 @@ void dungeonMovement(struct gameState * state)
 				state->switchSystem = 1;
 				state->switchTo = BATTLE_SCREEN;
 			}
-			
+			else if( nearbyBlocks(state,1) == B && state->keys > 0)
+				state->keys--;
+
 			break;
 		}
 		

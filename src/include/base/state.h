@@ -98,6 +98,7 @@
 		int floor; // floor in dungeon 
 		int building; // the building the player is in 
 		int direction; // the direction the player is facing in the dungeon 
+		int keys; // keys dropped by enemies that can be used to unlock doors 
 		
 		// npc information for dungeon 
 		int numNPCs;
@@ -270,6 +271,7 @@
 		state->direction = 0;
 		state->numNPCs = 0;
 		state->activeNPCs = NULL;	
+		state->keys = 1;
 		
 		state->visible = NULL;
 

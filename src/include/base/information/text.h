@@ -17,6 +17,11 @@
 	#define ENEMY_MOVEMENT "A footstep echoes from the darkness..."
 	#define PASS_NPC "They stepped aside for you to pass by."
 	#define NPC_DONE_TALK "They stopped talking to you."
+	
+	#define UNLOCKED_DOOR "You see a locked door, press enter to unlock it"
+	#define LOCKED_DOOR "You see a locked door, you need a key to open it..."
+	#define UNLOCK_DOOR "You unlocked the door and the key vanished?"
+	
 	#define NPC_RUN_AWAY "You walked away suddenly."
 	#define OPENED_CHEST "You opened the chest and found... nothing wow awesome."
 	#define TALK_TO_NPC "You began talking with the person."
@@ -26,7 +31,7 @@
 	#define NPCLOST "You hear someone crying out in pain."
 	#define NPCWON "The fighting seemed to stop."
 	#define PASSOUT "You feel tired and can't move..."
-	#define WAKIGNUP "You wake up."
+	#define WAKINGUP "You wake up."
 
 // specific dungeon narrative/description text 
 	#define FIRST_FLOOR_TEXT "You wake up in a strange stone room, dimly lit but still dark."

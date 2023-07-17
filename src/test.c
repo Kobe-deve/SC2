@@ -42,8 +42,8 @@ void dungeonTest()
 	struct gameState state;
 	
 	// set up inputs used in the test
-	numInputs = 10;
-	inputs = malloc(10 * sizeof(int));
+	numInputs = 27;
+	inputs = malloc(numInputs * sizeof(int));
 	inputs[0] = 0;
 	inputs[1] = ENTER;
 	inputs[2] = DOWN;
@@ -51,9 +51,26 @@ void dungeonTest()
 	inputs[4] = DOWN;
 	inputs[5] = DOWN;
 	inputs[6] = DOWN;
-	inputs[7] = 0;
-	inputs[8] = 0;
-	inputs[9] = 0;
+	inputs[7] = DOWN;
+	inputs[8] = RIGHT;
+	inputs[9] = RIGHT;
+	inputs[10] = RIGHT;
+	inputs[11] = UP;
+	inputs[12] = UP;
+	inputs[13] = UP;
+	inputs[14] = RIGHT;
+	inputs[15] = RIGHT;
+	inputs[16] = RIGHT;
+	inputs[17] = RIGHT;
+	inputs[18] = RIGHT;
+	inputs[19] = DOWN;
+	inputs[20] = DOWN;
+	inputs[21] = DOWN;
+	inputs[22] = DOWN;
+	inputs[23] = DOWN;
+	inputs[24] = DOWN;
+	inputs[25] = DOWN;
+	inputs[26] = DOWN;
 	
 	state.graphicsMode = 0; // set graphics mode 
 	

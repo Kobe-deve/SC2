@@ -32,7 +32,6 @@ int quickConvert(int x)
 		
 		case 6:
 		case A:
-		case B:
 		case 12:
 		case D:
 		case F:
@@ -40,6 +39,10 @@ int quickConvert(int x)
 		case 7:
 		return 1;
 		break;
+		
+		case B:
+		return 186;
+		break; 
 		
 		case 8:
 		case 17:
@@ -139,6 +142,10 @@ void displayStatus(struct gameState * state)
 			setCursor(1,31+i);
 			printf("%s",state->statusText[i]);
 		}
+		
+		setCursor(20,10);
+		printf("Keys: %d",state->keys);
+		
 		break;
 		case 1:
 		
@@ -190,7 +197,11 @@ void description(struct gameState * state)
 {	
 	// check nearby npcs close to the player 
 	int npcTalked = (npcNearby(state->playerX,state->playerY-1,state->floor,1,state) || npcNearby(state->playerX,state->playerY+1,state->floor,1,state) || npcNearby(state->playerX+1,state->playerY,state->floor,1,state) || npcNearby(state->playerX-1,state->playerY,state->floor,1,state));
-		
+	
+	// get nearby blocks the player can interact with 
+	// TODO fix crashing with this 
+	int nearby = nearbyBlocks(state,0);
+	
 	// update status text based on where the player is at 
 	switch(state->d[state->floor][state->playerY][state->playerX])
 	{
@@ -219,6 +230,14 @@ void description(struct gameState * state)
 		}
 		else if(npcTalked && state->activeNPCs[state->nearestNPC].inCombat )
 			updateStatus(NPC_FIGHT,state);	
+		else if(nearby == B) // locked door 
+		{
+			if(state->keys == 0)
+				updateStatus(LOCKED_DOOR,state);	
+			else if(state->keys > 0)
+				updateStatus(UNLOCKED_DOOR,state);	
+		}
+		
 		break;
 	}
 }
