@@ -16,7 +16,9 @@ run setup_sc2.bat with a C/C++ compiler installed with the following libraries:
 
 File Organization:
 src:  
-	 main.c
+  	 test.c - test program used for implementation  
+	 main.c - main program 
+	 setup_sc2 - batch file for compiling 
      -> include - header files used
 		-battle.h - general battle system operations 
 		-character_menu.h - general status menu operations 
@@ -47,6 +49,7 @@ src:
 				-stats.h - specifies stat data structure 
 				-text.h - contains all text used in the game 
 				
+			-sc2.h - general functions used in the game code 
 			-menu.h - generic menu operations 
 			-state.h - contains the game state and operations for initializing/loading/saving/deallocating the data 
 
