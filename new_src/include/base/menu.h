@@ -127,4 +127,27 @@ void handleMenu(struct gameState * state)
 		
 }
 
+// clear the menu from the display 
+void clearMenu(struct gameState * state) 
+{
+	int i;
+	int j;
+	
+	setColor(BLACK);
+	for(int i=0;i<state->numOptions;i++)
+	{
+		setCursor(state->menuX,state->menuY+i);
+		
+		for(j=0;j<strlen(state->options[i]);j++)
+		{
+			setCursor(state->menuX+j,state->menuY+i);
+			printf("%c",219);
+		}
+	}
+	setCursor(state->menuX-1,state->menuY+state->option);
+	printf("%c",219);
+	
+	setColor(WHITE);
+}
+
 #endif

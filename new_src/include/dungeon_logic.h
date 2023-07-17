@@ -276,6 +276,8 @@ void resetDungeon(struct gameState * state)
 // handles the player's movement in the dungeon 
 void dungeonMovement(struct gameState * state)
 {
+	int npcNear = (npcNearby(state->playerX,state->playerY-1,state->floor,1,state) || npcNearby(state->playerX,state->playerY+1,state->floor,1,state) || npcNearby(state->playerX+1,state->playerY,state->floor,1,state) || npcNearby(state->playerX-1,state->playerY,state->floor,1,state));
+	
 	// input handling with moving the player and other commands 
 	switch(state->input)
 	{
@@ -343,6 +345,37 @@ void dungeonMovement(struct gameState * state)
 			case 9: // shop 
 			state->switchSystem = 1;
 			state->switchTo = SHOP_SCREEN;
+			break;
+			default: // interacting with movable entities
+			
+			if(state->activeNPCs[state->nearestNPC].active == 1 && npcNear && !state->activeNPCs[state->nearestNPC].inCombat) // interact with npc
+			{
+				// set up menu and variables for talking 
+				updateStatus(TALK_TO_NPC,state);
+				
+				state->activeNPCs[state->nearestNPC].talking = 1;
+				
+				char ** array = malloc(3 * sizeof(char*));
+				array[0] = G_COMMAND;
+				array[1] = Q_COMMAND;
+				array[2] = P_COMMAND;
+				
+				initMenu(state,3,array,70,31);
+				
+				free(array);
+				
+			}	
+			else if(state->activeNPCs[state->nearestNPC].active == 1 && npcNear && state->activeNPCs[state->nearestNPC].inCombat) // help npc in combat 
+			{
+				state->activeEnemies[state->activeNPCs[state->nearestNPC].enemyCombat].active = 0;
+				state->activeEnemies[state->activeNPCs[state->nearestNPC].enemyCombat].inCombat = 0;
+				
+				state->activeNPCs[state->nearestNPC].inCombat = 0;
+				state->activeNPCs[state->nearestNPC].numSaved++;
+				
+				// start encounter 
+			}
+			
 			break;
 		}
 		

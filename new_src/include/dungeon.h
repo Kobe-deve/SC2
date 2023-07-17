@@ -214,7 +214,19 @@ void dungeonLogic(struct gameState * state)
 		clearDisplay(state);
 	
 	// player movement logic 
-	dungeonMovement(state);
+	if(state->options == NULL) // if player isn't interacting with an object/character they can move 
+		dungeonMovement(state);
+	else // basic menu handling 
+	{
+		handleMenu(state);
+		
+		if(state->input == BACKSPACE) // handle menu logic 
+		{
+			clearMenu(state);
+			deallocateMenu(state);	
+			state->activeNPCs[state->nearestNPC].talking = 0;
+		}
+	}
 	
 	// npc handler
 	npcHandler(state);

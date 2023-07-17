@@ -2,22 +2,6 @@
 #ifndef SPRITES_HANDLED
 #define SPRITES_HANDLED
 
-// ascii color handling 
-typedef int colors; // for printing images
-#define YELLOW 14
-#define SILVER 8
-#define GREEN 10
-#define PINK 13
-#define BABY_BLUE 11
-#define BLUE 9
-#define DARK_RED 4
-#define DARK_BLUE 1
-#define DARK_GREEN 2
-#define DARK_BABY_BLUE 3
-#define DARK_YELLOW 6
-#define WHITE 15
-#define BLACK 16
-
 // for arrays when printing images (helps make them look nice)
 #define A 10
 #define B 11
@@ -634,24 +618,6 @@ int combr[10][10] = {0,0,0,0,0,0,8,8,8,4,
 					 0,0,4,8,8,3,0,0,0,0,
 					 0,0,8,8,0,0,0,0,0,0,
 					 0,8,8,0,0,0,0,0,0,0};
-
-// set color based on a given color value 
-void setColor(int ForgC)
-{
-	WORD wColor;
-
-	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-
-    //We use csbi for the wAttributes word.
-	if(GetConsoleScreenBufferInfo(hStdOut, &csbi))
-	{
-		//Mask out all but the background attribute, and add in the forgournd color
-		wColor = (csbi.wAttributes & 0xF0) + (ForgC & 0x0F); // 0xF0 is red
-		SetConsoleTextAttribute(hStdOut, wColor);
-	}
-	return;
-}
 
 // print specific array patterns 
 void printPattern(enum sprites patternType, int xPos, int yPos, int maxX, int maxY)
