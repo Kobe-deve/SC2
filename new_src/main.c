@@ -14,27 +14,7 @@ int main(int argc, char *argv[])
 	
 	state.graphicsMode = 1; // set graphics mode 
 		
-	// initialize the game state 
-	init(&state);
-	
-	// initialize music handler
-	initMusic(&state);
-	
-	// set up SDL input handling if graphics mode enabled 
-	if(state.graphicsMode == 1)
-	{
-		// initialize event handler for SDL2 events and renderer color 
-		state.e = malloc(sizeof(SDL_Event));
-		state.colors[0] = 0;
-		state.colors[1] = 0;
-		state.colors[2] = 100;
-		state.colors[3] = 0;
-		
-		// initialize background assets
-		state.backgroundAsset = initImage(BACKGROUND_ASSET,state.renderer);
-		state.backgroundAsset.scale = 4;
-		
-	}
+	initializeGame(&state);
 	
 	// main loop
 	while(state.input != 27)
@@ -195,25 +175,7 @@ int main(int argc, char *argv[])
 		}
 	}
 	
-	// deallocate based on the current system being used 
-	switch(state.gameSystem)
-	{
-		case DUNGEON_SCREEN:
-		deallocateDungeon(&state);
-		break;
-	}
-	
-	// deallocate background image if in spirte mode 
-	if(state.graphicsMode == 1)
-	{
-		deallocateImage(&state.backgroundAsset);
-	}
-	
-	// deallocate menu if it is being used
-	if(state.options != NULL)
-		deallocateMenu(&state);
-	
-	deallocate(&state);	
+	deallocateGame(&state);	
 	
 	return 0;
 }

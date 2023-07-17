@@ -17,6 +17,57 @@
 #ifndef GAMELOOP_HANDLED
 #define GAMELOOP_HANDLED
 
+	// initialize game
+	void initializeGame(struct gameState * state)
+	{
+		// initialize the game state 
+		init(state);
+		
+		// initialize music handler
+		initMusic(state);
+		
+		// set up SDL input handling if graphics mode enabled 
+		if(state->graphicsMode == 1)
+		{
+			// initialize event handler for SDL2 events and renderer color 
+			state->e = malloc(sizeof(SDL_Event));
+			state->colors[0] = 0;
+			state->colors[1] = 0;
+			state->colors[2] = 100;
+			state->colors[3] = 0;
+			
+			// initialize background assets
+			state->backgroundAsset = initImage(BACKGROUND_ASSET,state->renderer);
+			state->backgroundAsset.scale = 4;
+			
+		}
+	}
+
+	// deallocate game 
+	void deallocateGame(struct gameState * state)
+	{
+		// deallocate based on the current system being used 
+		switch(state->gameSystem)
+		{
+			case DUNGEON_SCREEN:
+			deallocateDungeon(state);
+			break;
+		}
+		
+		// deallocate background image if in spirte mode 
+		if(state->graphicsMode == 1)
+		{
+			deallocateImage(&state->backgroundAsset);
+		}
+		
+		// deallocate menu if it is being used
+		if(state->options != NULL)
+			deallocateMenu(state);
+		
+		deallocate(state);
+	}
+
+
 	// handles general logic operations 
 	void logicHandler(struct gameState * state)
 	{	
