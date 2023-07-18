@@ -92,6 +92,17 @@
 		// background asset used for sprite mode 
 		struct image backgroundAsset;
 		
+		// for sprite rendering a section of a spirte sheet 
+		SDL_Rect spriteClip; 	
+		
+		// menu variables
+		int option; // menu option 
+		char ** options; // strings for options 
+		int numOptions; // number of options 
+		int menuX, menuY; // menu option coordinates
+		
+		
+		
 		// dungeon crawling variables
 		int playerX; // x coord in dungeon 
 		int playerY; // y coord in dungeon 
@@ -129,16 +140,6 @@
 
 		// coordinates of stairs going up for AI 
 		int ** upStairCoords;
-		
-		// for sprite rendering a section of a spirte sheet 
-		SDL_Rect spriteClip; 	
-		
-		// menu variables
-		int option; // menu option 
-		char ** options; // strings for options 
-		int numOptions; // number of options 
-		int menuX, menuY; // menu option coordinates
-		
 	};
 	
 	
@@ -173,7 +174,7 @@
 			SCREEN_TICK_PER_FRAME = 25;  // 1000 / SCREEN_FPS
 
 			// hide console window 
-			ShowWindow(consoleWindow, SW_HIDE);
+			//ShowWindow(consoleWindow, SW_HIDE);
 			
 			// initialize window and SDL handling
 			if(SDL_Init( IMG_INIT_JPG | IMG_INIT_PNG | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO) >= 0)
@@ -365,6 +366,47 @@
 			// quit sdl
 			SDL_Quit();
 		}
+	}
+	
+	// saving data to a file 
+	void saveData(struct gameState * state)
+	{
+		FILE *file;
+		char * fileReader = malloc(128 * sizeof(char)); 
+		file = fopen("./data/saveData.dat","w+");
+		
+		if(file != NULL)
+		{
+			fwrite(state, sizeof(struct gameState), 1, file);
+			fclose(file);
+		}
+	}
+	
+	// loading data to a file 
+	void loadData(struct gameState * state)
+	{
+		FILE *file;
+		char * fileReader = malloc(128 * sizeof(char)); 
+		file = fopen("./data/saveData.dat","r");
+		
+		struct gameState * getData = malloc(sizeof(struct gameState));
+		
+		// get data from the file 
+		if (file != NULL) 
+		{
+			fread(getData, sizeof(struct gameState), 1, file);
+			fclose(file);
+		}
+		
+		state->playerX = getData->playerX; // x coord in dungeon 
+		state->playerY = getData->playerY; // y coord in dungeon 
+		state->floor = getData->floor; // floor in dungeon 
+		state->building = getData->building; // the building the player is in 
+		state->direction = getData->direction; // the direction the player is facing in the dungeon 
+		state->keys = getData->keys; // keys dropped by enemies that can be used to unlock doors 
+		state->dungeonSize = getData->dungeonSize;
+		
+		free(getData);
 	}
 	
 #endif

@@ -68,4 +68,9 @@
 	//title screen options 
 	#define NG "New Game"
 	#define CT "Continue"
+	
+	// character menu stuff 
+	#define C_SAVE "Save Game"
+	#define C_EXIT "Go back"
+	
 #endif

@@ -56,10 +56,23 @@ void titleScreenHandler(struct gameState * state)
 	
 	if(state->input == ENTER)
 	{		
-		state->switchSystem = 1;
-		state->switchTo = DUNGEON_SCREEN;
-		
-		deallocateMenu(state);
+		// handle a specific option 
+		switch(state->option)
+		{
+			case 0: // new game 
+			state->switchSystem = 1;
+			state->switchTo = DUNGEON_SCREEN;
+
+			deallocateMenu(state);
+			break;
+			case 1: // load 
+			loadData(state);
+			state->switchSystem = 1;
+			state->switchTo = DUNGEON_SCREEN;
+
+			deallocateMenu(state);
+			break;
+		}
 	}
 }
 
