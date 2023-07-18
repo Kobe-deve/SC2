@@ -102,15 +102,6 @@
 		int menuX, menuY; // menu option coordinates
 		
 		
-		
-		// dungeon crawling variables
-		int playerX; // x coord in dungeon 
-		int playerY; // y coord in dungeon 
-		int floor; // floor in dungeon 
-		int building; // the building the player is in 
-		int direction; // the direction the player is facing in the dungeon 
-		int keys; // keys dropped by enemies that can be used to unlock doors 
-		
 		// npc information for dungeon 
 		int numNPCs;
 		struct npc * activeNPCs;
@@ -140,6 +131,17 @@
 
 		// coordinates of stairs going up for AI 
 		int ** upStairCoords;
+		
+		
+		// dungeon crawling variables
+		int playerX; // x coord in dungeon 
+		int playerY; // y coord in dungeon 
+		int floor; // floor in dungeon 
+		int building; // the building the player is in 
+		int direction; // the direction the player is facing in the dungeon 
+		int keys; // keys dropped by enemies that can be used to unlock doors 
+		
+		struct character stats; // stats of the player character 
 	};
 	
 	
@@ -174,7 +176,7 @@
 			SCREEN_TICK_PER_FRAME = 25;  // 1000 / SCREEN_FPS
 
 			// hide console window 
-			//ShowWindow(consoleWindow, SW_HIDE);
+			ShowWindow(consoleWindow, SW_HIDE);
 			
 			// initialize window and SDL handling
 			if(SDL_Init( IMG_INIT_JPG | IMG_INIT_PNG | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO) >= 0)
@@ -242,6 +244,11 @@
 			
 			state->megaAlpha = 0;
 		}
+		
+		state->stats = generateCharacter(HUMAN);
+		
+		// set player name 
+		strcpy(state->stats.name,"Player Character");
 		
 		// initialize fade in display variable 
 		state->fadeIn = 0;
@@ -405,6 +412,8 @@
 		state->direction = getData->direction; // the direction the player is facing in the dungeon 
 		state->keys = getData->keys; // keys dropped by enemies that can be used to unlock doors 
 		state->dungeonSize = getData->dungeonSize;
+		
+		state->stats = getData->stats;
 		
 		free(getData);
 	}

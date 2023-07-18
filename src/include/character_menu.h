@@ -55,12 +55,13 @@ void characterMenuDisplay(struct gameState * state)
 			state->megaAlpha = 1;
 			setCursor(1,30);
 			printf("MENU");
-
+			
 		}
 		break;
 		case 1: // sprite mode
 		
-		printText("We are menu lmao", 10, 400, state->fontHandler);
+		printText("MENU", 10, 400, state->fontHandler);
+		printText(state->stats.name, 10, 440, state->fontHandler);
 		/*if(state->numImages == 0)
 		{
 			addImage(state,LOGO_IMAGE);
