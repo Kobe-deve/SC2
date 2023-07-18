@@ -13,6 +13,14 @@ int quickConvert(int x)
 {
 	switch(x)
 	{
+		case A:
+		return '|';
+		break;
+		case G:
+		return '_';
+		break;
+		
+		case D:
 		case 1:
 		return 219;
 		break;
@@ -31,11 +39,7 @@ int quickConvert(int x)
 		break;
 		
 		case 6:
-		case A:
 		case 12:
-		case D:
-		case F:
-		case G:
 		case 7:
 		return 1;
 		break;
@@ -57,6 +61,7 @@ int quickConvert(int x)
 		return 206;
 		break;
 		
+		case F:
 		default:
 		case 100:
 		return 178;

@@ -12,6 +12,39 @@
 #include "dungeon_display.h"
 #endif
 
+// if a switch is flipped, change the dungeon 
+void flippedSwitch(int switchStatus, struct gameState * state)
+{
+	int iy,ix;
+	
+	// set all hidden wall/mechanism blocks to a specific status based on the switch 
+	for(iy=0;iy<state->dungeonSize;iy++)
+	{
+		for(ix=0;ix<state->dungeonSize;ix++)
+		{	
+			if(state->d[state->floor][iy][ix] == D || state->d[state->floor][iy][ix] == F)
+			{
+				switch(switchStatus)
+				{
+					case A: // close 
+					state->d[state->floor][iy][ix] = D;
+					break;
+					case G: //open 
+					state->d[state->floor][iy][ix] = F;
+					break;
+				}
+			}
+			
+			// if in graphics mode, update the screen 
+			if(state->graphicsMode == 0 && state->visible[state->floor][iy][ix] == 1)
+			{
+				setCursor(dungeonPrintCoordX+ix,dungeonPrintCoordY+iy);
+				printf("%c",quickConvert(state->d[state->floor][iy][ix]));
+			}
+		}
+	}
+}
+
 // return nearby blocks that the player can interact with (if action is more than 0 then perform action)
 int nearbyBlocks(struct gameState * state, int action)
 {	
@@ -55,18 +88,32 @@ int nearbyBlocks(struct gameState * state, int action)
 			
 			if(val >= A && val != E)
 			{
-				// if an action is being performed on the nearby block, perform it 
-				switch(action)
+				if(action == 1)	// if an action is being performed on the nearby block, perform it 
 				{
-					case 1: // unlock door 
-					
-					if(state->keys > 0)
+					switch(val)
 					{
-						(*spots[i]) = 0; 
+						case B: // unlock door 
 						
-						updateStatus(UNLOCK_DOOR,state);
+						if(state->keys > 0)
+						{
+							(*spots[i]) = 0; 
+							
+							updateStatus(UNLOCK_DOOR,state);
+						}
+						break;
+						
+						case A: // flip switch 
+						(*spots[i]) = G;
+						break;
+						case G: // flip switch 
+						(*spots[i]) = A; 						
+						break;
 					}
-					break;
+					if((*spots[i]) == A || (*spots[i]) == G)
+					{
+						flippedSwitch((*spots[i]),state);
+					}
+					
 				}
 				return val;
 			}
@@ -349,7 +396,7 @@ void dungeonMovement(struct gameState * state)
 		// movement 
 		case UP:
 		state->direction = 0;
-		if(state->playerY > 0 && state->d[state->floor][state->playerY-1][state->playerX] != 1 && !npcNearby(state->playerX,state->playerY-1,state->floor,0,state) && state->d[state->floor][state->playerY-1][state->playerX] != B)
+		if(state->playerY > 0 && passableBlock(state->playerX,state->playerY-1,state) && !npcNearby(state->playerX,state->playerY-1,state->floor,0,state))
 		{
 			displayRange(state);
 			state->playerY--;
@@ -360,7 +407,7 @@ void dungeonMovement(struct gameState * state)
 		break;
 		case DOWN:
 		state->direction = 2;
-		if(state->playerY < state->dungeonSize-1 && state->d[state->floor][state->playerY+1][state->playerX] != 1 && !npcNearby(state->playerX,state->playerY+1,state->floor,0,state) && state->d[state->floor][state->playerY+1][state->playerX] != B)
+		if(state->playerY < state->dungeonSize-1 && passableBlock(state->playerX,state->playerY+1,state) && !npcNearby(state->playerX,state->playerY+1,state->floor,0,state))
 		{
 			displayRange(state);
 			state->playerY++;
@@ -371,7 +418,7 @@ void dungeonMovement(struct gameState * state)
 		break;
 		case LEFT:
 		state->direction = 3;
-		if(state->playerX > 0 && state->d[state->floor][state->playerY][state->playerX-1] != 1 && !npcNearby(state->playerX-1,state->playerY,state->floor,0,state) && state->d[state->floor][state->playerY][state->playerX-1] != B)
+		if(state->playerX > 0 && passableBlock(state->playerX-1,state->playerY,state) && !npcNearby(state->playerX-1,state->playerY,state->floor,0,state))
 		{
 			displayRange(state);
 			state->playerX--;
@@ -382,7 +429,7 @@ void dungeonMovement(struct gameState * state)
 		break;
 		case RIGHT:
 		state->direction = 1;
-		if(state->playerX < state->dungeonSize-1 && state->d[state->floor][state->playerY][state->playerX+1] != 1  && !npcNearby(state->playerX+1,state->playerY,state->floor,0,state) && state->d[state->floor][state->playerY][state->playerX+1] != B)
+		if(state->playerX < state->dungeonSize-1 && passableBlock(state->playerX+1,state->playerY,state) && !npcNearby(state->playerX+1,state->playerY,state->floor,0,state))
 		{
 			displayRange(state);
 			state->playerX++;
@@ -442,9 +489,20 @@ void dungeonMovement(struct gameState * state)
 				state->switchSystem = 1;
 				state->switchTo = BATTLE_SCREEN;
 			}
-			else if( nearbyBlocks(state,1) == B && state->keys > 0)
-				state->keys--;
-
+			else // interacting with nearby objects  
+			{
+				switch(nearbyBlocks(state,1))
+				{
+					case B: // unlocking a door 
+					if(state->keys > 0)
+						state->keys--;
+					break;
+					case A:
+					case G:
+					
+					break; 
+				}
+			}	
 			break;
 		}
 		

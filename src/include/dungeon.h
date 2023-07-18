@@ -8,6 +8,25 @@ void generateEnemies(struct gameState * state);
 int npcNearby(int x, int y, int f, int isPlayer, struct gameState * state);
 int nearbyBlocks(struct gameState * state, int action);
 
+// check if the position is passable 
+int passableBlock(int x, int y, struct gameState * state)
+{
+	// checks if there is an impassable block
+	switch(state->d[state->floor][y][x])
+	{
+		case 1:
+		case D:
+		case A:
+		case G:
+		case B:
+		return 0;
+		break;
+	}
+	
+	// true
+	return 1;
+}
+
 #ifndef DUNGEON_ENEMIES__HANDLED
 #include "dungeon_enemies.h"
 #endif
@@ -104,6 +123,7 @@ void dungeonDisplay(struct gameState * state)
 						
 						switch(state->d[state->floor][iy][ix])
 						{
+							case D: // hidden door (closed) 
 							case 1: // wall
 							state->spriteClip.x = SPRITE_SQUARE_SIZE*2;
 							state->spriteClip.y = 0;
@@ -149,6 +169,22 @@ void dungeonDisplay(struct gameState * state)
 							
 							case B: // door
 							state->spriteClip.x = SPRITE_SQUARE_SIZE*12;
+							state->spriteClip.y = 0;
+							state->images[0].x = ix*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							state->images[0].y = iy*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							renderImage(&state->images[0], state->renderer,&state->spriteClip);
+							break;
+							
+							case A: // switch (closed)
+							state->spriteClip.x = SPRITE_SQUARE_SIZE*14;
+							state->spriteClip.y = 0;
+							state->images[0].x = ix*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							state->images[0].y = iy*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							renderImage(&state->images[0], state->renderer,&state->spriteClip);
+							break;
+							
+							case G: // switch (open)
+							state->spriteClip.x = SPRITE_SQUARE_SIZE*13;
 							state->spriteClip.y = 0;
 							state->images[0].x = ix*SPRITE_SQUARE_SIZE*state->images[0].scale;
 							state->images[0].y = iy*SPRITE_SQUARE_SIZE*state->images[0].scale;

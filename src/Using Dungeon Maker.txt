@@ -35,12 +35,17 @@ Dungeon Maker
 
 	Block Types:
 		1 - Wall
+		
 		2 - Stairs(up)
 		3 - Stairs(down)
+		
 		4 - chest
 		5 - opened chest 
+		
 		9 - shop
-		A(10) - switch  
+		
+		A(10) - switch (closed)
+		G(10) - switch (open)
 		
 		D(13) - hidden door (closed) 
 		F(15) - hidden door (open)
