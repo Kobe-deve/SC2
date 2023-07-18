@@ -132,7 +132,7 @@ void npcHandler(struct gameState * state)
 				if(state->graphicsMode == 0 && !state->activeNPCs[i].talking && !state->activeNPCs[i].inCombat && movement == 1 && state->floor == state->activeNPCs[i].floor && state->visible[state->activeNPCs[i].floor][state->activeNPCs[i].y][state->activeNPCs[i].x] == 1)
 				{
 					setColor(WHITE);
-					setCursor(dungeonPrintCoordX+state->activeNPCs[i].x,dungeonPrintCoordX+state->activeNPCs[i].y);
+					setCursor(dungeonPrintCoordX+state->activeNPCs[i].x,dungeonPrintCoordY+state->activeNPCs[i].y);
 					printf("%c",quickConvert(state->d[state->floor][state->activeNPCs[i].y][state->activeNPCs[i].x]));	
 				}
 				
@@ -179,7 +179,7 @@ void npcHandler(struct gameState * state)
 				switch(state->graphicsMode)
 				{
 					case 0:
-					setCursor(dungeonPrintCoordX+state->activeNPCs[i].x,dungeonPrintCoordX+state->activeNPCs[i].y);
+					setCursor(dungeonPrintCoordX+state->activeNPCs[i].x,dungeonPrintCoordY+state->activeNPCs[i].y);
 					switch(state->activeNPCs[i].type)
 					{
 						case 0:

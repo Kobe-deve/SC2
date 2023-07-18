@@ -115,7 +115,7 @@ void enemyHandler(struct gameState * state)
 			if(state->graphicsMode == 0 && state->visible[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == 1)
 			{
 				// make sure there isn't another enemy on this spot if updating 
-				setCursor(dungeonPrintCoordX+state->activeEnemies[i].x,dungeonPrintCoordX+state->activeEnemies[i].y);
+				setCursor(dungeonPrintCoordX+state->activeEnemies[i].x,dungeonPrintCoordY+state->activeEnemies[i].y);
 				printf("%c",quickConvert(state->d[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x]));	
 			}	
 			else if(/*!sleeping && conversation == NONE &&*/ state->visible[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == 0) // display status that enemies are moving in the dark 
@@ -257,7 +257,7 @@ void enemyHandler(struct gameState * state)
 		// display enemy 
 		if(state->graphicsMode == 0 && state->visible[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == 1 && state->activeEnemies[i].inCombat == 0 && state->activeEnemies[i].active == 1)
 		{
-			setCursor(dungeonPrintCoordX+state->activeEnemies[i].x,dungeonPrintCoordX+state->activeEnemies[i].y);
+			setCursor(dungeonPrintCoordX+state->activeEnemies[i].x,dungeonPrintCoordY+state->activeEnemies[i].y);
 			printf("+");
 		}
 	}

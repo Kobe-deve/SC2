@@ -251,9 +251,6 @@ void initDungeonFloor(struct gameState * state)
 	// generate enemies on the first floor 
 	generateEnemies(state);
 	
-	// initial display range 
-	displayRange(state);
-	
 	// generate npcs
 	generateNPCs(state,state->building);
 
@@ -326,52 +323,8 @@ void resetDungeon(struct gameState * state)
 	// clear screen
 	system("cls");	
 
-	// allocate sprites back if they're gone 
-	if(state->graphicsMode == 1 && state->images == NULL)
-	{
-		state->images = malloc(sizeof(struct image));
-		state->numImages = 1;
-			
-		addImage(state,DUNGEON_SPRITE);
-		state->images[0].x = SPRITE_SQUARE_SIZE;
-		state->images[0].y = SPRITE_SQUARE_SIZE;
-		state->images[0].scale = 2;
-	}
-	else if(state->graphicsMode == 0 && state->megaAlpha != 0) // if in ascii mode, reset view 
-	{
-		// display dungeon walls 
-		for(iy = -1;iy < state->dungeonSize+1;iy++)
-		{
-			for(ix = -1;ix < state->dungeonSize+1;ix++)
-			{
-				setCursor(dungeonPrintCoordX+ix,dungeonPrintCoordY+iy);
-				if((ix == -1 || ix == state->dungeonSize || iy == -1 || iy == state->dungeonSize))
-				{	
-					setColor(BLUE);
-					printf("%c",219);
-				}
-				else if(state->visible[state->floor][iy][ix] == 1)
-				{
-					setColor(WHITE);
-					printf("%c",quickConvert(state->d[state->floor][iy][ix]));
-				}
-			}
-		}		
-		setColor(WHITE);
-	
-		// display visible enemies 
-		for(i = 0;i<state->numEnemies;i++)
-		{
-			if(state->visible[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == 1 && state->activeEnemies[i].active == 1)
-			{
-				setCursor(dungeonPrintCoordX+state->activeEnemies[i].x,dungeonPrintCoordX+state->activeEnemies[i].y);
-				printf("+");
-			}
-		}
-	}
-	
-	// check main display range around the player 
-	displayRange(state);
+	// initialize display 
+	initDungeonDisplay(state);
 	
 	// reset passBy variable for npcs 
 	//for(i=0;i<state->numNPCs;i++)

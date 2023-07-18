@@ -118,7 +118,7 @@ void displayRange(struct gameState * state)
 					{
 						if(state->activeEnemies[i].inCombat == 0 && state->activeEnemies[i].active == 1 && state->activeEnemies[i].x == x && state->activeEnemies[i].y == y)
 						{
-							setCursor(dungeonPrintCoordX+state->activeEnemies[i].x,dungeonPrintCoordX+state->activeEnemies[i].y);
+							setCursor(dungeonPrintCoordX+state->activeEnemies[i].x,dungeonPrintCoordY+state->activeEnemies[i].y);
 							printf("+");
 						}
 					}
@@ -136,6 +136,7 @@ void displayStatus(struct gameState * state)
 	switch(state->graphicsMode)
 	{
 		case 0:
+		
 		setCursor(1,30);
 		printf("STATUS:");
 	
@@ -246,5 +247,74 @@ void description(struct gameState * state)
 		break;
 	}
 }
+
+
+// initialize the dungeon display 
+void initDungeonDisplay(struct gameState * state)
+{
+	int ix,iy,i;
+	
+	switch(state->graphicsMode)
+	{
+		case 0: // ascii 
+		// set position of the dungeon on the screen
+		dungeonPrintCoordX = 80;
+		dungeonPrintCoordY = 10;
+	
+		// display dungeon walls 
+		for(iy = -1;iy < state->dungeonSize+1;iy++)
+		{
+			for(ix = -1;ix < state->dungeonSize+1;ix++)
+			{
+				setCursor(dungeonPrintCoordX+ix,dungeonPrintCoordY+iy);
+				if((ix == -1 || ix == state->dungeonSize || iy == -1 || iy == state->dungeonSize))
+				{	
+					setColor(BLUE);
+					printf("%c",219);
+				}
+				else if(state->visible[state->floor][iy][ix] == 1)
+				{
+					setColor(WHITE);
+					printf("%c",quickConvert(state->d[state->floor][iy][ix]));
+				}
+			}
+		}		
+		
+		setColor(WHITE);
+	
+		// initial display range 
+		displayRange(state);
+	
+		// display visible enemies 
+		for(i = 0;i<state->numEnemies;i++)
+		{
+			if(state->visible[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == 1 && state->activeEnemies[i].active == 1)
+			{
+				setCursor(dungeonPrintCoordX+state->activeEnemies[i].x,dungeonPrintCoordX+state->activeEnemies[i].y);
+				printf("+");
+			}
+		}
+	
+		break;
+		case 1: // sprites 
+		// initialize images used in dungeon crawling
+		state->images = malloc(sizeof(struct image));
+		state->numImages = 1;
+			
+		addImage(state,DUNGEON_SPRITE);
+		state->images[0].x = SPRITE_SQUARE_SIZE;
+		state->images[0].y = SPRITE_SQUARE_SIZE;
+		state->images[0].scale = 4; // scale of the images on the screen 
+		
+		// set position of the dungeon on the screen
+		spriteDungeonPrintCoordX = (WINDOW_WIDTH-100)/2-state->dungeonSize*state->images[0].scale*SPRITE_SQUARE_SIZE/2;
+		spriteDungeonPrintCoordY = (WINDOW_HEIGHT-100)/2-state->dungeonSize*state->images[0].scale*SPRITE_SQUARE_SIZE/2;
+		
+		// initial display range 
+		displayRange(state);
+		break; 
+	}
+}
+
 
 #endif
