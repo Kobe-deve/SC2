@@ -3,22 +3,25 @@
 An RPG developed using C with the SDL2 library
 
 Visual modes:
+
   ASCII - Uses basic terminal windows.h graphics
   Sprite - Uses SDL2 rendering library
 
 Compiling command:
+
 run setup_sc2.bat with a C/C++ compiler installed with the following libraries:
+	
 	SDL2
 	SDL2_image
 	SDL2_ttf
 	SDL2_mixer
 
-	the commands in setup_sc2.bat:
 	windres main.rs -o main.o 
 	gcc main.c main.o -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -o "Stone Crawler 2"
 
 File Organization:
-src:  
+
+	src:  
   	 test.c - test program used for implementation  
 	 main.c - main program 
 	 setup_sc2 - batch file for compiling 
@@ -70,18 +73,19 @@ src:
 	 
 	 
 Graphic Modes:
-	With Stone Crawler Rebuild there are two graphical modes: ASCII and sprite 
-	
 	To toggle a specific mode with a build, the state variable graphicsMode is set to a 
-	specific value with these being the specific modes
+	specific value with these being the specific modes (set in main.c)
 	0 - ascii
 	1 - sprites
 
 Game Systems:
+
 	Each state of the general game application (such as being in a battle, dungeon, title screen)
 	involves having a specific display and logic function. Generally the only specification
 	for each system is that it should have the below set up for display functions so as
 	to fit with the constraints of the Ascii/sprite mode.
+	
+	Code Example:
 	
 	void display(void)
 	{	
