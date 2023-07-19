@@ -212,6 +212,9 @@ void initDungeonFloor(struct gameState * state)
 		case 0:
 		fileName = ORIGINAL_DUNGEON;
 		break;
+		case 1:
+		fileName = SECTOR_2_FILE;
+		break;
 	}
 	
 	// read dungeon file 
@@ -484,8 +487,34 @@ void dungeonMovement(struct gameState * state)
 			state->floor = state->floor-1;
 			break;
 		}	
-		generateEnemies(state);
-		resetDungeon(state);
+		
+		// moving to another section based on floor position  
+		if(state->floor < 0 || state->floor == state->dungeonSize) 
+		{
+			switch(state->building)
+			{
+				case 0: // sector 1 
+				if(state->floor < 0 )
+				{
+					state->building = 1;
+					state->floor = 14;
+				}
+				else
+				{
+				}
+				break;
+				
+				case 1:
+				break;
+			}
+			deallocateDungeon(state);
+			initDungeonFloor(state);
+		}
+		else
+		{
+			generateEnemies(state);
+			resetDungeon(state);
+		}
 		break;
 	}
 }

@@ -11,6 +11,8 @@
 #define ORIGINAL_DUNGEON "maps/original_dungeon.txt" // first dungeon 
 #define ORIGINAL_DUNGEON_NPC "maps/npc_data/origin.txt" // first dungeon npc file 
 
+#define SECTOR_2_FILE "maps/sector_2.txt" // second sector  
+
 // image files and specific width/height
 #define LOGO_IMAGE "resources/sprites/logo.png"
 #define DUNGEON_SPRITE "resources/sprites/dungeon_sheet.png"

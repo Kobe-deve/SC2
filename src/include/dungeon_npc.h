@@ -34,7 +34,7 @@ int npcNearby(int x, int y, int f, int isPlayer, struct gameState * state)
 // load npcs from a file based on the dungeon type 
 void generateNPCs(struct gameState * state, int dungeonType)
 {
-	FILE *readFile;
+	FILE *readFile = NULL;
 	char * fileReader = malloc(128 * sizeof(char)); 
 	
 	int i;
@@ -47,7 +47,7 @@ void generateNPCs(struct gameState * state, int dungeonType)
 		break;
 	}
 	
-	if(!readFile)
+	if(!readFile && readFile != NULL)
 	{
 		printf("ERROR:DUNGEON NPC FILE COULD NOT BE READ");
 		getchar();

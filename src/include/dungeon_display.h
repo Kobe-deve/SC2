@@ -149,11 +149,15 @@ void displayStatus(struct gameState * state)
 			printf("%s",state->statusText[i]);
 		}
 		
-		setCursor(20,10);
+		setCursor(0,0);
 		printf("Keys: %d",state->keys);
 		
+		setCursor(20,0);
+		printf("Sector - %d",state->building);
+		
+		
 		break;
-		case 1:
+		case 1:	
 		
 		printText("STATUS:", 10, 400, state->fontHandler);
 		
