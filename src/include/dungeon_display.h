@@ -289,16 +289,6 @@ void initDungeonDisplay(struct gameState * state)
 		// initial display range 
 		displayRange(state);
 	
-		// display visible enemies 
-		for(i = 0;i<state->numEnemies;i++)
-		{
-			if(state->visible[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == 1 && state->activeEnemies[i].active == 1)
-			{
-				setCursor(dungeonPrintCoordX+state->activeEnemies[i].x,dungeonPrintCoordX+state->activeEnemies[i].y);
-				printf("+");
-			}
-		}
-	
 		break;
 		case 1: // sprites 
 		// initialize images used in dungeon crawling
