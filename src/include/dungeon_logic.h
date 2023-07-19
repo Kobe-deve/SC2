@@ -53,7 +53,7 @@ int nearbyBlocks(struct gameState * state, int action)
 	
 	int val;
 	
-	if(state->playerY-1 > 0)
+	if(state->playerY-1 >= 0)
 	{
 		spots[numSpots] = &state->d[state->floor][state->playerY-1][state->playerX];
 		numSpots++;
@@ -71,7 +71,7 @@ int nearbyBlocks(struct gameState * state, int action)
 		numSpots++;
 	}
 	
-	if(state->playerX-1 > 0)
+	if(state->playerX-1 >= 0)
 	{
 		spots[numSpots] = &state->d[state->floor][state->playerY][state->playerX-1];
 		numSpots++;
@@ -256,7 +256,10 @@ void initDungeonFloor(struct gameState * state)
 	
 	// generate npcs
 	generateNPCs(state,state->building);
-
+	
+	// initialize dungeon display
+	initDungeonDisplay(state);
+	
 	// set up status handling array 
 	state->numStatusLines = 0;
 	state->statusText = malloc(state->maxStatus * sizeof(char *));	
@@ -493,7 +496,7 @@ void dungeonMovement(struct gameState * state)
 		{
 			switch(state->building)
 			{
-				case 0: // sector 1 
+				case 0: // to sector 1 
 				if(state->floor < 0 )
 				{
 					state->building = 1;
@@ -504,7 +507,13 @@ void dungeonMovement(struct gameState * state)
 				}
 				break;
 				
-				case 1:
+				case 1: // to sector 0
+				if(state->floor >= state->dungeonSize) 
+				{
+					state->building = 0;
+					state->floor = 0;
+				}
+				
 				break;
 			}
 			deallocateDungeon(state);
