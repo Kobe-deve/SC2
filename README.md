@@ -73,6 +73,7 @@ File Organization:
 	 
 	 
 Graphic Modes:
+
 	To toggle a specific mode with a build, the state variable graphicsMode is set to a 
 	specific value with these being the specific modes (set in main.c)
 	0 - ascii
