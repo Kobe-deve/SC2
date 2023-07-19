@@ -384,9 +384,31 @@
 		
 		if(file != NULL)
 		{
+			// save stats 
 			fwrite(state, sizeof(struct gameState), 1, file);
 			fclose(file);
+			
+			// save 
 		}
+		
+		file = fopen("./data/mapData/saveData.dat","w+");
+		fwrite(state, sizeof(struct gameState), 1, file);
+		fclose(file);
+	}
+	
+	// checks if there is a save file 
+	int filePresent()
+	{
+		FILE *file;
+		char * fileReader = malloc(128 * sizeof(char)); 
+		file = fopen("./data/saveData.dat","r");
+		
+		if(file != NULL)
+		{
+			fclose(file);
+			return 1;
+		}
+		return 0;
 	}
 	
 	// loading data to a file 

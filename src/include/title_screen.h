@@ -41,14 +41,28 @@ void titleScreenDisplay(struct gameState * state)
 // logic handling for title screen 
 void titleScreenHandler(struct gameState * state)
 {
+	char ** array;
+	
 	if(state->options == NULL) // initialize menu used
 	{
-		char ** array = malloc(2 * sizeof(char*));
-		array[0] = NG;
-		array[1] = CT;
-		
-		initMenu(state,2,array,85,24);
-		
+		// set up menu based on if there is save data
+		switch(filePresent())
+		{
+			case 0:
+			array = malloc(1 * sizeof(char*));
+			array[0] = NG;
+			
+			initMenu(state,1,array,85,24);
+			break; 
+			case 1:
+			array = malloc(2 * sizeof(char*));
+			array[0] = NG;
+			array[1] = CT;
+			
+			initMenu(state,2,array,85,24);
+			
+			break;
+		}
 		free(array);
 	}
 	else
