@@ -251,6 +251,12 @@ void initDungeonFloor(struct gameState * state)
 		state->statusText = NULL;
 	}
 	
+	// set up status handling array 
+	state->numStatusLines = 0;
+	state->statusText = malloc(state->maxStatus * sizeof(char *));	
+	for(iy=0;iy<state->maxStatus;iy++)
+		state->statusText[iy] = NULL;
+	
 	// generate enemies on the first floor 
 	generateEnemies(state);
 	
@@ -259,12 +265,6 @@ void initDungeonFloor(struct gameState * state)
 	
 	// initialize dungeon display
 	initDungeonDisplay(state);
-	
-	// set up status handling array 
-	state->numStatusLines = 0;
-	state->statusText = malloc(state->maxStatus * sizeof(char *));	
-	for(iy=0;iy<state->maxStatus;iy++)
-		state->statusText[iy] = NULL;
 	
 	// set initial status 
 	updateStatus(FIRST_FLOOR_TEXT,state);

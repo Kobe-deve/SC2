@@ -66,6 +66,7 @@ void generateEnemies(struct gameState * state)
 				state->activeEnemies[numGenerate-1].npcFighting = -1;
 				state->activeEnemies[numGenerate-1].health = 5;
 				numGenerate--;
+				updateStatus(ENEMY_MOVEMENT,state);	
 			}
 		}
 	}
@@ -90,6 +91,7 @@ void generateEnemies(struct gameState * state)
 			state->activeEnemies[i].npcFighting = -1;
 			state->activeEnemies[i].type = rand()%3+1;
 			state->activeEnemies[i].health = 5;
+			updateStatus(ENEMY_MOVEMENT,state);	
 		}
 	}
 }
@@ -118,9 +120,6 @@ void enemyHandler(struct gameState * state)
 				setCursor(dungeonPrintCoordX+state->activeEnemies[i].x,dungeonPrintCoordY+state->activeEnemies[i].y);
 				printf("%c",quickConvert(state->d[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x]));	
 			}	
-			else if(/*!sleeping && conversation == NONE &&*/ state->visible[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == 0) // display status that enemies are moving in the dark 
-				updateStatus(ENEMY_MOVEMENT,state);	
-			
 			
 			//if(state->activeEnemies[i].x < state->dungeonSize-1 && state->d[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x+1] != 1)
 			//	state->activeEnemies[i].x++;
