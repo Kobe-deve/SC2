@@ -46,7 +46,7 @@ void titleScreenHandler(struct gameState * state)
 	if(state->options == NULL) // initialize menu used
 	{
 		// set up menu based on if there is save data
-		switch(filePresent())
+		switch(filePresent(MAIN_SAVE_FILE))
 		{
 			case 0:
 			array = malloc(1 * sizeof(char*));

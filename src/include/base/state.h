@@ -380,28 +380,25 @@
 	{
 		FILE *file;
 		char * fileReader = malloc(128 * sizeof(char)); 
-		file = fopen("./data/saveData.dat","w+");
+		file = fopen(MAIN_SAVE_FILE,"w+");
 		
 		if(file != NULL)
 		{
 			// save stats 
 			fwrite(state, sizeof(struct gameState), 1, file);
 			fclose(file);
-			
-			// save 
 		}
+		else
+			throwError("ERROR: COULD NOT SAVE DATA");
 		
-		file = fopen("./data/mapData/saveData.dat","w+");
-		fwrite(state, sizeof(struct gameState), 1, file);
-		fclose(file);
 	}
 	
-	// checks if there is a save file 
-	int filePresent()
+	// checks if a file is present 
+	int filePresent(char * fileName)
 	{
 		FILE *file;
 		char * fileReader = malloc(128 * sizeof(char)); 
-		file = fopen("./data/saveData.dat","r");
+		file = fopen(fileName,"r");
 		
 		if(file != NULL)
 		{

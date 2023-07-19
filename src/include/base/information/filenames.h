@@ -2,6 +2,9 @@
 #ifndef FILENAMES_HANDLED
 #define FILENAMES_HANDLED
 
+// save data locations
+#define MAIN_SAVE_FILE "./data/saveData.dat" // main save file 
+
 // music files 
 #define TITLE_MUSIC "resources/music/Stone.wav"
 #define BATTLE_MUSIC "resources/music/Stone Crawler Battle.wav"
