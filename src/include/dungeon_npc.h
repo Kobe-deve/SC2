@@ -117,16 +117,18 @@ void npcHandler(struct gameState * state)
 	int i,j;
 	int movement = 0; // boolean variable for if the npc should move at all when their movement timer is up 
 	int cx,cy;
+	int xdirection,ydirection;
 	
 	// display/move npcs  
 	for(i = 0;i<state->numNPCs;i++)
 	{	
 		movement = 1;
+		
 		if(state->activeNPCs[i].active)
 		{	
 			// movement logic if movement timer is up 
 			if(movement == 1 && state->activeNPCs[i].inCombat != 1 && state->activeNPCs[i].talking != 1 && ((int)(SDL_GetTicks() - state->activeNPCs[i].startTicks))/1000.f >= state->activeNPCs[i].speed)
-			{
+			{	
 				// erase/update current spot when moving 
 				if(state->graphicsMode == 0 && !state->activeNPCs[i].talking && !state->activeNPCs[i].inCombat && movement == 1 && state->floor == state->activeNPCs[i].floor && state->visible[state->activeNPCs[i].floor][state->activeNPCs[i].y][state->activeNPCs[i].x] == 1)
 				{
@@ -142,17 +144,49 @@ void npcHandler(struct gameState * state)
 				cx = state->activeNPCs[i].x;
 				cy = state->activeNPCs[i].y;
 				
-				// move to new position 
+				// determine movement 
+				if(state->upStairCoords[state->activeNPCs[i].floor][0] > state->activeNPCs[i].x)
+					xdirection = 1;
+				else if(state->upStairCoords[state->activeNPCs[i].floor][0] < state->activeNPCs[i].x)
+					xdirection = 3;
 				
+				if(state->upStairCoords[state->activeNPCs[i].floor][1] > state->activeNPCs[i].y)
+					ydirection = 2;
+				else if(state->upStairCoords[state->activeNPCs[i].floor][1] < state->activeNPCs[i].y)
+					ydirection = 0;
 				
+				// execute movement 
+				switch(ydirection)
+				{
+					case 0: // UP
+					if(state->activeNPCs[i].y - 1 >= 0 && passableBlock(state->activeNPCs[i].x,state->activeNPCs[i].y-1,state))
+						state->activeNPCs[i].y = state->activeNPCs[i].y - 1;				
+					break;
+					case 2: // DOWN
+					if(state->activeNPCs[i].y + 1 < state->dungeonSize && passableBlock(state->activeNPCs[i].x,state->activeNPCs[i].y+1,state))
+						state->activeNPCs[i].y = state->activeNPCs[i].y + 1;
+					break;
+				}
+				
+				switch(xdirection)
+				{				
+					case 1: // RIGHT
+					if(state->activeNPCs[i].x + 1 < state->dungeonSize && passableBlock(state->activeNPCs[i].x+1,state->activeNPCs[i].y,state))
+						state->activeNPCs[i].x = state->activeNPCs[i].x + 1;				
+					break;
+					case 3: // LEFT
+					if(state->activeNPCs[i].x - 1 >= 0 && passableBlock(state->activeNPCs[i].x-1,state->activeNPCs[i].y,state))
+						state->activeNPCs[i].x = state->activeNPCs[i].x - 1;
+					break;
+				}
 				
 				// check if there isn't an overlap with another npc 
 				for(j=0;j<state->numNPCs;j++)
 				{
 					if(j!=i && (state->activeNPCs[i].x == state->activeNPCs[j].x) && (state->activeNPCs[i].y == state->activeNPCs[j].y))
 					{
-						state->activeNPCs[i].x = cx;
-						state->activeNPCs[i].y = cy;
+						cx = state->activeNPCs[i].x;
+						cy = state->activeNPCs[i].y;
 						break;
 					}
 				}

@@ -120,7 +120,7 @@ void enemyHandler(struct gameState * state)
 				printf("%c",quickConvert(state->d[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x]));	
 			}	
 			
-			// determine enemy movement 
+			// determine movement 
 			if(state->playerX > state->activeEnemies[i].x)
 				direction = 1;
 			else if(state->playerX < state->activeEnemies[i].x)
@@ -178,6 +178,9 @@ void enemyHandler(struct gameState * state)
 				state->activeNPCs[checkNPC].passBy = 0;
 				state->activeNPCs[checkNPC].inCombat = 1;
 				state->activeNPCs[checkNPC].enemyCombat = i;
+				
+				// update status 
+				updateStatus(NPCvsENEMY,state);	
 			}
 			
 			// reset start tick 
@@ -185,9 +188,6 @@ void enemyHandler(struct gameState * state)
 		}
 		else if(state->activeEnemies[i].inCombat == 1 && ((int)(SDL_GetTicks() - state->activeEnemies[i].startTicks))/1000.f >= state->activeEnemies[i].speed) // handle fighting an npc over time 
 		{
-			// update status 
-			updateStatus(NPCvsENEMY,state);	
-			
 			// change stats based on combat 
 			switch(rand()%4)
 			{
