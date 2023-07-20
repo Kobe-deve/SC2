@@ -145,10 +145,6 @@ void readDungeonFile(struct gameState * state, char * fileName)
 		fscanf(readFile,"%s",fileReader);
 		state->dungeonSize = atoi(fileReader);
 		
-		// read number of enemies spawned per floor 
-		fscanf(readFile,"%s",fileReader);
-		state->numEnemies = atoi(fileReader);
-		
 		// skip line
 		fscanf(readFile,"%s",fileReader);
 	

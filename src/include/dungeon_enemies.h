@@ -31,9 +31,11 @@ struct enemies
 void generateEnemies(struct gameState * state)
 {
 	// number of spawn points specifically on the map
-	int numSpawnPoints = 0;
-	int ix,iy;
+	int numGenerate = 0;
 	int i = 0;
+	int ix,iy;
+	
+	state->numEnemies = 0;
 	
 	// set enemies on floor
 	if(state->activeEnemies != NULL)
@@ -43,17 +45,26 @@ void generateEnemies(struct gameState * state)
 	}
 	
 	// variable used to check how many predetermined spawn points there are vs generated number from file 
-	int numGenerate = state->numEnemies;
+	for(iy=0;iy<state->dungeonSize;iy++)
+	{	
+		for(ix=0;ix<state->dungeonSize;ix++)
+		{	
+			if(state->d[state->floor][iy][ix] == E)
+				state->numEnemies++;
+		}
+	}
 	
 	// allocate memory
 	state->activeEnemies = malloc(state->numEnemies * sizeof(struct enemies));
+	
+	numGenerate = state->numEnemies;
 	
 	// check if the map has any specific enemy spawn points 
 	for(iy=0;iy<state->dungeonSize;iy++)
 	{	
 		for(ix=0;ix<state->dungeonSize;ix++)
 		{	
-			if(state->d[state->floor][iy][ix] == E && numGenerate > 0)
+			if(state->d[state->floor][iy][ix] == E)
 			{
 				state->activeEnemies[numGenerate-1].speed = rand()%3+1; 
 				state->activeEnemies[numGenerate-1].startTicks = 0;
@@ -68,30 +79,6 @@ void generateEnemies(struct gameState * state)
 				numGenerate--;
 				updateStatus(ENEMY_MOVEMENT,state);	
 			}
-		}
-	}
-	
-	// if there are no specific spawn point coordinates, randomly spawn the remaining number of enemies 
-	if(numGenerate > 0)
-	{
-		// generate enemies to specific coordinates 
-		for(i = 0;i<state->numEnemies;i++)
-		{
-			state->activeEnemies[i].speed = rand()%3+1; 
-			state->activeEnemies[i].x = rand()%state->dungeonSize;
-			state->activeEnemies[i].startTicks = 0;
-			state->activeEnemies[i].y = rand()%state->dungeonSize;
-			state->activeEnemies[i].inCombat = 0;
-			while(state->d[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == 1)
-			{
-				state->activeEnemies[i].x = rand()%state->dungeonSize;
-				state->activeEnemies[i].y = rand()%state->dungeonSize;	
-			}
-			state->activeEnemies[i].active = 1;
-			state->activeEnemies[i].npcFighting = -1;
-			state->activeEnemies[i].type = rand()%3+1;
-			state->activeEnemies[i].health = 5;
-			updateStatus(ENEMY_MOVEMENT,state);	
 		}
 	}
 }
