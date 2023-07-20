@@ -124,7 +124,7 @@ void npcHandler(struct gameState * state)
 	{	
 		movement = 1;
 		
-		if(state->activeNPCs[i].active)
+		if(state->activeNPCs[i].active && state->activeNPCs[i].floor == state->floor)
 		{	
 			// movement logic if movement timer is up 
 			if(movement == 1 && state->activeNPCs[i].inCombat != 1 && state->activeNPCs[i].talking != 1 && ((int)(SDL_GetTicks() - state->activeNPCs[i].startTicks))/1000.f >= state->activeNPCs[i].speed)
