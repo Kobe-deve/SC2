@@ -269,7 +269,7 @@ void dungeonLogic(struct gameState * state)
 	{
 		handleMenu(state);
 		
-		if(state->input == BACKSPACE) // handle menu logic 
+		if(state->activeNPCs[state->nearestNPC].inCombat == 1 || state->input == BACKSPACE) // handle menu logic 
 		{
 			clearMenu(state);
 			deallocateMenu(state);	
