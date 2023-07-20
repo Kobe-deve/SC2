@@ -32,6 +32,9 @@
 	#define NPCWON "The fighting seemed to stop."
 	#define PASSOUT "You feel tired and can't move..."
 	#define WAKINGUP "You wake up."
+	
+// signs in the game 
+	#define SECTOR_0_SIGN "You see a sign that says \"BEWARE\""
 
 // specific dungeon narrative/description text 
 	#define FIRST_FLOOR_TEXT "You wake up in a strange stone room, dimly lit but still dark."

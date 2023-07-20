@@ -22,7 +22,8 @@
 #define SPRITE_SQUARE_SIZE 10 // width/height of dungeon tiles
 
 // background sprites used 
-#define BACKGROUND_ASSET "resources/sprites/background/background_asset.png"
+#define DUNGEON_BACKGROUND_ASSET "resources/sprites/background/background_asset.png"
+#define BATTLE_BACKGROUND_ASSET "resources/sprites/background/sword.png"
 
 // font file used in sprite mode 
 #define USED_FONT_FILE "resources/font/chiaro.ttf"

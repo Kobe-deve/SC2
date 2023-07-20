@@ -431,7 +431,7 @@ void dungeonMovement(struct gameState * state)
 				array[1] = Q_COMMAND;
 				array[2] = P_COMMAND;
 				
-				initMenu(state,3,array,70,31);
+				initMenu(state,3,array,70,45);
 				
 				free(array);
 				

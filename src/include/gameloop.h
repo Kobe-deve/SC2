@@ -11,7 +11,7 @@
 #include "dungeon.h"
 
 // how much the alpha will change per frame when transitioning
-#define ALPHA_CHANGE 10
+#define ALPHA_CHANGE 15
 
 // general game loop operations
 #ifndef GAMELOOP_HANDLED
@@ -37,9 +37,8 @@
 			state->colors[3] = 0;
 			
 			// initialize background assets
-			state->backgroundAsset = initImage(BACKGROUND_ASSET,state->renderer);
-			state->backgroundAsset.scale = 4;
-			
+			state->backgroundAsset = initImage(BATTLE_BACKGROUND_ASSET,state->renderer);
+			state->backgroundAsset.scale = 4;	
 		}
 	}
 
@@ -144,6 +143,7 @@
 			// if alpha is at zero, change system and start fade in 
 			if(state->megaAlpha <= 0)
 			{
+				state->megaAlpha = 0;
 				state->switchSystem = 0;
 				state->gameSystem = state->switchTo;
 				
@@ -152,10 +152,24 @@
 					state->fadeIn = 1;	
 					clearImages(state);
 					state->numImages = -1;
+					
+					// set new background asset
+					deallocateImage(&state->backgroundAsset);
+					switch(state->gameSystem)
+					{
+						default:
+						case TITLE_SCREEN:
+						case DUNGEON_SCREEN:
+						state->backgroundAsset = initImage(DUNGEON_BACKGROUND_ASSET,state->renderer);
+						break;
+						case BATTLE_SCREEN:
+						state->backgroundAsset = initImage(BATTLE_BACKGROUND_ASSET,state->renderer);
+						break;
+					}
+					state->backgroundAsset.scale = 4;	
 				}
 				else
 					system("cls");
-				state->megaAlpha = 0;
 			}
 		}
 		else if(state->megaAlpha <= 255 && state->fadeIn == 1) // fade into new system 
@@ -169,7 +183,7 @@
 			}
 		}
 		
-		if(state->graphicsMode == 1 && state->numImages >= 0)
+		if(state->graphicsMode == 1)
 			setAlphaOfImages(state);
 	}
 

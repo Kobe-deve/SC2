@@ -53,6 +53,8 @@ Dungeon Maker
 		B(11) - locked door
 		
 		E(14) - Enemy spawn point 
+		
+		M(22) - Sign
 
 	Mechanics:
 		-Locked doors

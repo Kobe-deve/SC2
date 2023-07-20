@@ -23,6 +23,7 @@ int passableBlock(int x, int y, struct gameState * state)
 		case A:
 		case G:
 		case B:
+		case M:
 		return 0;
 		break;
 	}
@@ -116,10 +117,22 @@ void dungeonDisplay(struct gameState * state)
 							state->spriteClip.y = 0;
 							break;
 							case 4: // chest 
+							state->spriteClip.x = SPRITE_SQUARE_SIZE;
+							state->spriteClip.y = 0;
+							state->images[0].x = spriteDungeonPrintCoordX+ix*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							state->images[0].y = spriteDungeonPrintCoordY+iy*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							renderImage(&state->images[0], state->renderer,&state->spriteClip);
+						
 							state->spriteClip.x = SPRITE_SQUARE_SIZE*4;
 							state->spriteClip.y = 0;
 							break;
 							case 5: // opened chest 
+							state->spriteClip.x = SPRITE_SQUARE_SIZE;
+							state->spriteClip.y = 0;
+							state->images[0].x = spriteDungeonPrintCoordX+ix*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							state->images[0].y = spriteDungeonPrintCoordY+iy*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							renderImage(&state->images[0], state->renderer,&state->spriteClip);
+						
 							state->spriteClip.x = SPRITE_SQUARE_SIZE*5;
 							state->spriteClip.y = 0;
 							break;
@@ -156,6 +169,19 @@ void dungeonDisplay(struct gameState * state)
 							state->images[0].x = spriteDungeonPrintCoordX+ix*SPRITE_SQUARE_SIZE*state->images[0].scale;
 							state->images[0].y = spriteDungeonPrintCoordY+iy*SPRITE_SQUARE_SIZE*state->images[0].scale;
 							renderImage(&state->images[0], state->renderer,&state->spriteClip);
+							break;
+							
+							case M: // sign 
+							state->spriteClip.x = SPRITE_SQUARE_SIZE;
+							state->spriteClip.y = 0;
+							state->images[0].x = spriteDungeonPrintCoordX+ix*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							state->images[0].y = spriteDungeonPrintCoordY+iy*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							renderImage(&state->images[0], state->renderer,&state->spriteClip);
+						
+							state->spriteClip.x = SPRITE_SQUARE_SIZE*17;
+							state->spriteClip.y = 0;
+							state->images[0].x = spriteDungeonPrintCoordX+ix*SPRITE_SQUARE_SIZE*state->images[0].scale;
+							state->images[0].y = spriteDungeonPrintCoordY+iy*SPRITE_SQUARE_SIZE*state->images[0].scale;
 							break;
 							
 							default: // floor 

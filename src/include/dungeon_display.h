@@ -13,6 +13,10 @@ int quickConvert(int x)
 {
 	switch(x)
 	{
+		case M:
+		return 194;
+		break;
+		
 		case A:
 		return '|';
 		break;
@@ -72,7 +76,7 @@ int quickConvert(int x)
 // clear display when player moves  
 void clearDisplay(struct gameState * state)
 {	
-	if(state->input != 0)
+	if(state->input != 0 && state->graphicsMode == 0)
 	{
 		setCursor(dungeonPrintCoordX+state->playerX,dungeonPrintCoordY+state->playerY);
 		printf("%c",quickConvert(state->d[state->floor][state->playerY][state->playerX]));	
@@ -89,24 +93,23 @@ void displayRange(struct gameState * state)
 	{
 		for(x=state->playerX-2;x<state->playerX+3;x++)
 		{	
-			if(!(x == state->playerX && y == state->playerY))
+			if((y >= 0 && x >= 0 && y < state->dungeonSize && x < state->dungeonSize))
 			{
-				if((y >= 0 && x >= 0 && y < state->dungeonSize && x < state->dungeonSize))
+				if((state->visible[state->floor][y][x] == 0))
 				{
-					if((state->visible[state->floor][y][x] == 0))
+					// update what is visible to the player 
+					state->visible[state->floor][y][x] = 1;
+					
+					if(state->graphicsMode == 0 && !(x == state->playerX && y == state->playerY))
 					{
 						setCursor(dungeonPrintCoordX+x,dungeonPrintCoordY+y);
-			
-						// update what is visible to the player 
-						state->visible[state->floor][y][x] = 1;
-						
-						if(state->graphicsMode == 0 )
-							printf("%c",quickConvert(state->d[state->floor][y][x]));
+						printf("%c",quickConvert(state->d[state->floor][y][x]));
+						setColor(WHITE);
 					}
 				}
-				
-				setColor(WHITE);
 			}
+				
+			
 			
 			// if in ascii mode, update display if enemies are visible 
 			if(state->graphicsMode == 0 )
@@ -159,10 +162,10 @@ void displayStatus(struct gameState * state)
 		break;
 		case 1:	
 		
-		printText("STATUS:", 10, 400, state->fontHandler);
+		printText("STATUS:", 10, 500, state->fontHandler);
 		
 		for(i=0;i<state->numStatusLines;i++)
-			printText(state->statusText[i], 10, 400+FONT_SIZE+i*FONT_SIZE, state->fontHandler);
+			printText(state->statusText[i], 10, 500+FONT_SIZE+i*FONT_SIZE, state->fontHandler);
 		break;
 	}
 }
@@ -247,6 +250,10 @@ void description(struct gameState * state)
 			else if(state->keys > 0)
 				updateStatus(UNLOCKED_DOOR,state);	
 		}
+		else if(nearby == M) // nearby signs
+		{
+			updateStatus(SECTOR_0_SIGN,state);	
+		}
 		
 		break;
 	}
@@ -273,7 +280,15 @@ void initDungeonDisplay(struct gameState * state)
 				setCursor(dungeonPrintCoordX+ix,dungeonPrintCoordY+iy);
 				if((ix == -1 || ix == state->dungeonSize || iy == -1 || iy == state->dungeonSize))
 				{	
-					setColor(BLUE);
+					switch(state->building)
+					{
+						case 0:
+						setColor(BLUE);
+						break;
+						case 1:
+						setColor(DARK_RED);
+						break;
+					}
 					printf("%c",219);
 				}
 				else if(state->visible[state->floor][iy][ix] == 1)
@@ -298,7 +313,7 @@ void initDungeonDisplay(struct gameState * state)
 		addImage(state,DUNGEON_SPRITE);
 		state->images[0].x = SPRITE_SQUARE_SIZE;
 		state->images[0].y = SPRITE_SQUARE_SIZE;
-		state->images[0].scale = 4; // scale of the images on the screen 
+		state->images[0].scale = 3; // scale of the images on the screen 
 		
 		// set position of the dungeon on the screen
 		spriteDungeonPrintCoordX = (WINDOW_WIDTH-100)/2-state->dungeonSize*state->images[0].scale*SPRITE_SQUARE_SIZE/2;

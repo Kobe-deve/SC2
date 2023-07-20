@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 
 	struct gameState state;
 	
-	state.graphicsMode = 0; // set graphics mode 
+	state.graphicsMode = 1; // set graphics mode 
 		
 	// initialize game 	
 	initializeGame(&state);
@@ -30,10 +30,10 @@ int main(int argc, char *argv[])
 			// if in sprite mode, render background 
 			state.backgroundAsset.angle++;
 			state.backgroundAsset.angle%=360;
-			state.backgroundAsset.y = 500;
-			for(i=0;i<6;i++)
+			state.backgroundAsset.x = WINDOW_WIDTH-300;
+			for(i=0;i<3;i++)
 			{
-				state.backgroundAsset.x = i*200;
+				state.backgroundAsset.y = (i*200)-50;
 				renderImage(&state.backgroundAsset,state.renderer,NULL);
 			}
 		}
@@ -163,6 +163,8 @@ int main(int argc, char *argv[])
 		
 		// game display handling 
 		displayHandler(&state);
+		
+		// if the system is changing, change the background elements 
 		
 		// if sprite mode enabled, render screen and keep the frame rate 
 		if(state.graphicsMode == 1)

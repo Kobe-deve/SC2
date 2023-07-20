@@ -288,7 +288,7 @@
 		state->numEnemies = 0;
 		state->activeEnemies = NULL;
 
-		state->maxStatus = 10; // max number of status lines visible 
+		state->maxStatus = 5; // max number of status lines visible 
 		state->statusText = NULL;
 		state->numStatusLines = 0;
 
@@ -315,12 +315,22 @@
 			s->images[s->imageStackSize] = initImage(filePath, s->renderer);
 			s->imageStackSize++;
 		}
+		
+		SDL_SetTextureBlendMode(s->images[s->imageStackSize].texture, SDL_BLENDMODE_BLEND);
+		SDL_SetTextureAlphaMod(s->images[s->imageStackSize].texture, s->megaAlpha);
+		
 	}
 	
 	// sets the alpha of all images/fonts 
 	void setAlphaOfImages(struct gameState * state)
 	{
 		int i;
+	//	printf("\n%d",state->megaAlpha);
+		
+		if(state->megaAlpha < 0)
+			state->megaAlpha = 0;
+		else if(state->megaAlpha > 255)
+			state->megaAlpha = 255;
 		
 		// set alpha of all images used 
 		for(i=0;i<state->numImages;i++)
@@ -328,6 +338,10 @@
 			SDL_SetTextureBlendMode(state->images[i].texture, SDL_BLENDMODE_BLEND);
 			SDL_SetTextureAlphaMod(state->images[i].texture, state->megaAlpha);
 		}
+		
+		// set alpha of background asset 
+		SDL_SetTextureBlendMode(state->backgroundAsset.texture, SDL_BLENDMODE_BLEND);
+		SDL_SetTextureAlphaMod(state->backgroundAsset.texture, state->megaAlpha);
 		
 		// set alpha of text 
 		state->fontHandler->textColor.a = state->megaAlpha;
@@ -358,10 +372,10 @@
 			
 			// deallocate images
 			clearImages(state);
-			/*
+			
 			// deallocate background image
-			deallocateImage(&backgroundAsset);
-			*/
+			deallocateImage(&state->backgroundAsset);
+			
 			// deallocate font 
 			deallocateFont(state->fontHandler);
 			
