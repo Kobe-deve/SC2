@@ -215,6 +215,9 @@ void initDungeonFloor(struct gameState * state)
 		case 1:
 		fileName = SECTOR_2_FILE;
 		break;
+		case 2:
+		fileName = SECTOR_3_FILE;
+		break; 
 	}
 	
 	// read dungeon file 
@@ -264,11 +267,17 @@ void initDungeonFloor(struct gameState * state)
 	generateNPCs(state,state->building);
 	
 	// initialize dungeon display
+	
 	initDungeonDisplay(state);
 	
 	// set initial status 
-	updateStatus(FIRST_FLOOR_TEXT,state);
-
+	switch(state->building)
+	{
+		case 0:
+		updateStatus(FIRST_FLOOR_TEXT,state);
+		break;
+	}
+	
 	// start dungeon crawling music 
 	//switchTrack(DUNGEON_MUSIC,s);
 }
@@ -456,10 +465,6 @@ void dungeonMovement(struct gameState * state)
 					if(state->keys > 0)
 						state->keys--;
 					break;
-					case A:
-					case G:
-					
-					break; 
 				}
 			}	
 			break;
@@ -496,25 +501,35 @@ void dungeonMovement(struct gameState * state)
 		{
 			switch(state->building)
 			{
-				case 0: // to sector 1 
-				if(state->floor < 0 )
+				case 0:
+				if(state->floor < 0 ) // to sector 1 
 				{
 					state->building = 1;
 					state->floor = 14;
 				}
-				else
+				else // to sector 3
 				{
+					state->building = 2;
+					state->floor = 0;
 				}
 				break;
 				
-				case 1: // to sector 0
-				if(state->floor >= state->dungeonSize) 
+				case 1: 
+				if(state->floor >= state->dungeonSize) // to sector 0
 				{
 					state->building = 0;
 					state->floor = 0;
 				}
 				
 				break;
+				case 2:
+				if(state->floor < 0) // to sector 0
+				{
+					state->building = 0;
+					state->floor = 9;
+				}
+				
+				break; 
 			}
 			deallocateDungeon(state);
 			initDungeonFloor(state);

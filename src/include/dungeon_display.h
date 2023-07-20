@@ -134,6 +134,7 @@ void displayRange(struct gameState * state)
 // display status in dungeon 
 void displayStatus(struct gameState * state)
 {
+	char displayer[400]; // used in sprite mode to display stats 
 	int i;
 	
 	switch(state->graphicsMode)
@@ -160,7 +161,13 @@ void displayStatus(struct gameState * state)
 		
 		
 		break;
-		case 1:	
+		case 1:
+		sprintf(displayer,"Keys: %d",state->keys);	
+		printText(displayer, 10, 0, state->fontHandler);
+		
+		sprintf(displayer,"Sector %d",state->building);	
+		printText(displayer, 200, 0, state->fontHandler);
+		
 		
 		printText("STATUS:", 10, 500, state->fontHandler);
 		

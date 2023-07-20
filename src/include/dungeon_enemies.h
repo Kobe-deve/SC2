@@ -103,14 +103,13 @@ void enemyHandler(struct gameState * state)
 	int i = 0;
 	int j,enemyHere;
 	int cYo;
-	int directionX, directionY;
+	int direction;
 
 	for(i = 0;i<state->numEnemies;i++)
 	{
 		enemyHere = 0;
 		
-		directionY = 0;
-		directionX = 0;
+		direction = 0;
 		if(state->activeEnemies[i].inCombat == 0 && state->activeEnemies[i].active == 1 && ((int)(SDL_GetTicks() - state->activeEnemies[i].startTicks))/1000.f >= state->activeEnemies[i].speed)
 		{
 			// erase/update current spot when moving 
@@ -121,66 +120,39 @@ void enemyHandler(struct gameState * state)
 				printf("%c",quickConvert(state->d[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x]));	
 			}	
 			
-			//if(state->activeEnemies[i].x < state->dungeonSize-1 && state->d[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x+1] != 1)
-			//	state->activeEnemies[i].x++;
-			/*
-			TODO fix enemy movement logic
+			// determine enemy movement 
+			if(state->playerX > state->activeEnemies[i].x)
+				direction = 1;
+			else if(state->playerX < state->activeEnemies[i].x)
+				direction = 3;
+			else if(state->playerY > state->activeEnemies[i].y)
+				direction = 2;
+			else if(state->playerY < state->activeEnemies[i].y)
+				direction = 0;
+			else 
+				direction = rand()%4;
 			
-			// set up direction variables 
-			if(state->playerX > activeEnemies[i].x)
-				directionX = 1;
-			else if(state->playerX < activeEnemies[i].x)
-				directionX = 3;
-				
-			if(state->playerY > activeEnemies[i].y)
-				directionY = 1;
-			else if(state->playerY < activeEnemies[i].y)
-				directionY = 2;
-			
-			int cY = activeEnemies[i].y;
-			int cX = activeEnemies[i].x; 
-			cYo = 0;
-			
-			// move in y direction 
-			switch(directionY)
+			// execute movement 
+			switch(direction)
 			{
-				case 1:
-				if(cY < dungeonSize-1 && d[state->floor][cY+1][cX] != 1)
-					activeEnemies[i].y++;
+				case 0: // UP
+				if(state->activeEnemies[i].y - 1 >= 0 && passableBlock(state->activeEnemies[i].x,state->activeEnemies[i].y-1,state))
+					state->activeEnemies[i].y = state->activeEnemies[i].y - 1;				
 				break;
-				case 2:
-				if(cY > 0 && d[state->floor][cY-1][cX] != 1)
-					activeEnemies[i].y--;
+				case 1: // RIGHT
+				if(state->activeEnemies[i].x + 1 < state->dungeonSize && passableBlock(state->activeEnemies[i].x+1,state->activeEnemies[i].y,state))
+					state->activeEnemies[i].x = state->activeEnemies[i].x + 1;				
+				break;
+				case 2: // DOWN
+				if(state->activeEnemies[i].y + 1 < state->dungeonSize && passableBlock(state->activeEnemies[i].x,state->activeEnemies[i].y+1,state))
+					state->activeEnemies[i].y = state->activeEnemies[i].y + 1;
+				break;
+				case 3: // LEFT
+				if(state->activeEnemies[i].x - 1 >= 0 && passableBlock(state->activeEnemies[i].x-1,state->activeEnemies[i].y,state))
+					state->activeEnemies[i].x = state->activeEnemies[i].x - 1;
 				break;
 			}
 			
-			// move in x direction 
-			cYo = cY;
-			cY = activeEnemies[i].y;
-			
-			switch(directionX)
-			{
-				case 1:
-				if(cX < dungeonSize-1 && d[state->floor][cY][cX+1] != 1)
-					activeEnemies[i].x++;
-				break;
-				case 3:
-				if(cX > 0 && d[state->floor][cY][cX-1] != 1)
-					activeEnemies[i].x--;
-				break;
-			}
-			
-			// make sure enemies don't overlap when moving, if so then keep them at their spot 
-			for(j=0;j<numEnemies;j++)
-			{
-				if(j !=i && activeEnemies[j].active == 1 && ((activeEnemies[i].y == activeEnemies[j].y) && (activeEnemies[i].x == activeEnemies[j].x)))
-				{
-					activeEnemies[i].x = cX;
-					activeEnemies[i].y = cYo;
-					break;
-				}
-			}
-			*/
 			
 			// starting fight with npc 
 			int checkNPC = -1;

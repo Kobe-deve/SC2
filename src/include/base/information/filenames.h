@@ -16,6 +16,8 @@
 
 #define SECTOR_2_FILE "maps/sector_2.txt" // second sector  
 
+#define SECTOR_3_FILE "maps/sector_3.txt" // third sector  
+
 // image files and specific width/height
 #define LOGO_IMAGE "resources/sprites/logo.png"
 #define DUNGEON_SPRITE "resources/sprites/dungeon_sheet.png"

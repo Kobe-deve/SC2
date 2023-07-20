@@ -41,7 +41,6 @@ void generateNPCs(struct gameState * state, int dungeonType)
 	
 	switch(dungeonType)
 	{
-		default:
 		case 0:
 		readFile = fopen(ORIGINAL_DUNGEON_NPC,"r");
 		break;
