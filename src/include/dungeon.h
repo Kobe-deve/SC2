@@ -209,9 +209,20 @@ void dungeonDisplay(struct gameState * state)
 			for(i = 0;i<state->numEnemies;i++)
 			{		
 				if(state->visible[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == 1 && state->activeEnemies[i].inCombat == 0 && state->activeEnemies[i].active == 1)
-				{				
-					state->spriteClip.x = SPRITE_SQUARE_SIZE*8;
-					state->spriteClip.y = 0;
+				{			
+					// displaying different types of enemies 			
+					switch(state->activeEnemies[i].type)
+					{
+						case K: // boss 
+						state->spriteClip.x = SPRITE_SQUARE_SIZE*18;
+						state->spriteClip.y = 0;
+						break;
+						default: // regular 
+						state->spriteClip.x = SPRITE_SQUARE_SIZE*8;
+						state->spriteClip.y = 0;
+						break;
+					}
+					
 					state->images[0].x = spriteDungeonPrintCoordX+state->activeEnemies[i].x*SPRITE_SQUARE_SIZE*state->images[0].scale;
 					state->images[0].y = spriteDungeonPrintCoordY+state->activeEnemies[i].y*SPRITE_SQUARE_SIZE*state->images[0].scale;
 					renderImage(&state->images[0], state->renderer,&state->spriteClip);			

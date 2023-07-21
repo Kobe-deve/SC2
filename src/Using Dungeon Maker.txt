@@ -26,7 +26,7 @@ Dungeon Maker
 	I 18
 	J 19
 	K 20
-	M 22
+	M 22 
 
 	Block Types:
 		1 - Wall
@@ -50,6 +50,8 @@ Dungeon Maker
 		E(14) - Enemy spawn point 
 		
 		M(22) - Sign
+		
+		K(20) - Boss spawn point 
 
 	Mechanics:
 		-Locked doors

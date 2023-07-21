@@ -49,7 +49,7 @@ void generateEnemies(struct gameState * state)
 	{	
 		for(ix=0;ix<state->dungeonSize;ix++)
 		{	
-			if(state->d[state->floor][iy][ix] == E)
+			if(state->d[state->floor][iy][ix] == E || state->d[state->floor][iy][ix] == K)
 				state->numEnemies++;
 		}
 	}
@@ -64,7 +64,7 @@ void generateEnemies(struct gameState * state)
 	{	
 		for(ix=0;ix<state->dungeonSize;ix++)
 		{	
-			if(state->d[state->floor][iy][ix] == E)
+			if(state->d[state->floor][iy][ix] == E) // spawning regular enemies 
 			{
 				state->activeEnemies[numGenerate-1].speed = rand()%3+1; 
 				state->activeEnemies[numGenerate-1].startTicks = 0;
@@ -76,6 +76,21 @@ void generateEnemies(struct gameState * state)
 				state->activeEnemies[numGenerate-1].type = rand()%3+1;
 				state->activeEnemies[numGenerate-1].npcFighting = -1;
 				state->activeEnemies[numGenerate-1].health = 5;
+				numGenerate--;
+				updateStatus(ENEMY_MOVEMENT,state);	
+			}
+			else if(state->d[state->floor][iy][ix] == K) // spawning a boss 
+			{
+				state->activeEnemies[numGenerate-1].speed = 0; 
+				state->activeEnemies[numGenerate-1].startTicks = 0;
+				state->activeEnemies[numGenerate-1].x = ix;
+				state->activeEnemies[numGenerate-1].y = iy;
+				state->activeEnemies[numGenerate-1].inCombat = 0;
+				
+				state->activeEnemies[numGenerate-1].active = 1;
+				state->activeEnemies[numGenerate-1].type = K;
+				state->activeEnemies[numGenerate-1].npcFighting = -1;
+				state->activeEnemies[numGenerate-1].health = 20;
 				numGenerate--;
 				updateStatus(ENEMY_MOVEMENT,state);	
 			}
@@ -97,7 +112,7 @@ void enemyHandler(struct gameState * state)
 		enemyHere = 0;
 		
 		direction = 0;
-		if(state->activeEnemies[i].inCombat == 0 && state->activeEnemies[i].active == 1 && ((int)(SDL_GetTicks() - state->activeEnemies[i].startTicks))/1000.f >= state->activeEnemies[i].speed)
+		if(state->activeEnemies[i].type != K && state->activeEnemies[i].inCombat == 0 && state->activeEnemies[i].active == 1 && ((int)(SDL_GetTicks() - state->activeEnemies[i].startTicks))/1000.f >= state->activeEnemies[i].speed)
 		{
 			// erase/update current spot when moving 
 			if(state->graphicsMode == 0 && state->visible[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == 1)
