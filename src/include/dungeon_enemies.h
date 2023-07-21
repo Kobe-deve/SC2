@@ -170,7 +170,7 @@ void enemyHandler(struct gameState * state)
 
 			
 			// if npc found, start battle 
-			if(checkNPC != -1 && checkNPC < state->numNPCs)
+			if(checkNPC != -1 && checkNPC < state->numNPCs && !state->activeNPCs[checkNPC].inCombat)
 			{
 				if(state->graphicsMode == 0)
 					printf("%d",checkNPC);

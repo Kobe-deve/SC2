@@ -320,7 +320,7 @@ void initDungeonDisplay(struct gameState * state)
 		addImage(state,DUNGEON_SPRITE);
 		state->images[0].x = SPRITE_SQUARE_SIZE;
 		state->images[0].y = SPRITE_SQUARE_SIZE;
-		state->images[0].scale = 3; // scale of the images on the screen 
+		state->images[0].scale = 1; // scale of the images on the screen 
 		
 		// set position of the dungeon on the screen
 		spriteDungeonPrintCoordX = (WINDOW_WIDTH-100)/2-state->dungeonSize*state->images[0].scale*SPRITE_SQUARE_SIZE/2;

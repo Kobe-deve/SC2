@@ -88,6 +88,11 @@ void dungeonDisplay(struct gameState * state)
 				{	
 					if(state->visible[state->floor][iy][ix]) // visibility setting 
 					{
+						// change the lighting of blocks based on if they're close to the player 
+						if((iy >= state->playerY-1 && iy <= state->playerY+1) && (ix >= state->playerX-1 && ix <= state->playerX+1))	
+							SDL_SetTextureColorMod( state->images[0].texture, 255, 255, 255 );
+						else
+							SDL_SetTextureColorMod( state->images[0].texture, 100, 100, 100 );
 						
 						switch(state->d[state->floor][iy][ix])
 						{
@@ -204,12 +209,18 @@ void dungeonDisplay(struct gameState * state)
 					}
 				}
 			}
-			
+			SDL_SetTextureColorMod( state->images[0].texture, 255, 255, 255 );
+						
 			// display enemies 
 			for(i = 0;i<state->numEnemies;i++)
 			{		
 				if(state->visible[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == 1 && state->activeEnemies[i].inCombat == 0 && state->activeEnemies[i].active == 1)
 				{			
+					if((state->activeEnemies[i].y >= state->playerY-1 && state->activeEnemies[i].y <= state->playerY+1) && (state->activeEnemies[i].x >= state->playerX-1 && state->activeEnemies[i].x <= state->playerX+1))	
+						SDL_SetTextureColorMod( state->images[0].texture, 255, 255, 255 );
+					else
+						SDL_SetTextureColorMod( state->images[0].texture, 100, 100, 100 );
+						
 					// displaying different types of enemies 			
 					switch(state->activeEnemies[i].type)
 					{
@@ -234,6 +245,11 @@ void dungeonDisplay(struct gameState * state)
 			{		
 				if(state->activeNPCs[i].active && state->visible[state->activeNPCs[i].floor][state->activeNPCs[i].y][state->activeNPCs[i].x] == 1 && state->floor == state->activeNPCs[i].floor)
 				{
+					if((state->activeNPCs[i].y >= state->playerY-1 && state->activeNPCs[i].y <= state->playerY+1) && (state->activeNPCs[i].x >= state->playerX-1 && state->activeNPCs[i].x <= state->playerX+1))	
+						SDL_SetTextureColorMod( state->images[0].texture, 255, 255, 255 );
+					else
+						SDL_SetTextureColorMod( state->images[0].texture, 100, 100, 100 );
+					
 					// change sprite based on situation the npc is in 
 					if(state->activeNPCs[i].inCombat == 1)
 						state->spriteClip.x = SPRITE_SQUARE_SIZE*11;
@@ -247,6 +263,7 @@ void dungeonDisplay(struct gameState * state)
 					renderImage(&state->images[0], state->renderer,&state->spriteClip);
 				}
 			}
+			SDL_SetTextureColorMod( state->images[0].texture, 255, 255, 255 );
 			
 			// display player 
 			state->spriteClip.x = 0;

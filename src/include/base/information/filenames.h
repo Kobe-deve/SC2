@@ -21,7 +21,8 @@
 // image files and specific width/height
 #define LOGO_IMAGE "resources/sprites/logo.png"
 #define DUNGEON_SPRITE "resources/sprites/dungeon_sheet.png"
-#define SPRITE_SQUARE_SIZE 10 // width/height of dungeon tiles
+
+#define SPRITE_SQUARE_SIZE 30 // width/height of dungeon tiles
 
 // background sprites used 
 #define DUNGEON_BACKGROUND_ASSET "resources/sprites/background/background_asset.png"
