@@ -319,6 +319,8 @@ void dungeonLogic(struct gameState * state)
 			state->activeEnemies[i].active = 0;
 			updateStatus(ENCOUNTERED,state);
 	
+			state->enemyType = state->activeEnemies[i].type;
+			
 			state->switchSystem = 1;
 			state->switchTo = BATTLE_SCREEN;
 		}

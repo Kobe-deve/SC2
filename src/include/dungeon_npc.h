@@ -19,15 +19,32 @@ int npcNearby(int x, int y, int f, int isPlayer, struct gameState * state)
 	{
 		if(!state->activeNPCs[i].passBy && state->activeNPCs[i].active && (state->activeNPCs[i].floor == f && (y == state->activeNPCs[i].y && x == state->activeNPCs[i].x)))
 		{
-			if(isPlayer == 1)
+			switch(isPlayer)
+			{
+				case 1: // player 
 				state->nearestNPC = i;
-			return 1;
+				case 0: // checking 
+				return 1;
+				break;
+				case -1: // enemy 
+				return i;
+				break;
+			}
 		}
 	}
 	
-	if(isPlayer == 1)
+	switch(isPlayer)
+	{
+		case 1: // player 
 		state->nearestNPC = 0;
-			
+		case 0: // checking 
+		return 0;
+		break;
+		case -1: // enemy 
+		return -1;
+		break;
+	}
+
 	return 0;
 }
 

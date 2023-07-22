@@ -144,6 +144,8 @@
 		int keys; // keys dropped by enemies that can be used to unlock doors 
 		int money; // how much money the player has 
 		
+		int enemyType; // the type of enemy the player is fighting 
+		
 		struct character stats; // stats of the player character 
 	};
 	

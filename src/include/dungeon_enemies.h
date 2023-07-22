@@ -106,7 +106,7 @@ void generateEnemies(struct gameState * state)
 void enemyHandler(struct gameState * state)
 {
 	int i = 0;
-	int j;
+	int cx,cy; // store coords before change 
 	int cYo;
 	int direction;
 
@@ -123,6 +123,9 @@ void enemyHandler(struct gameState * state)
 		
 		if(state->activeEnemies[i].type != K && state->activeEnemies[i].inCombat == 0 && state->activeEnemies[i].active == 1 && ((int)(SDL_GetTicks() - state->activeEnemies[i].startTicks))/1000.f >= state->activeEnemies[i].speed)
 		{
+			cx = state->activeEnemies[i].x;
+			cy = state->activeEnemies[i].y; 
+			
 			// erase/update current spot when moving 
 			if(state->graphicsMode == 0 && state->visible[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == 1)
 			{
@@ -163,21 +166,12 @@ void enemyHandler(struct gameState * state)
 					state->activeEnemies[i].x = state->activeEnemies[i].x - 1;
 				break;
 			}
-			
+						
 			// starting fight with npc 
-			int checkNPC = -1;
-		
-			for(j=0;j<state->numNPCs;j++)
-			{
-				if(state->activeNPCs[j].active == 1 && (state->activeNPCs[j].floor == state->floor && (state->activeEnemies[i].y == state->activeNPCs[j].y && state->activeEnemies[i].x == state->activeNPCs[j].x)))
-				{
-					checkNPC = j;
-					break;
-				}
-			}
+			int checkNPC = npcNearby(state->activeEnemies[i].x,state->activeEnemies[i].y,state->floor,-1,state);
 			
 			// if npc found, start battle 
-			if(checkNPC != -1 && checkNPC < state->numNPCs && !state->activeNPCs[checkNPC].inCombat)
+			if(checkNPC != -1 && (state->activeNPCs[checkNPC].active == 1 && state->activeNPCs[checkNPC].inCombat == 0))
 			{
 				if(state->graphicsMode == 0)
 					printf("%d",checkNPC);
@@ -190,6 +184,11 @@ void enemyHandler(struct gameState * state)
 				
 				// update status 
 				updateStatus(NPCvsENEMY,state);	
+			}
+			else if(checkNPC != -1 && state->activeNPCs[checkNPC].inCombat == 1) // if npc in combat don't move there 
+			{
+				state->activeEnemies[i].x = cx;
+				state->activeEnemies[i].y = cy; 
 			}
 			
 			// reset start tick 
