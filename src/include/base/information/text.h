@@ -32,6 +32,7 @@
 	#define NPCWON "The fighting seemed to stop."
 	#define PASSOUT "You feel tired and can't move..."
 	#define WAKINGUP "You wake up."
+	#define CRUSHED "Something got crushed by a wall"
 	
 // signs in the game 
 	#define SECTOR_0_SIGN "You see a sign that says \"BEWARE\""

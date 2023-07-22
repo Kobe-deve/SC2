@@ -86,10 +86,10 @@ void dungeonDisplay(struct gameState * state)
 			{
 				for(ix=0;ix<state->dungeonSize;ix++)
 				{	
-					if(state->visible[state->floor][iy][ix]) // visibility setting 
+					if(state->safeZone || state->visible[state->floor][iy][ix]) // visibility setting 
 					{
 						// change the lighting of blocks based on if they're close to the player 
-						if((iy >= state->playerY-1 && iy <= state->playerY+1) && (ix >= state->playerX-1 && ix <= state->playerX+1))	
+						if(state->safeZone || ((iy >= state->playerY-1 && iy <= state->playerY+1) && (ix >= state->playerX-1 && ix <= state->playerX+1)))	
 							SDL_SetTextureColorMod( state->images[0].texture, 255, 255, 255 );
 						else
 							SDL_SetTextureColorMod( state->images[0].texture, 100, 100, 100 );
@@ -245,7 +245,7 @@ void dungeonDisplay(struct gameState * state)
 			{		
 				if(state->activeNPCs[i].active && state->visible[state->activeNPCs[i].floor][state->activeNPCs[i].y][state->activeNPCs[i].x] == 1 && state->floor == state->activeNPCs[i].floor)
 				{
-					if((state->activeNPCs[i].y >= state->playerY-1 && state->activeNPCs[i].y <= state->playerY+1) && (state->activeNPCs[i].x >= state->playerX-1 && state->activeNPCs[i].x <= state->playerX+1))	
+					if(state->safeZone || ((state->activeNPCs[i].y >= state->playerY-1 && state->activeNPCs[i].y <= state->playerY+1) && (state->activeNPCs[i].x >= state->playerX-1 && state->activeNPCs[i].x <= state->playerX+1)))	
 						SDL_SetTextureColorMod( state->images[0].texture, 255, 255, 255 );
 					else
 						SDL_SetTextureColorMod( state->images[0].texture, 100, 100, 100 );

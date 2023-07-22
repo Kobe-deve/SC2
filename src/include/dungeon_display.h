@@ -159,15 +159,19 @@ void displayStatus(struct gameState * state)
 		setCursor(20,0);
 		printf("Sector - %d",state->building);
 		
-		
 		break;
 		case 1:
 		sprintf(displayer,"Keys: %d",state->keys);	
 		printText(displayer, 10, 0, state->fontHandler);
-		
-		sprintf(displayer,"Sector %d",state->building);	
+			
+		sprintf(displayer,"Gold: %d",state->money);	
 		printText(displayer, 200, 0, state->fontHandler);
 		
+		sprintf(displayer,"Sector %d",state->building);	
+		printText(displayer, 390, 0, state->fontHandler);
+	
+		sprintf(displayer,"Floor: %d",state->floor);	
+		printText(displayer, 580, 0, state->fontHandler);
 		
 		printText("STATUS:", 10, 500, state->fontHandler);
 		

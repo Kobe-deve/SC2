@@ -132,6 +132,8 @@
 		// coordinates of stairs going up for AI 
 		int ** upStairCoords;
 		
+		// is the current section the player is in a safe zone where they can walk around and such? (toggles full visibility)
+		int safeZone;
 		
 		// dungeon crawling variables
 		int playerX; // x coord in dungeon 
@@ -140,6 +142,7 @@
 		int building; // the building the player is in 
 		int direction; // the direction the player is facing in the dungeon 
 		int keys; // keys dropped by enemies that can be used to unlock doors 
+		int money; // how much money the player has 
 		
 		struct character stats; // stats of the player character 
 	};
@@ -280,6 +283,9 @@
 		state->numNPCs = 0;
 		state->activeNPCs = NULL;	
 		state->keys = 1;
+		state->money = 0;
+		
+		state->safeZone = 0;
 		
 		state->visible = NULL;
 
@@ -444,7 +450,7 @@
 		state->building = getData->building; // the building the player is in 
 		state->direction = getData->direction; // the direction the player is facing in the dungeon 
 		state->keys = getData->keys; // keys dropped by enemies that can be used to unlock doors 
-		state->dungeonSize = getData->dungeonSize;
+		state->money = getData->money;
 		
 		state->stats = getData->stats;
 		

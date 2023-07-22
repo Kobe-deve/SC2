@@ -207,9 +207,11 @@ void initDungeonFloor(struct gameState * state)
 		default:
 		case 0:
 		fileName = ORIGINAL_DUNGEON;
+		state->safeZone = 0;
 		break;
 		case 1:
 		fileName = SECTOR_2_FILE;
+		state->safeZone = 1;
 		break;
 		case 2:
 		fileName = SECTOR_3_FILE;

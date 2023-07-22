@@ -27,6 +27,9 @@ struct enemies
 #ifndef DUNGEON_ENEMIES__HANDLED
 #define DUNGEON_ENEMIES__HANDLED
 
+// how fast enemies move (per seconds)
+#define ENEMY_SPEED 2
+
 // generate enemies on the floor 
 void generateEnemies(struct gameState * state)
 {
@@ -66,7 +69,7 @@ void generateEnemies(struct gameState * state)
 		{	
 			if(state->d[state->floor][iy][ix] == E) // spawning regular enemies 
 			{
-				state->activeEnemies[numGenerate-1].speed = rand()%3+1; 
+				state->activeEnemies[numGenerate-1].speed = ENEMY_SPEED; 
 				state->activeEnemies[numGenerate-1].startTicks = 0;
 				state->activeEnemies[numGenerate-1].x = ix;
 				state->activeEnemies[numGenerate-1].y = iy;
@@ -103,15 +106,21 @@ void generateEnemies(struct gameState * state)
 void enemyHandler(struct gameState * state)
 {
 	int i = 0;
-	int j,enemyHere;
+	int j;
 	int cYo;
 	int direction;
 
 	for(i = 0;i<state->numEnemies;i++)
 	{
-		enemyHere = 0;
-		
 		direction = 0;
+		
+		// if a switch is pressed and enemies are crushed by a wall 
+		if(state->activeEnemies[i].active && state->d[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == D)
+		{
+			state->activeEnemies[i].active = 0;
+			updateStatus(CRUSHED,state);
+		}
+		
 		if(state->activeEnemies[i].type != K && state->activeEnemies[i].inCombat == 0 && state->activeEnemies[i].active == 1 && ((int)(SDL_GetTicks() - state->activeEnemies[i].startTicks))/1000.f >= state->activeEnemies[i].speed)
 		{
 			// erase/update current spot when moving 
@@ -155,7 +164,6 @@ void enemyHandler(struct gameState * state)
 				break;
 			}
 			
-			
 			// starting fight with npc 
 			int checkNPC = -1;
 		
@@ -167,7 +175,6 @@ void enemyHandler(struct gameState * state)
 					break;
 				}
 			}
-
 			
 			// if npc found, start battle 
 			if(checkNPC != -1 && checkNPC < state->numNPCs && !state->activeNPCs[checkNPC].inCombat)
