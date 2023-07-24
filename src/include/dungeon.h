@@ -295,11 +295,13 @@ void dungeonLogic(struct gameState * state)
 		dungeonMovement(state);
 	else // basic menu handling 
 	{
-		handleMenu(state);
+		npcConversationHandler(state);
 		
-		if(state->activeNPCs[state->nearestNPC].inCombat == 1 || state->input == BACKSPACE) // handle menu logic 
+		// walking away or if the npc is in combat
+		if(state->activeNPCs[state->nearestNPC].inCombat == 1 || state->input == BACKSPACE)
 		{
 			clearMenu(state);
+			updateStatus(NPC_RUN_AWAY,state);
 			deallocateMenu(state);	
 			state->activeNPCs[state->nearestNPC].talking = 0;
 		}
@@ -316,6 +318,13 @@ void dungeonLogic(struct gameState * state)
 	{
 		if(state->activeEnemies[i].active == 1 && state->activeEnemies[i].y == state->playerY && state->activeEnemies[i].x == state->playerX)
 		{
+			// if talking to npc, deallocate and stop that 
+			if(state->options != NULL)
+			{
+				deallocateMenu(state);	
+				state->activeNPCs[state->nearestNPC].talking = 0;
+			}
+			
 			state->activeEnemies[i].active = 0;
 			updateStatus(ENCOUNTERED,state);
 	

@@ -256,4 +256,32 @@ void npcHandler(struct gameState * state)
 	setColor(WHITE);
 }
 
+// exiting an npc conversation 
+void exitNPCConversation(struct gameState * state)
+{
+	updateStatus(NPC_DONE_TALK,state);
+	deallocateMenu(state);	
+	state->activeNPCs[state->nearestNPC].talking = 0;
+}
+
+// function for handling conversations with the npc 
+void npcConversationHandler(struct gameState * state)
+{
+	// handles the main menu the player is using to interact with the npc 
+	handleMenu(state);
+	
+	// handle input 
+	if(state->input == ENTER)
+	{
+		switch(state->option)
+		{
+			case 2:
+			state->activeNPCs[state->nearestNPC].passBy = 1;
+			break;
+		}
+		
+		exitNPCConversation(state);
+	}
+}
+
 #endif

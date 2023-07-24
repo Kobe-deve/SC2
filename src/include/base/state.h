@@ -101,11 +101,12 @@
 		int numOptions; // number of options 
 		int menuX, menuY; // menu option coordinates
 		
-		
 		// npc information for dungeon 
 		int numNPCs;
 		struct npc * activeNPCs;
 		int nearestNPC; // the npc the player is closest to
+		
+		int conversationPhase; // used for keeping track of conversations in the game 
 		
 		// array of visible tiles in an area
 		int *** visible;
