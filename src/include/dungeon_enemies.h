@@ -101,7 +101,6 @@ void generateEnemies(struct gameState * state)
 	}
 }
 
-
 // moves enemies on the floor 
 void enemyHandler(struct gameState * state)
 {

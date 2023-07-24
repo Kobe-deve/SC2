@@ -4,6 +4,16 @@
 
 // save data locations
 #define MAIN_SAVE_FILE "./data/saveData.dat" // main save file 
+#define D1_SAVE "./data/mapData/s1_data.dat"
+#define D2_SAVE "./data/mapData/s2_data.dat"
+#define D3_SAVE "./data/mapData/s3_data.dat"
+
+// dungeon basis for a new game 
+#define ORIGINAL_DUNGEON "maps/original_dungeon.txt" // first dungeon 
+#define ORIGINAL_DUNGEON_NPC "maps/npc_data/origin.txt" // first dungeon npc file 
+#define SECTOR_2_FILE "maps/sector_2.txt" // second sector  
+#define SECTOR_3_FILE "maps/sector_3.txt" // third sector  
+
 
 // music files 
 #define TITLE_MUSIC "resources/music/Stone.wav"
@@ -11,12 +21,6 @@
 #define DUNGEON_MUSIC "resources/music/39 Arms vs 2.wav"
 #define DREAM_MUSIC "resources/music/Way Before.wav"
 
-#define ORIGINAL_DUNGEON "maps/original_dungeon.txt" // first dungeon 
-#define ORIGINAL_DUNGEON_NPC "maps/npc_data/origin.txt" // first dungeon npc file 
-
-#define SECTOR_2_FILE "maps/sector_2.txt" // second sector  
-
-#define SECTOR_3_FILE "maps/sector_3.txt" // third sector  
 
 // image files and specific width/height
 #define LOGO_IMAGE "resources/sprites/logo.png"

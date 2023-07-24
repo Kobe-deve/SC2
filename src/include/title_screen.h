@@ -74,12 +74,14 @@ void titleScreenHandler(struct gameState * state)
 		switch(state->option)
 		{
 			case 0: // new game 
+			state->newGame = 1;
 			state->switchSystem = 1;
 			state->switchTo = DUNGEON_SCREEN;
 
 			deallocateMenu(state);
 			break;
-			case 1: // load 
+			case 1: // load  
+			state->newGame = 0;
 			loadData(state);
 			state->switchSystem = 1;
 			state->switchTo = DUNGEON_SCREEN;

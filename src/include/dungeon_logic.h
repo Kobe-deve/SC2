@@ -124,31 +124,47 @@ int nearbyBlocks(struct gameState * state, int action)
 	return 0;
 }
 
-// define dungeon based on file
-void readDungeonFile(struct gameState * state, char * fileName)
+// access the dungeon save data
+void accessDungeonData(struct gameState * state, int writeMode)
 {
-	// the file to be read 
-	FILE *readFile;
-	char * fileReader = malloc(128 * sizeof(char)); 
-	
-	readFile = fopen(fileName,"r");
-	
+	FILE *saveFile;
 	int iy, iz, ix;
-	int check;
 	
-	// check if file is opened
-	if(readFile == NULL)
-		throwError("ERROR:DUNGEON FILE COULD NOT BE READ");
-	else
+	char fileReader[128];
+	char fileMode[2];
+	
+	switch(writeMode)
 	{
-		// read size of dungeon 
-		fscanf(readFile,"%s",fileReader);
-		state->dungeonSize = atoi(fileReader);
-		
-		// skip line
-		fscanf(readFile,"%s",fileReader);
+		case 0: // write 
+		strcpy(fileMode,"w+");
+		break;
+		case 1: // read 
+		strcpy(fileMode,"r");
+		break;
+	}
 	
-		// allocate size 
+	switch(state->building)
+	{
+		case 0:
+		saveFile = fopen(D1_SAVE, fileMode);
+		break;
+		case 1:
+		saveFile = fopen(D2_SAVE, fileMode);
+		break;
+		case 2:
+		saveFile = fopen(D3_SAVE, fileMode);
+		break;
+	}
+	
+	switch(writeMode)
+	{
+		case 0:
+		fprintf(saveFile,"%d\n",state->dungeonSize);
+		break;
+		case 1:
+		fscanf(saveFile,"%d",&state->dungeonSize);
+		
+		// allocate dungeon and upStairsCoords
 		state->d = malloc(state->dungeonSize * sizeof(int **));
 		state->upStairCoords = malloc(state->dungeonSize * sizeof(int *));
 		for(iz=0;iz<state->dungeonSize;iz++)
@@ -163,33 +179,180 @@ void readDungeonFile(struct gameState * state, char * fileName)
 			}	
 		}
 		
-		// read file data 
-		for(iz=0;iz<state->dungeonSize;iz++)
+		// allocate visible array 
+		if(state->visible == NULL)
 		{
-			for(iy=0;iy<state->dungeonSize;iy++)
-			{	
-				for(ix=0;ix<state->dungeonSize;ix++)
+			state->visible = malloc(state->dungeonSize * sizeof(int **));
+			for(iz=0;iz<state->dungeonSize;iz++)
+			{
+				state->visible[iz] = malloc(state->dungeonSize * sizeof(int *));
+				for(iy=0;iy<state->dungeonSize;iy++)
 				{	
-					fscanf(readFile,"%s",fileReader);
-					
-					// checks if character is a letter 
-					if(fileReader[0] >= 'A' && (strcmp(fileReader," ") != 0))
-						state->d[iz][iy][ix] = 10+(fileReader[0]-65);		
-					else if(strcmp(fileReader," ") != 0)
-						state->d[iz][iy][ix] = atoi(fileReader);
-					
-					if(state->d[iz][iy][ix] == 2)
-					{
-						state->upStairCoords[iz][0] = ix;
-						state->upStairCoords[iz][1] = iy;
-					}
-				}
-			}	
-		}
-		fclose(readFile);
+					state->visible[iz][iy] = malloc(state->dungeonSize * sizeof(int));
+					for(ix=0;ix<state->dungeonSize;ix++)
+						state->visible[iz][iy][ix] = 0;
+				}	
+			}
+		}	
+		break; 
 	}
+	
+	// save/load upstairs coords 
+	for(iz=0;iz<state->dungeonSize;iz++)
+	{
+		switch(writeMode)
+		{
+			case 0:
+			fprintf(saveFile,"%d %d\n",state->upStairCoords[iz][0],state->upStairCoords[iz][1]);
+			
+			break;
+			case 1:	
+			fscanf(saveFile,"%d %d",&state->upStairCoords[iz][0],&state->upStairCoords[iz][1]);
+			break;
+		}
+	}
+	
+	// save/load dungeon data 
+	for(iz=0;iz<state->dungeonSize;iz++)
+	{
+		for(iy=0;iy<state->dungeonSize;iy++)
+		{
+			for(ix=0;ix<state->dungeonSize;ix++)
+			{
+				switch(writeMode)
+				{
+					case 0:
+					fprintf(saveFile,"%d ", state->d[iz][iy][ix]);
+					break;
+					case 1:
+					fscanf(saveFile,"%d ", &state->d[iz][iy][ix]);
+					break;
+				}
+			}
+			if(writeMode == 0)
+				fprintf(saveFile,"\n");
+		}
+	}
+	
+	// save/load visible data 
+	for(iz=0;iz<state->dungeonSize;iz++)
+	{
+		for(iy=0;iy<state->dungeonSize;iy++)
+		{
+			for(ix=0;ix<state->dungeonSize;ix++)
+			{
+				switch(writeMode)
+				{
+					case 0:
+					fprintf(saveFile,"%d ", state->visible[iz][iy][ix]);
+					break;
+					case 1:
+					fscanf(saveFile,"%d", &state->visible[iz][iy][ix]);
+					break;
+				}
+			}
+			fprintf(saveFile,"\n");
+		}
+		fprintf(saveFile,"\n");
+	}
+	
+	fclose(saveFile);
+	
+	printf("DONE READING");
+}
+
+// define initial dungeon based on file
+void readDungeonFile(struct gameState * state, char * fileName)
+{
+	// the file to be read 
+	FILE *readFile;
+	FILE *checkFile;
+	char * fileReader = malloc(128 * sizeof(char)); 
+	
+	int iy, iz, ix;
+	int check;
+	
+	// check if there's save data 
+	switch(state->building)
+	{
+		case 0:
+		checkFile = fopen(D1_SAVE, "r");
+		break;
+		case 1:
+		checkFile = fopen(D2_SAVE, "r");
+		break;
+		case 2:
+		checkFile = fopen(D3_SAVE, "r");
+		break;
+	}
+	
+	// if there's a file, load it
+	if(!state->newGame == 1 && checkFile != NULL)
+	{
+		fclose(checkFile);
 		
-	free(fileReader);
+		accessDungeonData(state,1);
+	}
+	else // if no save data, load from main file 
+	{
+		fclose(checkFile);
+		readFile = fopen(fileName,"r");
+		
+		// check if file is opened
+		if(readFile == NULL)
+			throwError("ERROR:DUNGEON FILE COULD NOT BE READ");
+		else
+		{
+			// read size of dungeon 
+			fscanf(readFile,"%s",fileReader);
+			state->dungeonSize = atoi(fileReader);
+			
+			// skip line
+			fscanf(readFile,"%s",fileReader);
+		
+			// allocate dungeon and upStairsCoords
+			state->d = malloc(state->dungeonSize * sizeof(int **));
+			state->upStairCoords = malloc(state->dungeonSize * sizeof(int *));
+			for(iz=0;iz<state->dungeonSize;iz++)
+			{
+				state->upStairCoords[iz] = malloc(sizeof(int[2])); // malloc stair coords 
+				state->d[iz] = malloc(state->dungeonSize * sizeof(int *));
+				for(iy=0;iy<state->dungeonSize;iy++)
+				{	
+					state->d[iz][iy] = malloc(state->dungeonSize * sizeof(int));
+					for(ix=0;ix<state->dungeonSize;ix++)
+						state->d[iz][iy][ix] = 0;
+				}	
+			}
+			
+			// read file data 
+			for(iz=0;iz<state->dungeonSize;iz++)
+			{
+				for(iy=0;iy<state->dungeonSize;iy++)
+				{	
+					for(ix=0;ix<state->dungeonSize;ix++)
+					{	
+						fscanf(readFile,"%s",fileReader);
+						
+						// checks if character is a letter 
+						if(fileReader[0] >= 'A' && (strcmp(fileReader," ") != 0))
+							state->d[iz][iy][ix] = 10+(fileReader[0]-65);		
+						else if(strcmp(fileReader," ") != 0)
+							state->d[iz][iy][ix] = atoi(fileReader);
+						
+						if(state->d[iz][iy][ix] == 2)
+						{
+							state->upStairCoords[iz][0] = ix;
+							state->upStairCoords[iz][1] = iy;
+						}
+					}
+				}	
+			}
+			fclose(readFile);
+		}
+			
+		free(fileReader);
+	}
 }
 
 // used for start of dungeon crawling 
