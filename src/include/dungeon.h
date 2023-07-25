@@ -344,6 +344,16 @@ void dungeonLogic(struct gameState * state)
 			state->switchTo = BATTLE_SCREEN;
 		}
 	}
+	
+	// testing battles 
+	if(state->testMode == 1 && state->input == ACTIVATE_BATTLE)
+	{
+		updateStatus(ENCOUNTERED,state);
+		state->enemyType = 0;
+			
+		state->switchSystem = 1;
+		state->switchTo = BATTLE_SCREEN;
+	}
 }
 
 #endif

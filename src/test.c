@@ -94,8 +94,67 @@ void dungeonTest()
 		
 		deallocateGame(&state);	
 	}
+}
+
+void battleTest()
+{
+		int i,j;
 	
-	printf("\nDONE");
+	struct gameState state;
+	
+	// set up inputs used in the test
+	numInputs = 27;
+	inputs = malloc(numInputs * sizeof(int));
+	inputs[0] = 0;
+	inputs[1] = ENTER;
+	inputs[2] = DOWN;
+	inputs[3] = DOWN;
+	inputs[4] = DOWN;
+	inputs[5] = DOWN;
+	inputs[6] = DOWN;
+	inputs[7] = DOWN;
+	inputs[8] = RIGHT;
+	inputs[9] = BATTLE_SCREEN;
+	inputs[10] = ENTER;
+	inputs[11] = ENTER;
+	inputs[12] = ENTER;
+	inputs[13] = ENTER;
+	inputs[14] = ENTER;
+	inputs[15] = ENTER;
+	inputs[16] = ENTER;
+	inputs[17] = RIGHT;
+	inputs[18] = ENTER;
+	inputs[19] = ENTER;
+	inputs[20] = ENTER;
+	inputs[21] = ENTER;
+	inputs[22] = ENTER;
+	inputs[23] = ENTER;
+	inputs[24] = ENTER;
+	inputs[25] = ENTER;
+	inputs[26] = ENTER;
+	
+	state.graphicsMode = 0; // set graphics mode 
+	
+	printf("\nBATTLE TEST\n");
+		
+	for(i=0;i<100;i++)
+	{
+		printf("%d",i+1);
+		initializeGame(&state);
+		
+		for(j=0;j<numInputs;j++)
+		{
+			state.input = inputs[j];
+			
+			// game logic handling 
+			logicHandler(&state);
+			
+			// game display handling 
+			displayHandler(&state);
+		}
+		
+		deallocateGame(&state);	
+	}
 }
 
 // main function 
@@ -106,5 +165,7 @@ void main()
 	
 	titleTest();
 	dungeonTest();
+	battleTest();
+	printf("\nDONE");
 	free(inputs);
 }

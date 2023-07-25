@@ -43,7 +43,8 @@
 		ENTER = 13,
 		ESC = 27,
 		MENU = 109, 
-		BACKSPACE = 8
+		BACKSPACE = 8,
+		ACTIVATE_BATTLE = -1111
 	};
 	
 	// game system enumeration used 
