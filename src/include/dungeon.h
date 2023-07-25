@@ -73,7 +73,12 @@ void dungeonDisplay(struct gameState * state)
 		printf("%c",1);	
 		
 		break;
-		case 1: // sprite mode
+		case 1: // sprite mode		
+	
+		// set position of the dungeon on the screen
+		spriteDungeonPrintCoordX = (WINDOW_WIDTH-100)/2-state->playerX*state->images[0].scale*SPRITE_SQUARE_SIZE;
+		spriteDungeonPrintCoordY = (WINDOW_HEIGHT-100)/2-state->playerY*state->images[0].scale*SPRITE_SQUARE_SIZE;
+		
 		
 		if(state->numImages == 0) // get dungeon image assets initialized if screen is cleared out
 		{
@@ -268,9 +273,14 @@ void dungeonDisplay(struct gameState * state)
 			// display player 
 			state->spriteClip.x = 0;
 			state->spriteClip.y = 0;
-							
+			
+			/*			
 			state->images[0].x = spriteDungeonPrintCoordX+state->playerX*SPRITE_SQUARE_SIZE*state->images[0].scale;
 			state->images[0].y = spriteDungeonPrintCoordY+state->playerY*SPRITE_SQUARE_SIZE*state->images[0].scale;
+			*/
+			state->images[0].x = (WINDOW_WIDTH-100)/2;
+			state->images[0].y = (WINDOW_HEIGHT-100)/2;
+			
 			renderImage(&state->images[0], state->renderer,&state->spriteClip);
 			
 			// display in-game status 

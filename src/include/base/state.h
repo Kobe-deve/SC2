@@ -2,6 +2,7 @@
 
 #include "information/text.h"
 #include "information/filenames.h"
+#include "information/quests.h"
 
 #ifndef SDL_MAIN_HANDLED
 #define SDL_MAIN_HANDLED
@@ -150,6 +151,9 @@
 		
 		int enemyType; // the type of enemy the player is fighting 
 		
+		int numQuests; // number of quests the player has 
+		struct quest currentQuests[100]; // current quests the player has open 
+		
 		struct character stats; // stats of the player character 
 	};
 	
@@ -278,6 +282,8 @@
 		state->imageStackSize = 0;
 		state->numImages = 0;
 		
+		state->numQuests = 0;
+		
 		// set up current game system 
 		state->gameSystem = TITLE_SCREEN;
 		
@@ -334,6 +340,14 @@
 		
 	}
 	
+	// adding a quest when the player takes one on 
+	void addQuest(int questNum, struct gameState * state)
+	{
+		state->currentQuests[state->numQuests].questType = questNum;
+		
+		state->numQuests++;
+	}
+	
 	// sets the alpha of all images/fonts 
 	void setAlphaOfImages(struct gameState * state)
 	{
@@ -379,6 +393,8 @@
 	// deallocate the game state 
 	void deallocate(struct gameState * state)
 	{
+		free(state->currentQuests);
+		
 		// deallocate data used for sprite mode 
 		if(state->graphicsMode == 1)
 		{
@@ -444,6 +460,7 @@
 		FILE *file;
 		char * fileReader = malloc(128 * sizeof(char)); 
 		file = fopen("./data/saveData.dat","r");
+		int i;
 		
 		struct gameState * getData = malloc(sizeof(struct gameState));
 		
@@ -463,6 +480,20 @@
 		state->money = getData->money;
 		
 		state->stats = getData->stats;
+		
+		state->numQuests = getData->numQuests;
+		
+		if(state->numQuests != 0 )
+		{
+			for(i=0;i<state->numQuests;i++)
+			{
+				state->currentQuests[i].questType = getData->currentQuests[i].questType;
+				state->currentQuests[i].progress = getData->currentQuests[i].progress;
+				state->currentQuests[i].maxProg = getData->currentQuests[i].maxProg;
+				state->currentQuests[i].completed = getData->currentQuests[i].completed;
+			}
+		}
+		
 		
 		free(getData);
 	}

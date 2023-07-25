@@ -157,12 +157,12 @@ int main(int argc, char *argv[])
 		
 		if(state.switchSystem == 1 && state.input != 27)
 			state.input = 0;
+				
+		// game display handling 
+		displayHandler(&state);
 		
 		// game logic handling 
 		logicHandler(&state);
-		
-		// game display handling 
-		displayHandler(&state);
 		
 		// if the system is changing, change the background elements 
 		

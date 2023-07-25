@@ -275,6 +275,9 @@ void npcConversationHandler(struct gameState * state)
 	{
 		switch(state->option)
 		{
+			case 1:
+			addQuest(0,state);
+			break;
 			case 2:
 			state->activeNPCs[state->nearestNPC].passBy = 1;
 			break;
