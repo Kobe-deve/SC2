@@ -156,6 +156,9 @@
 		// is this a new game? 
 		int newGame; 
 		
+		// for specific menu levels in certain systems 
+		int menuLevel;
+		
 		int calledSystem;
 		
 		int enemyType; // the type of enemy the player is fighting 
@@ -187,6 +190,8 @@
 	
 		// initialize state variables
 		state->input = 0;
+		
+		state->menuLevel = 0;
 		
 		// initialize music 
 		state->music = NULL;	

@@ -79,6 +79,10 @@
 	#define SETTING_TEXT_F "Full Screen"
 	#define SETTING_TEXT_FPS "FPS"
 	#define SETTING_TEXT_C "Controls"
+	#define SETTING_TEXT_D "Revert to Default"
+	
+	#define DEF_Y "Revert settings to default"
+	#define DEF_N "Keep settings"
 	
 	// character menu stuff 
 	#define C_SAVE "Save Game"
