@@ -324,7 +324,18 @@ void initDungeonDisplay(struct gameState * state)
 		addImage(state,DUNGEON_SPRITE);
 		state->images[0].x = SPRITE_SQUARE_SIZE;
 		state->images[0].y = SPRITE_SQUARE_SIZE;
-		state->images[0].scale = 2; // scale of the images on the screen 
+		switch(state->screenW)
+		{
+			case 1400:
+			state->images[0].scale = 2; // scale of the images on the screen 
+			break;
+			case 1200:
+			state->images[0].scale = 1; // scale of the images on the screen 
+			break;
+			default:
+			state->images[0].scale = 2; // scale of the images on the screen 
+			break;
+		}
 	
 		// initial display range 
 		displayRange(state);
