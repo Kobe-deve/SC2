@@ -94,6 +94,9 @@ void settingScreenHandler(struct gameState * state)
 			case 2: // fps 
 			switch(SCREEN_FPS)
 			{
+				case 20:
+				SCREEN_FPS = 30;
+				break;
 				case 30:
 				SCREEN_FPS = 40;
 				break;
@@ -101,10 +104,7 @@ void settingScreenHandler(struct gameState * state)
 				SCREEN_FPS = 60;
 				break;
 				case 60:
-				SCREEN_FPS = 120;
-				break;
-				case 120:
-				SCREEN_FPS = 30; 
+				SCREEN_FPS = 20;
 				break;
 			}
 			SCREEN_TICK_PER_FRAME = 1000 / SCREEN_FPS;  

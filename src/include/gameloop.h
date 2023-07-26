@@ -145,7 +145,7 @@
 		
 		if(state->switchSystem == 1 && state->fadeIn == 0 &&  state->megaAlpha >= 0) // if switching to system, begin switch process with alpha handling 
 		{
-			state->megaAlpha-=ALPHA_CHANGE;
+			state->megaAlpha-=ALPHA_CHANGE*40/SCREEN_FPS;
 			
 			// if alpha is at zero, change system and start fade in 
 			if(state->megaAlpha <= 0)
@@ -181,7 +181,7 @@
 		}
 		else if(state->megaAlpha <= 255 && state->fadeIn == 1) // fade into new system 
 		{
-			state->megaAlpha+=ALPHA_CHANGE;
+			state->megaAlpha+=ALPHA_CHANGE*40/SCREEN_FPS;
 			
 			if((state->megaAlpha >= 255 && state->graphicsMode == 1))
 			{
