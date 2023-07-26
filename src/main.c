@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 			// if in sprite mode, render background 
 			state.backgroundAsset.angle++;
 			state.backgroundAsset.angle%=360;
-			state.backgroundAsset.x = WINDOW_WIDTH-300;
+			state.backgroundAsset.x = state.screenW-300;
 			for(i=0;i<3;i++)
 			{
 				state.backgroundAsset.y = (i*200)-50;

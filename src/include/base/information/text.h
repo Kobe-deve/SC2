@@ -77,6 +77,7 @@
 	// settings options
 	#define SETTING_TEXT_R "Resolution"
 	#define SETTING_TEXT_F "Full Screen"
+	#define SETTING_TEXT_FPS "FPS"
 	#define SETTING_TEXT_C "Controls"
 	
 	// character menu stuff 

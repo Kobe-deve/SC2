@@ -420,7 +420,6 @@
 			// deallocate font 
 			deallocateFont(state->fontHandler);
 			
-			
 			// deallocate renderer and window 
 			SDL_DestroyRenderer(state->renderer);
 			SDL_DestroyWindow(state->window);
