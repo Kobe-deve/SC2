@@ -173,10 +173,10 @@ void displayStatus(struct gameState * state)
 		sprintf(displayer,"Floor: %d",state->floor);	
 		printText(displayer, 580, 0, state->fontHandler);
 		
-		printText("STATUS:", 10, 500, state->fontHandler);
+		printText("STATUS:", 10, state->screenH-200, state->fontHandler);
 		
 		for(i=0;i<state->numStatusLines;i++)
-			printText(state->statusText[i], 10, 500+FONT_SIZE+i*FONT_SIZE, state->fontHandler);
+			printText(state->statusText[i], 10, state->screenH-200+FONT_SIZE+i*FONT_SIZE, state->fontHandler);
 		break;
 	}
 }

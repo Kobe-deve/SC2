@@ -155,6 +155,7 @@ int main(int argc, char *argv[])
 			break;
 		}
 		
+		// if switching systems, ignore input besides exiting 
 		if(state.switchSystem == 1 && state.input != 27)
 			state.input = 0;
 				

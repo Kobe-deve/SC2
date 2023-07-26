@@ -9,6 +9,7 @@
 #include "battle.h"
 #include "character_menu.h"
 #include "dungeon.h"
+#include "settings.h"
 
 // how much the alpha will change per frame when transitioning
 #define ALPHA_CHANGE 15
@@ -109,6 +110,9 @@
 				case SHOP_SCREEN:
 				shopLogic(state);
 				break;
+				case SETTINGS_SCREEN:
+				settingScreenHandler(state);
+				break; 
 			}
 		}
 			
@@ -134,6 +138,9 @@
 			case SHOP_SCREEN:
 			shopScreenDisplay(state);
 			break;
+			case SETTINGS_SCREEN:
+			settingScreenDisplay(state);
+			break; 
 		}
 		
 		if(state->switchSystem == 1 && state->fadeIn == 0 &&  state->megaAlpha >= 0) // if switching to system, begin switch process with alpha handling 

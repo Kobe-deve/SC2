@@ -5,11 +5,12 @@
 // initialize data for character menu
 void initCharacterMenu(struct gameState * state)
 {
-	char ** array = malloc(2 * sizeof(char*));
+	char ** array = malloc(3 * sizeof(char*));
 	array[0] = C_SAVE;
-	array[1] = C_EXIT;
+	array[1] = C_SET;
+	array[2] = C_EXIT;
 	
-	initMenu(state,2,array,85,24);
+	initMenu(state,3,array,85,24);
 	
 	free(array);
 }
@@ -33,7 +34,14 @@ void characterMenuLogic(struct gameState * state)
 			case 0: // save
 			saveData(state);
 			break;
-			case 1: // exit 
+			case 1: // settings 
+			state->calledSystem= MENU_SCREEN;
+			
+			state->switchSystem = 1;
+			state->switchTo = SETTINGS_SCREEN;
+			deallocateMenu(state);
+			break;
+			case 2: // exit 
 			state->switchSystem = 1;
 			state->switchTo = DUNGEON_SCREEN;
 

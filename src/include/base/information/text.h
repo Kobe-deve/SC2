@@ -71,10 +71,17 @@
 
 	//title screen options 
 	#define NG "New Game"
+	#define ST "Settings"
 	#define CT "Continue"
+	
+	// settings options
+	#define SETTING_TEXT_R "Resolution"
+	#define SETTING_TEXT_F "Full Screen"
+	#define SETTING_TEXT_C "Controls"
 	
 	// character menu stuff 
 	#define C_SAVE "Save Game"
-	#define C_EXIT "Go back"
+	#define C_SET "Settings"
+	#define C_EXIT "Back"
 	
 #endif

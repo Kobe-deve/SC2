@@ -6,6 +6,8 @@
 int numInputs;
 int * inputs = NULL;
 
+#define NUM_TEST_RUNS 100 // number of times the game is run
+
 // test of title screen functionality 
 void titleTest()
 {
@@ -17,7 +19,7 @@ void titleTest()
 	
 	printf("\nTITLE TEST\n");
 		
-	for(i=0;i<100;i++)
+	for(i=0;i<NUM_TEST_RUNS;i++)
 	{
 		printf("%d",i+1);
 		initializeGame(&state);
@@ -76,7 +78,7 @@ void dungeonTest()
 	
 	printf("\nDUNGEON TEST\n");
 		
-	for(i=0;i<100;i++)
+	for(i=0;i<NUM_TEST_RUNS;i++)
 	{
 		printf("%d",i+1);
 		initializeGame(&state);
@@ -137,7 +139,7 @@ void battleTest()
 	
 	printf("\nBATTLE TEST\n");
 		
-	for(i=0;i<100;i++)
+	for(i=0;i<NUM_TEST_RUNS;i++)
 	{
 		printf("%d",i+1);
 		initializeGame(&state);
@@ -166,6 +168,7 @@ void main()
 	titleTest();
 	dungeonTest();
 	battleTest();
+	system("cls");
 	printf("\nDONE");
 	free(inputs);
 }

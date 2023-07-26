@@ -26,7 +26,7 @@
 #include "information/stats.h"
 #include "information/npc.h"
 
-// screen dimensions in ascii mode 
+// default screen dimensions in ascii mode 
 #define WINDOW_WIDTH 1500
 #define WINDOW_HEIGHT 800
 
@@ -57,11 +57,16 @@
 		GAMEOVER_SCREEN = 5,
 		CUTSCENE_SCREEN = 6,
 		MENU_SCREEN = 7,
+		SETTINGS_SCREEN = 8,
 	};
 
 	// data structure for handling the state/data of the game 
 	struct gameState
 	{
+		int fullScreen; // is full screen toggled?
+		int screenW; // resolution
+		int screenH;
+		
 		int testMode; // for testing the game 
 		
 		int graphicsMode; // the graphics mode of the game (0 - ascii 1 - sprite)
@@ -150,6 +155,8 @@
 		// is this a new game? 
 		int newGame; 
 		
+		int calledSystem;
+		
 		int enemyType; // the type of enemy the player is fighting 
 		
 		int numQuests; // number of quests the player has 
@@ -182,6 +189,10 @@
 		// initialize music 
 		state->music = NULL;	
 		state->track = NULL;
+		
+		state->fullScreen = 0;
+		state->screenW = WINDOW_WIDTH-100;
+		state->screenH = WINDOW_HEIGHT-100;
 		
 		// if sprite mode, initialize graphics/music
 		if(state->graphicsMode == 1)
