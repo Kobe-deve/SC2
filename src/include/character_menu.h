@@ -68,6 +68,25 @@ void characterMenuDisplay(struct gameState * state)
 			printf("MENU");
 			
 		}
+		
+		printf("Quests:");
+		for(i=0;i<state->numQuests;i++)
+		{
+			// display based on specific quest type 
+			switch(state->currentQuests[i].questType)
+			{
+				case 0:
+				sprintf(displayer,QUEST_1,state->keys);	
+				break;
+				case 1:
+				sprintf(displayer,QUEST_2,state->keys);	
+				break;
+			}
+			
+			printf("%s",displayer);
+		
+		}
+		printf(state->stats.name);
 		break;
 		case 1: // sprite mode
 		
@@ -90,8 +109,8 @@ void characterMenuDisplay(struct gameState * state)
 			
 			printText(displayer, 10, 100+(i+1)*40, state->fontHandler);
 		
-			printText(state->stats.name, 10, 440, state->fontHandler);
 		}
+		printText(state->stats.name, 10, 440, state->fontHandler);
 		
 		/*if(state->numImages == 0)
 		{

@@ -159,6 +159,71 @@ void battleTest()
 	}
 }
 
+void menuTest()
+{
+		int i,j;
+	
+	struct gameState state;
+	
+	// set up inputs used in the test
+	numInputs = 27;
+	inputs = malloc(numInputs * sizeof(int));
+	inputs[0] = 0;
+	inputs[1] = ENTER;
+	inputs[2] = DOWN;
+	inputs[3] = DOWN;
+	inputs[4] = DOWN;
+	inputs[5] = DOWN;
+	inputs[6] = DOWN;
+	inputs[7] = DOWN;
+	inputs[8] = RIGHT;
+	inputs[9] = MENU;
+	inputs[10] = ENTER;
+	inputs[11] = ENTER;
+	inputs[12] = ENTER;
+	inputs[13] = MENU;
+	inputs[14] = ENTER;
+	inputs[15] = ENTER;
+	inputs[16] = ENTER;
+	inputs[17] = RIGHT;
+	inputs[18] = MENU;
+	inputs[19] = ENTER;
+	inputs[20] = ENTER;
+	inputs[21] = ENTER;
+	inputs[22] = ENTER;
+	inputs[23] = MENU;
+	inputs[24] = ENTER;
+	inputs[25] = ENTER;
+	inputs[26] = ENTER;
+	
+	state.graphicsMode = 0; // set graphics mode 
+	
+	printf("\nMENU TEST\n");
+		
+	for(i=0;i<NUM_TEST_RUNS;i++)
+	{
+		printf("%d",i+1);
+		initializeGame(&state);
+		
+		for(j=0;j<numInputs;j++)
+		{
+			state.input = inputs[j];
+			
+			// test adding quest
+			if(j==10)
+				addQuest(1,&state);
+			
+			// game logic handling 
+			logicHandler(&state);
+			
+			// game display handling 
+			displayHandler(&state);
+		}
+		
+		deallocateGame(&state);	
+	}
+}
+
 // main function 
 void main()
 {
@@ -168,6 +233,7 @@ void main()
 	titleTest();
 	dungeonTest();
 	battleTest();
+	menuTest();
 	system("cls");
 	printf("\nDONE");
 	free(inputs);
