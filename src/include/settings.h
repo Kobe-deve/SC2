@@ -69,6 +69,7 @@ void settingScreenHandler(struct gameState * state)
 				state->screenH = WINDOW_HEIGHT-100;
 				SDL_SetWindowFullscreen(state->window, SDL_WINDOW_SHOWN);
 			}
+			SDL_RenderSetLogicalSize(state->renderer,state->screenW,state->screenH);
 			
 			break;
 			
