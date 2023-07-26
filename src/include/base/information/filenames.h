@@ -8,6 +8,8 @@
 #define D2_SAVE "./data/mapData/s2_data.dat"
 #define D3_SAVE "./data/mapData/s3_data.dat"
 
+#define SETTINGS_FILE "./data/settings.dat" // file for settings 
+
 // dungeon basis for a new game 
 #define ORIGINAL_DUNGEON "maps/original_dungeon.txt" // first dungeon 
 #define ORIGINAL_DUNGEON_NPC "maps/npc_data/origin.txt" // first dungeon npc file 

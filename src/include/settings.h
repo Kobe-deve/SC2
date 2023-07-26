@@ -4,6 +4,56 @@
 #ifndef SETTINGS_HANDLED
 #define SETTINGS_HANDLED
 
+void loadSettings(struct gameState * state)
+{		
+	FILE *file;
+	file = fopen(SETTINGS_FILE,"r");
+	int data;
+	
+	if(file != NULL)
+	{
+		fread(&state->fullScreen, sizeof(int), 1, file);
+		fread(&state->screenW, sizeof(int), 1, file);
+		fread(&state->screenH, sizeof(int), 1, file);
+		fread(&SCREEN_FPS, sizeof(int), 1, file);
+		
+		
+		// set renderer/window based on loaded data 
+		
+		if(state->fullScreen)
+			SDL_SetWindowFullscreen(state->window, SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP);
+			
+		SCREEN_TICK_PER_FRAME = 1000 / SCREEN_FPS;  
+		
+		SDL_SetWindowSize(state->window,state->screenW,state->screenH);
+		SDL_RenderSetLogicalSize(state->renderer,state->screenW,state->screenH);
+		
+		fclose(file);
+	}
+	else
+		throwError("ERROR: COULD NOT READ SETTINGS FILE");
+}
+
+// save settings to file 
+void saveSettings(struct gameState * state)
+{
+	FILE *file;
+	file = fopen(SETTINGS_FILE,"w+");
+	
+	if(file != NULL)
+	{
+		fwrite(&state->fullScreen, sizeof(int), 1, file);
+		fwrite(&state->screenW, sizeof(int), 1, file);
+		fwrite(&state->screenH, sizeof(int), 1, file);
+		fwrite(&SCREEN_FPS, sizeof(int), 1, file);
+		
+		fclose(file);
+		
+	}
+	else
+		throwError("ERROR: COULD NOT SAVE SETTINGS");
+}
+
 // display function for title screen 
 void settingScreenDisplay(struct gameState * state)
 {	
@@ -111,7 +161,11 @@ void settingScreenHandler(struct gameState * state)
 			SCREEN_TICK_PER_FRAME = 1000 / SCREEN_FPS;  
 			break;
 			
-			case 3: // go back 			
+			case 3: // go back 	
+			
+			// save settings
+			saveSettings(state);
+			
 			state->switchSystem = 1;
 			state->switchTo = state->calledSystem;
 			

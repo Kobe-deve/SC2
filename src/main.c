@@ -17,6 +17,10 @@ int main(int argc, char *argv[])
 	// initialize game 	
 	initializeGame(&state);
 	
+	// load settings if they're available
+	if(filePresent(SETTINGS_FILE))
+		loadSettings(&state);
+
 	// main loop
 	while(state.input != 27)
 	{

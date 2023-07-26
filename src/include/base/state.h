@@ -63,6 +63,7 @@
 	// data structure for handling the state/data of the game 
 	struct gameState
 	{
+		// settings data 
 		int fullScreen; // is full screen toggled?
 		int screenW; // resolution
 		int screenH;
@@ -166,6 +167,7 @@
 	};
 	
 	void accessDungeonData(struct gameState * state, int writeMode);
+	void loadSettings(struct gameState * state);
 	
 	// frame handling variables
 
@@ -329,7 +331,6 @@
 		state->d = NULL;
 
 		state->upStairCoords = NULL;
-		
 	}
 
 	// add to images used in current state 
@@ -448,21 +449,6 @@
 		else
 			throwError("ERROR: COULD NOT SAVE DATA");
 		
-	}
-	
-	// checks if a file is present 
-	int filePresent(char * fileName)
-	{
-		FILE *file;
-		char * fileReader = malloc(128 * sizeof(char)); 
-		file = fopen(fileName,"r");
-		
-		if(file != NULL)
-		{
-			fclose(file);
-			return 1;
-		}
-		return 0;
 	}
 	
 	// loading data to a file 

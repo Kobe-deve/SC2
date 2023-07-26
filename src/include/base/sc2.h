@@ -59,3 +59,18 @@ void setColor(int ForgC)
 	}
 	return;
 }
+
+// checks if a file is present 
+int filePresent(char * fileName)
+{
+	FILE *file;
+	char * fileReader = malloc(128 * sizeof(char)); 
+	file = fopen(fileName,"r");
+	
+	if(file != NULL)
+	{
+		fclose(file);
+		return 1;
+	}
+	return 0;
+}
