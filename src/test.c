@@ -54,25 +54,25 @@ void dungeonTest()
 	inputs[5] = DOWN;
 	inputs[6] = DOWN;
 	inputs[7] = DOWN;
-	inputs[8] = RIGHT;
+	inputs[8] = ENTER;
 	inputs[9] = RIGHT;
 	inputs[10] = RIGHT;
-	inputs[11] = UP;
+	inputs[11] = RIGHT;
 	inputs[12] = UP;
 	inputs[13] = UP;
-	inputs[14] = RIGHT;
+	inputs[14] = ENTER;
 	inputs[15] = RIGHT;
-	inputs[16] = RIGHT;
+	inputs[16] = ENTER;
 	inputs[17] = RIGHT;
-	inputs[18] = RIGHT;
+	inputs[18] = ENTER;
 	inputs[19] = DOWN;
-	inputs[20] = DOWN;
+	inputs[20] = ENTER;
 	inputs[21] = DOWN;
-	inputs[22] = DOWN;
+	inputs[22] = ENTER;
 	inputs[23] = DOWN;
-	inputs[24] = DOWN;
+	inputs[24] = ENTER;
 	inputs[25] = DOWN;
-	inputs[26] = DOWN;
+	inputs[26] = ENTER;
 	
 	state.graphicsMode = 0; // set graphics mode 
 	
@@ -224,6 +224,67 @@ void menuTest()
 	}
 }
 
+void loadedGameTest()
+{
+		int i,j;
+	
+	struct gameState state;
+	
+	// set up inputs used in the test
+	numInputs = 27;
+	inputs = malloc(numInputs * sizeof(int));
+	inputs[0] = 0;
+	inputs[1] = DOWN;
+	inputs[2] = DOWN;
+	inputs[3] = ENTER;
+	inputs[4] = DOWN;
+	inputs[5] = DOWN;
+	inputs[6] = DOWN;
+	inputs[7] = DOWN;
+	inputs[8] = RIGHT;
+	inputs[9] = MENU;
+	inputs[10] = ENTER;
+	inputs[11] = ENTER;
+	inputs[12] = ENTER;
+	inputs[13] = MENU;
+	inputs[14] = ENTER;
+	inputs[15] = ENTER;
+	inputs[16] = ENTER;
+	inputs[17] = RIGHT;
+	inputs[18] = MENU;
+	inputs[19] = ENTER;
+	inputs[20] = ENTER;
+	inputs[21] = ENTER;
+	inputs[22] = ENTER;
+	inputs[23] = MENU;
+	inputs[24] = ENTER;
+	inputs[25] = ENTER;
+	inputs[26] = ENTER;
+	
+	state.graphicsMode = 0; // set graphics mode 
+	
+	printf("\nLOADED GAME TEST\n");
+		
+	for(i=0;i<NUM_TEST_RUNS;i++)
+	{
+		printf("%d",i+1);
+		initializeGame(&state);
+		
+		for(j=0;j<numInputs;j++)
+		{
+			state.input = inputs[j];
+			
+			// game logic handling 
+			logicHandler(&state);
+			
+			// game display handling 
+			displayHandler(&state);
+		}
+		
+		deallocateGame(&state);	
+	}
+}
+
 // main function 
 void main()
 {
@@ -234,6 +295,7 @@ void main()
 	dungeonTest();
 	battleTest();
 	menuTest();
+	loadedGameTest();
 	system("cls");
 	printf("\nDONE");
 	free(inputs);

@@ -435,7 +435,11 @@ void initDungeonFloor(struct gameState * state)
 	switch(state->building)
 	{
 		case 0:
-		updateStatus(FIRST_FLOOR_TEXT,state);
+		if(state->newGame)
+		{
+			updateStatus(FIRST_FLOOR_TEXT,state);
+			state->newGame = 0;
+		}
 		break;
 	}
 	
@@ -606,7 +610,7 @@ void dungeonMovement(struct gameState * state)
 				free(array);
 				
 			}	
-			else if(state->activeNPCs[state->nearestNPC].active == 1 && npcNear && state->activeNPCs[state->nearestNPC].inCombat) // help npc in combat 
+			else if(state->activeNPCs[state->nearestNPC].active == 1 && npcNear && state->activeNPCs[state->nearestNPC].inCombat == 1) // help npc in combat 
 			{
 				state->activeEnemies[state->activeNPCs[state->nearestNPC].enemyCombat].active = 0;
 				state->activeEnemies[state->activeNPCs[state->nearestNPC].enemyCombat].inCombat = 0;
@@ -614,9 +618,12 @@ void dungeonMovement(struct gameState * state)
 				state->activeNPCs[state->nearestNPC].inCombat = 0;
 				state->activeNPCs[state->nearestNPC].numSaved++;
 				
+				
 				// start encounter 
+				state->enemyType = state->activeNPCs[state->nearestNPC].enemyCombat;
 				state->switchSystem = 1;
 				state->switchTo = BATTLE_SCREEN;
+				
 			}
 			else // interacting with nearby objects  
 			{

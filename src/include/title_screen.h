@@ -58,8 +58,8 @@ void titleScreenHandler(struct gameState * state)
 			case 1:
 			array = malloc(3 * sizeof(char*));
 			array[0] = NG;
-			array[1] = C_SET;
-			array[2] = CT;
+			array[1] = CT;
+			array[2] = C_SET;
 			
 			initMenu(state,3,array,85,24);
 			
@@ -82,20 +82,32 @@ void titleScreenHandler(struct gameState * state)
 
 			deallocateMenu(state);
 			break;
-			case 1: // settings 
+			case 1: 
 			
+			switch(filePresent(MAIN_SAVE_FILE))
+			{
+				case 0: // settings 
+				state->calledSystem= TITLE_SCREEN;
+				
+				state->switchSystem = 1;
+				state->switchTo = SETTINGS_SCREEN;
+				deallocateMenu(state);
+				break;
+				case 1: // new game 
+				state->newGame = 0;
+				loadData(state);
+				state->switchSystem = 1;
+				state->switchTo = DUNGEON_SCREEN;
+
+				deallocateMenu(state);
+				break;
+			}
+			break;
+			case 2: // settings if there is a load file 
 			state->calledSystem= TITLE_SCREEN;
 			
 			state->switchSystem = 1;
 			state->switchTo = SETTINGS_SCREEN;
-			deallocateMenu(state);
-			break;
-			case 2: // load  
-			state->newGame = 0;
-			loadData(state);
-			state->switchSystem = 1;
-			state->switchTo = DUNGEON_SCREEN;
-
 			deallocateMenu(state);
 			break;
 		}

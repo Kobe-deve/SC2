@@ -1,0 +1,2 @@
+Report of bugs to fix:
+-Demons and NPCs can pass through each other 

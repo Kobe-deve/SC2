@@ -174,6 +174,7 @@ void enemyHandler(struct gameState * state)
 			{
 				if(state->graphicsMode == 0)
 					printf("%d",checkNPC);
+				
 				updateStatus(HEAR_FIGHT,state);
 				state->activeEnemies[i].inCombat = 1;
 				state->activeEnemies[i].npcFighting = checkNPC;

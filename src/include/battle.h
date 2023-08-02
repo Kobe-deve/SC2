@@ -82,10 +82,10 @@ void battleLogic(struct gameState * state)
 	handleMenu(state);
 	if(state->input == ENTER)
 	{		
+		deallocateMenu(state);
+		
 		state->switchSystem = 1;
 		state->switchTo = DUNGEON_SCREEN;
-
-		deallocateMenu(state);
 	}
 }
 

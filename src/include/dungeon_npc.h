@@ -213,8 +213,7 @@ void npcHandler(struct gameState * state)
 				{
 					state->activeNPCs[i].x = cx;
 					state->activeNPCs[i].y = cy;
-				}						
-				
+				}		
 				
 				// go upstairs if at stairs 
 				if(state->d[state->activeNPCs[i].floor][state->activeNPCs[i].y][state->activeNPCs[i].x] == 2)
