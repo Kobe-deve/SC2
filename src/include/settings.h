@@ -139,21 +139,21 @@ void settingScreenHandler(struct gameState * state)
 				break;
 				
 				case 1: // resolution 
-				switch(state->screenW)
-				{
-					case 1400:
-					state->screenW = 1200;
-					state->screenH = 600;
+				// switch(state->screenW)
+				// {
+				// 	case 1400:
+				// 	state->screenW = 1200;
+				// 	state->screenH = 600;
 					
-					break;
-					case 1200:
-					state->screenW = 1400;
-					state->screenH = 700;
-					break;
-				}
+				// 	break;
+				// 	case 1200:
+				// 	state->screenW = 1400;
+				// 	state->screenH = 700;
+				// 	break;
+				// }
 				
-				SDL_SetWindowSize(state->window,state->screenW,state->screenH);
-				SDL_RenderSetLogicalSize(state->renderer,state->screenW,state->screenH);
+				// SDL_SetWindowSize(state->window,state->screenW,state->screenH);
+				// SDL_RenderSetLogicalSize(state->renderer,state->screenW,state->screenH);
 				
 				break;
 				
