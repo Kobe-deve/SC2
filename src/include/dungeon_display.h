@@ -330,7 +330,7 @@ void initDungeonDisplay(struct gameState * state)
 			state->images[0].scale = 2; // scale of the images on the screen 
 			break;
 			case 1200:
-			state->images[0].scale = 1; // scale of the images on the screen 
+			state->images[0].scale = 2; // scale of the images on the screen 
 			break;
 			default:
 			state->images[0].scale = 2; // scale of the images on the screen 

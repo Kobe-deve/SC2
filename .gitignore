@@ -14,3 +14,4 @@ src/.vscode/
 *.ico
 *.ttf
 *.dat
+/.vscode
