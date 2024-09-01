@@ -1,3 +1,14 @@
+#define A 10
+#define B 11
+#define D 13
+#define E 14
+#define F 15
+#define G 16
+#define I 18
+#define J 19
+#define K 20
+#define M 22
+
 // for general handling dungeon crawling in the game 
 
 // coord to print dungeon at in ascii mode 
