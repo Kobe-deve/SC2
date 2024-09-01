@@ -26,20 +26,16 @@
 		// initialize music handler
 		initMusic(state);
 		
-		// set up SDL input handling if graphics mode enabled 
-		if(state->graphicsMode == 1)
-		{
-			// initialize event handler for SDL2 events and renderer color 
-			state->e = malloc(sizeof(SDL_Event));
-			state->colors[0] = 0;
-			state->colors[1] = 0;
-			state->colors[2] = 100;
-			state->colors[3] = 0;
-			
-			// initialize background assets
-			state->backgroundAsset = initImage(BATTLE_BACKGROUND_ASSET,state->renderer);
-			state->backgroundAsset.scale = 4;	
-		}
+		// initialize event handler for SDL2 events and renderer color 
+		state->e = malloc(sizeof(SDL_Event));
+		state->colors[0] = 0;
+		state->colors[1] = 0;
+		state->colors[2] = 100;
+		state->colors[3] = 0;
+		
+		// initialize background assets
+		state->backgroundAsset = initImage(BATTLE_BACKGROUND_ASSET,state->renderer);
+		state->backgroundAsset.scale = 4;	
 	}
 
 	// deallocate game 
@@ -54,10 +50,7 @@
 		}
 		
 		// deallocate background image if in spirte mode 
-		if(state->graphicsMode == 1)
-		{
-			deallocateImage(&state->backgroundAsset);
-		}
+		deallocateImage(&state->backgroundAsset);
 		
 		// deallocate menu if it is being used
 		if(state->options != NULL)
@@ -71,7 +64,7 @@
 	void logicHandler(struct gameState * state)
 	{	
 		// initialize logic 
-		if((state->megaAlpha == 0 && state->graphicsMode == 0) || (state->graphicsMode == 1 && state->numImages == -1))
+		if(state->numImages == -1)
 		{
 			state->numImages = 0;
 			switch(state->gameSystem)
@@ -152,45 +145,39 @@
 				state->megaAlpha = 0;
 				state->switchSystem = 0;
 				state->gameSystem = state->switchTo;
+			
+				state->fadeIn = 1;	
+				clearImages(state);
+				state->numImages = -1;
 				
-				if(state->graphicsMode == 1) // if sprite mode, start fading in 
+				// set new background asset
+				deallocateImage(&state->backgroundAsset);
+				switch(state->gameSystem)
 				{
-					state->fadeIn = 1;	
-					clearImages(state);
-					state->numImages = -1;
-					
-					// set new background asset
-					deallocateImage(&state->backgroundAsset);
-					switch(state->gameSystem)
-					{
-						default:
-						case TITLE_SCREEN:
-						case DUNGEON_SCREEN:
-						state->backgroundAsset = initImage(DUNGEON_BACKGROUND_ASSET,state->renderer);
-						break;
-						case BATTLE_SCREEN:
-						state->backgroundAsset = initImage(BATTLE_BACKGROUND_ASSET,state->renderer);
-						break;
-					}
-					state->backgroundAsset.scale = 4;	
+					default:
+					case TITLE_SCREEN:
+					case DUNGEON_SCREEN:
+					state->backgroundAsset = initImage(DUNGEON_BACKGROUND_ASSET,state->renderer);
+					break;
+					case BATTLE_SCREEN:
+					state->backgroundAsset = initImage(BATTLE_BACKGROUND_ASSET,state->renderer);
+					break;
 				}
-				else
-					system("cls");
+				state->backgroundAsset.scale = 4;	
 			}
 		}
 		else if(state->megaAlpha <= 255 && state->fadeIn == 1) // fade into new system 
 		{
 			state->megaAlpha+=ALPHA_CHANGE*40/SCREEN_FPS;
 			
-			if((state->megaAlpha >= 255 && state->graphicsMode == 1))
+			if((state->megaAlpha >= 255))
 			{
 				state->megaAlpha = 255;
 				state->fadeIn = 0;
 			}
 		}
 		
-		if(state->graphicsMode == 1)
-			setAlphaOfImages(state);
+		setAlphaOfImages(state);
 	}
 
 #endif

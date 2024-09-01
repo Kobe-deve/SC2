@@ -40,22 +40,9 @@ void initMenu(struct gameState * state, int numOpts, char ** options, int x, int
 	if(state->option >= numOpts)
 		state->option = 0;
 	
-	// set initial display
-	switch(state->graphicsMode)
-	{
-		case 0:
-		state->menuX = x;
-		state->menuY = y;
-	
-		setCursor(state->menuX-1,state->menuY+state->option);
-		printf(">");
-		break;
-		
-		case 1:
-		state->menuX = x*12;
-		state->menuY = y*12;
-		break;
-	}
+	// set initial display		
+	state->menuX = x*12;
+	state->menuY = y*12;
 }
 
 // handle menu display and input
@@ -65,89 +52,23 @@ void handleMenu(struct gameState * state)
 	{
 		for(int i=0;i<state->numOptions;i++)
 		{
-			switch(state->graphicsMode)
-			{
-				case 0:
-				setCursor(state->menuX,state->menuY+i);
-				printf("%s",state->options[i]);
-				break;
-				case 1:
-				printText(state->options[i], state->menuX, state->menuY+i*FONT_SIZE, state->fontHandler);
-				break;
-			}
+			printText(state->options[i], state->menuX, state->menuY+i*FONT_SIZE, state->fontHandler);
 		}
-	
-		if(state->graphicsMode == 0)
-		{
-			switch(state->input)
-			{
-				case UP:
-				if(state->option > 0)
-				{
-					setCursor(state->menuX-1,state->menuY+state->option);
-					printf(" ");
-			
-					state->option--;
-				}
-				break;
-				case DOWN:
-				if(state->option < state->numOptions-1)
-				{
-					setCursor(state->menuX-1,state->menuY+state->option);
-					printf(" ");
-		
-					state->option++;
-				}	
-				break;
-			}
-		
-		
-			if(state->input == UP || state->input == DOWN)
-			{
-				setCursor(state->menuX-1,state->menuY+state->option);
-				printf(">");
-			}
-		}
-		else
-		{
-			switch(state->input)
-			{
-				case UP:
-				if(state->option > 0)
-					state->option--;
-				break;
-				case DOWN:
-				if(state->option < state->numOptions-1)
-					state->option++;
-				break;
-			}				
-			printText(">", state->menuX-FONT_SIZE,state->menuY+state->option*FONT_SIZE, state->fontHandler);
-		}		
-	}
-		
-}
 
-// clear the menu from the display 
-void clearMenu(struct gameState * state) 
-{
-	int i;
-	int j;
-	
-	setColor(BLACK);
-	for(int i=0;i<state->numOptions;i++)
-	{
-		setCursor(state->menuX,state->menuY+i);
-		
-		for(j=0;j<strlen(state->options[i]);j++)
+		switch(state->input)
 		{
-			setCursor(state->menuX+j,state->menuY+i);
-			printf("%c",219);
-		}
+			case UP:
+			if(state->option > 0)
+				state->option--;
+			break;
+			case DOWN:
+			if(state->option < state->numOptions-1)
+				state->option++;
+			break;
+		}				
+		printText(">", state->menuX-FONT_SIZE,state->menuY+state->option*FONT_SIZE, state->fontHandler);
 	}
-	setCursor(state->menuX-1,state->menuY+state->option);
-	printf("%c",219);
-	
-	setColor(WHITE);
+		
 }
 
 #endif

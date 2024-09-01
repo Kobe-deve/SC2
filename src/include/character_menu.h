@@ -58,71 +58,37 @@ void characterMenuDisplay(struct gameState * state)
 	int i;
 	char displayer[400]; // used in sprite mode to display stats 
 	
-	switch(state->graphicsMode)
+	printText("MENU", 10, 10, state->fontHandler);
+	
+	// display current quests
+	printText("Quests:", 10, 100, state->fontHandler);
+	for(i=0;i<state->numQuests;i++)
 	{
-		case 0: // ascii mode 
-		if(state->megaAlpha == 0) //  initialize display 
+		// display based on specific quest type 
+		switch(state->currentQuests[i].questType)
 		{
-			state->megaAlpha = 1;
-			setCursor(1,30);
-			printf("MENU");
-			
+			case 0:
+			sprintf(displayer,QUEST_1,state->keys);	
+			break;
+			case 1:
+			sprintf(displayer,QUEST_2,state->keys);	
+			break;
 		}
 		
-		printf("Quests:");
-		for(i=0;i<state->numQuests;i++)
-		{
-			// display based on specific quest type 
-			switch(state->currentQuests[i].questType)
-			{
-				case 0:
-				sprintf(displayer,QUEST_1,state->keys);	
-				break;
-				case 1:
-				sprintf(displayer,QUEST_2,state->keys);	
-				break;
-			}
-			
-			printf("%s",displayer);
-		
-		}
-		printf(state->stats.name);
-		break;
-		case 1: // sprite mode
-		
-		printText("MENU", 10, 10, state->fontHandler);
-		
-		// display current quests
-		printText("Quests:", 10, 100, state->fontHandler);
-		for(i=0;i<state->numQuests;i++)
-		{
-			// display based on specific quest type 
-			switch(state->currentQuests[i].questType)
-			{
-				case 0:
-				sprintf(displayer,QUEST_1,state->keys);	
-				break;
-				case 1:
-				sprintf(displayer,QUEST_2,state->keys);	
-				break;
-			}
-			
-			printText(displayer, 10, 100+(i+1)*40, state->fontHandler);
-		
-		}
-		printText(state->stats.name, 10, 440, state->fontHandler);
-		
-		/*if(state->numImages == 0)
-		{
-			addImage(state,LOGO_IMAGE);
-			state->images[0].x = 20*12;
-			state->images[0].y = 10*12;
-		}
-		else
-			renderImage(&state->images[0], state->renderer, NULL);*/
-		
-		break;
+		printText(displayer, 10, 100+(i+1)*40, state->fontHandler);
+	
 	}
+	printText(state->stats.name, 10, 440, state->fontHandler);
+	
+	/*if(state->numImages == 0)
+	{
+		addImage(state,LOGO_IMAGE);
+		state->images[0].x = 20*12;
+		state->images[0].y = 10*12;
+	}
+	else
+		renderImage(&state->images[0], state->renderer, NULL);*/
+	
 }
 
 

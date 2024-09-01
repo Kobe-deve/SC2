@@ -125,14 +125,6 @@ void enemyHandler(struct gameState * state)
 			cx = state->activeEnemies[i].x;
 			cy = state->activeEnemies[i].y; 
 			
-			// erase/update current spot when moving 
-			if(state->graphicsMode == 0 && state->visible[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == 1)
-			{
-				// make sure there isn't another enemy on this spot if updating 
-				setCursor(dungeonPrintCoordX+state->activeEnemies[i].x,dungeonPrintCoordY+state->activeEnemies[i].y);
-				printf("%c",quickConvert(state->d[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x]));	
-			}	
-			
 			// determine movement 
 			if(state->playerX > state->activeEnemies[i].x)
 				direction = 1;
@@ -171,10 +163,7 @@ void enemyHandler(struct gameState * state)
 			
 			// if npc found, start battle 
 			if(checkNPC != -1 && (state->activeNPCs[checkNPC].active == 1 && state->activeNPCs[checkNPC].inCombat == 0))
-			{
-				if(state->graphicsMode == 0)
-					printf("%d",checkNPC);
-				
+			{				
 				updateStatus(HEAR_FIGHT,state);
 				state->activeEnemies[i].inCombat = 1;
 				state->activeEnemies[i].npcFighting = checkNPC;
@@ -231,13 +220,6 @@ void enemyHandler(struct gameState * state)
 			
 			// reset start tick 
 			state->activeEnemies[i].startTicks = SDL_GetTicks();
-		}
-		
-		// display enemy 
-		if(state->graphicsMode == 0 && state->visible[state->floor][state->activeEnemies[i].y][state->activeEnemies[i].x] == 1 && state->activeEnemies[i].inCombat == 0 && state->activeEnemies[i].active == 1)
-		{
-			setCursor(dungeonPrintCoordX+state->activeEnemies[i].x,dungeonPrintCoordY+state->activeEnemies[i].y);
-			printf("+");
 		}
 	}
 }

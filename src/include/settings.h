@@ -59,19 +59,11 @@ void settingScreenDisplay(struct gameState * state)
 {	
 	char displayer[400];
 
-	switch(state->graphicsMode)
-	{
-		case 0: // ascii mode 
-		
-		break;
-		case 1: // sprite mode
-		sprintf(displayer,"FPS: %d",SCREEN_FPS);	
-		printText(displayer, 10, 288, state->fontHandler);
-		
-		sprintf(displayer,"Resolution: %d x %d",state->screenW,state->screenH);	
-		printText(displayer, 10, 328, state->fontHandler);
-		break;
-	}
+	sprintf(displayer,"FPS: %d",SCREEN_FPS);	
+	printText(displayer, 10, 288, state->fontHandler);
+	
+	sprintf(displayer,"Resolution: %d x %d",state->screenW,state->screenH);	
+	printText(displayer, 10, 328, state->fontHandler);
 }
 
 // logic handling for title screen 

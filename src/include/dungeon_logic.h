@@ -34,13 +34,6 @@ void flippedSwitch(int switchStatus, struct gameState * state)
 					break;
 				}
 			}
-			
-			// if in graphics mode, update the screen 
-			if(state->graphicsMode == 0 && state->visible[state->floor][iy][ix] == 1)
-			{
-				setCursor(dungeonPrintCoordX+ix,dungeonPrintCoordY+iy);
-				printf("%c",quickConvert(state->d[state->floor][iy][ix]));
-			}
 		}
 	}
 }
@@ -512,10 +505,6 @@ void resetDungeon(struct gameState * state)
 	
 	// switch back to dungeon track 
 	//switchTrack(DUNGEON_MUSIC,s);
-	
-	// get dungeon status back up if in ascii mode 
-	if(state->graphicsMode == 0)
-		displayStatus(state);
 }
 
 // handles the player's movement in the dungeon 

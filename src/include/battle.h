@@ -34,45 +34,33 @@ void deallocateBattle(struct gameState * state)
 // general battle display 
 void battleDisplay(struct gameState * state)
 {	
-	switch(state->graphicsMode)
+	if(state->numImages == 0)
 	{
-		case 0: // ascii mode 
-		if(state->megaAlpha == 0) //  initialize display 
+		// initialize images based on what enemies are present 
+		switch(state->enemyType)
 		{
-			state->megaAlpha = 1;
+			case 0:
+			addImage(state,STRANJER_SPRITE);
+			break;
+			case 1:
+			addImage(state,COBOL_SPRITE);
+			break; 
+			case 2:
+			addImage(state,APOCALYPSE_SPRITE);
+			break; 
+			case 3:
+			addImage(state,COSMIC_SPRITE);
+			break;
 		}
-		break;
-		case 1: // sprite mode
-		if(state->numImages == 0)
-		{
-			// initialize images based on what enemies are present 
-			switch(state->enemyType)
-			{
-				case 0:
-				addImage(state,STRANJER_SPRITE);
-				break;
-				case 1:
-				addImage(state,COBOL_SPRITE);
-				break; 
-				case 2:
-				addImage(state,APOCALYPSE_SPRITE);
-				break; 
-				case 3:
-				addImage(state,COSMIC_SPRITE);
-				break;
-			}
-			
-			// set positions based on the number of enemies present 
-			state->images[0].x = 20*12;
-			state->images[0].y = 10*12;
-			
-			// initialize ui assets 
-		}
-		else
-			renderImage(&state->images[0], state->renderer, NULL);
 		
-		break;
+		// set positions based on the number of enemies present 
+		state->images[0].x = 20*12;
+		state->images[0].y = 10*12;
+		
+		// initialize ui assets 
 	}
+	else
+		renderImage(&state->images[0], state->renderer, NULL);
 	
 }
 

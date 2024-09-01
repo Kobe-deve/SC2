@@ -4,20 +4,15 @@
 
 void shopScreenDisplay(struct gameState * state)
 {
-	switch(state->graphicsMode)
+	// add title screen image if images are cleared out  
+	if(state->numImages == 0)
 	{
-		case 1: // sprite mode
-		// add title screen image if images are cleared out  
-		if(state->numImages == 0)
-		{
-			addImage(state,LOGO_IMAGE);
-			state->images[0].x = 20*12;
-			state->images[0].y = 10*12;
-		}
-		else
-			renderImage(&state->images[0], state->renderer, NULL);
-		break;
+		addImage(state,LOGO_IMAGE);
+		state->images[0].x = 20*12;
+		state->images[0].y = 10*12;
 	}
+	else
+		renderImage(&state->images[0], state->renderer, NULL);
 }
 
 void shopLogic(struct gameState * state)

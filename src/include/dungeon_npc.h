@@ -145,16 +145,7 @@ void npcHandler(struct gameState * state)
 		{	
 			// movement logic if movement timer is up 
 			if(movement == 1 && state->activeNPCs[i].inCombat != 1 && state->activeNPCs[i].talking != 1 && ((int)(SDL_GetTicks() - state->activeNPCs[i].startTicks))/1000.f >= state->activeNPCs[i].speed)
-			{	
-				// erase/update current spot when moving 
-				if(state->graphicsMode == 0 && !state->activeNPCs[i].talking && !state->activeNPCs[i].inCombat && movement == 1 && state->floor == state->activeNPCs[i].floor && state->visible[state->activeNPCs[i].floor][state->activeNPCs[i].y][state->activeNPCs[i].x] == 1)
-				{
-					setColor(WHITE);
-					setCursor(dungeonPrintCoordX+state->activeNPCs[i].x,dungeonPrintCoordY+state->activeNPCs[i].y);
-					printf("%c",quickConvert(state->d[state->floor][state->activeNPCs[i].y][state->activeNPCs[i].x]));	
-				}
-				
-				
+			{					
 				// determine movement 
 				
 				// store original position in case we have to go back 
@@ -225,34 +216,11 @@ void npcHandler(struct gameState * state)
 			// display npc 
 			if(state->visible[state->activeNPCs[i].floor][state->activeNPCs[i].y][state->activeNPCs[i].x] == 1 && state->floor == state->activeNPCs[i].floor)
 			{
-				switch(state->graphicsMode)
-				{
-					case 0:
-					setCursor(dungeonPrintCoordX+state->activeNPCs[i].x,dungeonPrintCoordY+state->activeNPCs[i].y);
-					switch(state->activeNPCs[i].type)
-					{
-						case 0:
-						setColor(DARK_BABY_BLUE);
-						break;
-						case 1:
-						setColor(SILVER);
-						break;
-					}
-				
-					if(state->activeNPCs[i].inCombat == 1) // shows a fight 
-						printf("X");
-					else
-						printf("%c",1);
-					break;
-					case 1:
-					
-					break;
-				}
 			}
 		}
 	
 	}
-	setColor(WHITE);
+
 }
 
 // exiting an npc conversation 
