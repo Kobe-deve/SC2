@@ -1,3 +1,4 @@
 Report of bugs to fix:
 -Demons and NPCs can pass through each other 
 -Resolution does not change when set (just changes the window size)
+-FPS seems to cause things to be slower what the hey 

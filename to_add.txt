@@ -1,0 +1,4 @@
+-basic battle system
+-ui assets in dungeon 
+-save slots 
+-better npc-to-stairs pathfinding 
