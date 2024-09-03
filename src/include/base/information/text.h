@@ -13,6 +13,8 @@
 	#define EMPTY_CHEST "You stand near an opened empty steel chest."
 	#define CLOSED_CHEST "You stand near a closed steel chest, press enter to open it."
 	#define SHOP_ENTRANCE "You stand near a hole in the wall, press enter to go through it."
+	#define UPSTAIRS_TILE "Press enter to go upstairs."
+	#define DOWNSTAIRS_TILE "Press enter to go downstairs."
 	#define NPC_FIGHT "You see someone fighting a curse! Press enter to help them!"
 	#define ENEMY_MOVEMENT "A footstep echoes from the darkness..."
 	#define PASS_NPC "They stepped aside for you to pass by."

@@ -89,6 +89,14 @@ void description(struct gameState * state)
 	// update status text based on where the player is at 
 	switch(state->d[state->floor][state->playerY][state->playerX])
 	{
+		case 2:
+		updateStatus(UPSTAIRS_TILE,state);
+		break;
+		
+		case 3:
+		updateStatus(DOWNSTAIRS_TILE,state);
+		break;
+
 		case 5:
 		updateStatus(EMPTY_CHEST,state);
 		break;

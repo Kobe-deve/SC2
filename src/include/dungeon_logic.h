@@ -572,6 +572,66 @@ void dungeonMovement(struct gameState * state)
 		
 		switch(state->d[state->floor][state->playerY][state->playerX])
 		{
+			case 2:
+			case 3:
+			switch(state->d[state->floor][state->playerY][state->playerX])
+			{
+				case 2:
+				updateStatus(WALK_UP,state);
+				state->floor = state->floor+1;
+				break;
+				case 3:
+				updateStatus(WALK_DOWN,state);
+				state->floor = state->floor-1;
+				break;
+			}	
+			
+			// moving to another section based on floor position  
+			if(state->floor < 0 || state->floor == state->dungeonSize) 
+			{
+				switch(state->building)
+				{
+					case 0:
+					if(state->floor < 0 ) // to sector 1 
+					{
+						state->building = 1;
+						state->floor = 14;
+					}
+					else // to sector 3
+					{
+						state->building = 2;
+						state->floor = 0;
+					}
+					break;
+					
+					case 1: 
+					if(state->floor >= state->dungeonSize) // to sector 0
+					{
+						state->building = 0;
+						state->floor = 0;
+					}
+					
+					break;
+					case 2:
+					if(state->floor < 0) // to sector 0
+					{
+						state->building = 0;
+						state->floor = 9;
+					}
+					
+					break; 
+				}
+				deallocateDungeon(state);
+				initDungeonFloor(state);
+			}
+			else
+			{
+				generateEnemies(state);
+				resetDungeon(state);
+			}
+			break;
+
+			// staircase 
 			case 4: // chest
 			state->d[state->floor][state->playerY][state->playerX] = 5;
 			updateStatus(OPENED_CHEST,state);
@@ -638,64 +698,7 @@ void dungeonMovement(struct gameState * state)
 	// check what kind of tile the player is on 
 	switch(state->d[state->floor][state->playerY][state->playerX])
 	{
-		case 2:
-		case 3:
-		system("cls");
-		switch(state->d[state->floor][state->playerY][state->playerX])
-		{
-			case 2:
-			updateStatus(WALK_UP,state);
-			state->floor = state->floor+1;
-			break;
-			case 3:
-			updateStatus(WALK_DOWN,state);
-			state->floor = state->floor-1;
-			break;
-		}	
-		
-		// moving to another section based on floor position  
-		if(state->floor < 0 || state->floor == state->dungeonSize) 
-		{
-			switch(state->building)
-			{
-				case 0:
-				if(state->floor < 0 ) // to sector 1 
-				{
-					state->building = 1;
-					state->floor = 14;
-				}
-				else // to sector 3
-				{
-					state->building = 2;
-					state->floor = 0;
-				}
-				break;
-				
-				case 1: 
-				if(state->floor >= state->dungeonSize) // to sector 0
-				{
-					state->building = 0;
-					state->floor = 0;
-				}
-				
-				break;
-				case 2:
-				if(state->floor < 0) // to sector 0
-				{
-					state->building = 0;
-					state->floor = 9;
-				}
-				
-				break; 
-			}
-			deallocateDungeon(state);
-			initDungeonFloor(state);
-		}
-		else
-		{
-			generateEnemies(state);
-			resetDungeon(state);
-		}
+		default:
 		break;
 	}
 }
