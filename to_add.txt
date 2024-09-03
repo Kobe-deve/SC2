@@ -2,3 +2,4 @@
 -ui assets in dungeon 
 -save slots 
 -better npc-to-stairs pathfinding 
+-have npcs follow the player 
