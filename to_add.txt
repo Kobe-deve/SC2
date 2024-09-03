@@ -1,5 +1,7 @@
 -basic battle system
+-basic shop layout
 -ui assets in dungeon 
 -save slots 
 -better npc-to-stairs pathfinding 
 -have npcs follow the player 
+-cities

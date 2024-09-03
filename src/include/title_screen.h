@@ -29,7 +29,7 @@ void titleScreenHandler(struct gameState * state)
 			case 0:
 			array = malloc(2 * sizeof(char*));
 			array[0] = NG;
-			array[1] = C_SET;
+			array[1] = HTP;	
 			
 			initMenu(state,2,array,85,24);
 			break; 
@@ -37,7 +37,7 @@ void titleScreenHandler(struct gameState * state)
 			array = malloc(3 * sizeof(char*));
 			array[0] = NG;
 			array[1] = CT;
-			array[2] = C_SET;
+			array[2] = HTP;
 			
 			initMenu(state,3,array,85,24);
 			
@@ -68,7 +68,7 @@ void titleScreenHandler(struct gameState * state)
 				state->calledSystem= TITLE_SCREEN;
 				
 				state->switchSystem = 1;
-				state->switchTo = SETTINGS_SCREEN;
+				state->switchTo = HOW_TO_PLAY_SCREEN;
 				deallocateMenu(state);
 				break;
 				case 1: // new game 
@@ -85,7 +85,7 @@ void titleScreenHandler(struct gameState * state)
 			state->calledSystem= TITLE_SCREEN;
 			
 			state->switchSystem = 1;
-			state->switchTo = SETTINGS_SCREEN;
+			state->switchTo = HOW_TO_PLAY_SCREEN;
 			deallocateMenu(state);
 			break;
 		}

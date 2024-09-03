@@ -75,6 +75,7 @@
 	#define NG "New Game"
 	#define ST "Settings"
 	#define CT "Continue"
+	#define HTP "How to Play"
 	
 	// settings options
 	#define SETTING_TEXT_R "Resolution"

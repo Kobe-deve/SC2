@@ -58,6 +58,7 @@
 		CUTSCENE_SCREEN = 6,
 		MENU_SCREEN = 7,
 		SETTINGS_SCREEN = 8,
+		HOW_TO_PLAY_SCREEN = 9
 	};
 
 	// data structure for handling the state/data of the game 
@@ -174,7 +175,7 @@
 	// frame handling variables
 
 	// max FPS constant 
-	int SCREEN_FPS = 30; 
+	int SCREEN_FPS = 40; 
 	// calculates ticks per frame for timers
 	int SCREEN_TICK_PER_FRAME;  // 1000 / SCREEN_FPS
 	
