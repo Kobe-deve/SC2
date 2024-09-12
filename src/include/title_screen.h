@@ -71,7 +71,7 @@ void titleScreenHandler(struct gameState * state)
 				state->switchTo = HOW_TO_PLAY_SCREEN;
 				deallocateMenu(state);
 				break;
-				case 1: // new game 
+				case 1: // load game 
 				state->newGame = 0;
 				loadData(state);
 				state->switchSystem = 1;

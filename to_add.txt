@@ -5,3 +5,8 @@
 -better npc-to-stairs pathfinding 
 -have npcs follow the player 
 -cities
+
+-in the game have a tile that lets you view a picture (like a window), this can be used way later as a reveal that the dungeon 
+ is in space 
+
+-some enemies that are only visible in the player radius 
