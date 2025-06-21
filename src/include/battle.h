@@ -2,19 +2,27 @@
 #ifndef BATTLE_HANDLED
 #define BATTLE_HANDLED
 
+// initialize display assets for battle system
+void initBattleDisplay(struct gameState * state)
+{
+
+}
+
 // initialize battle data 
 void initBattle(struct gameState * state)
 {
-	char ** array = malloc(5 * sizeof(char*));
-	array[0] = A_COMMAND;
-	array[1] = M_COMMAND;
-	array[2] = T_COMMAND;
-	array[3] = W_COMMAND;
-	array[4] = E_COMMAND;
+	// char ** array = malloc(5 * sizeof(char*));
+	// array[0] = A_COMMAND;
+	// array[1] = M_COMMAND;
+	// array[2] = T_COMMAND;
+	// array[3] = W_COMMAND;
+	// array[4] = E_COMMAND;
 	
-	initMenu(state,5,array,85,24);
+	// initMenu(state,5,array,85,24);
 	
 	state->option = 0;
+	
+	initBattleDisplay(state);
 	
 	// set up enemy based on the type encounterd with 
 	switch(state->enemyType)
@@ -23,7 +31,7 @@ void initBattle(struct gameState * state)
 		break;
 	}
 	
-	free(array);
+	// free(array);
 }
 
 // deallocate battle data 
@@ -67,14 +75,18 @@ void battleDisplay(struct gameState * state)
 // general battle logic 
 void battleLogic(struct gameState * state)
 {
-	handleMenu(state);
-	if(state->input == ENTER)
-	{		
-		deallocateMenu(state);
-		
-		state->switchSystem = 1;
-		state->switchTo = DUNGEON_SCREEN;
+	if(state->options == NULL) // initialize menu used
+	{			
+		if(state->input == ENTER)
+		{		
+			deallocateMenu(state);
+			
+			state->switchSystem = 1;
+			state->switchTo = DUNGEON_SCREEN;
+		}
 	}
+	else
+		handleMenu(state);
 }
 
 #endif
